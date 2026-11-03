@@ -11,6 +11,10 @@ graphs shipped with the website are in
 See [methodology and reproduction](../docs/benchmarks.md). Correctness tests are
 separate in `tests/`; a small subprocess test checks the benchmark/report pipeline.
 
+The [experimental policy guide](../docs/experimental-strategies.md) describes
+v2.1, v3, v4, the insertion-depth tools, worst seed-averaged batches and the
+larger `benchmarks/run_v3_report.py` sweep, with small reproduction commands.
+
 ## Random level v2 against treap
 
 Open [the combined comparison](v2-treap/index.html) or the standalone

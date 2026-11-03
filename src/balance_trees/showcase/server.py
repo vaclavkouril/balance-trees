@@ -5,6 +5,7 @@ import json
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from typing import ClassVar
 
 from ..strategies import strategy_factory
 from .trace import build_trace
@@ -13,6 +14,12 @@ STATIC = Path(__file__).with_name("site") / "dist"
 
 
 class ShowcaseHandler(SimpleHTTPRequestHandler):
+    extensions_map: ClassVar[dict[str, str]] = {
+        **SimpleHTTPRequestHandler.extensions_map,
+        ".mjs": "text/javascript",
+        ".js": "text/javascript",
+    }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(STATIC), **kwargs)
 

@@ -1,3 +1,4 @@
+import { randomLevelV3 } from './random-level-v3.mjs';
 // One policy implementation for both object-node traces and typed-array workers.
 // Adapters supply tree primitives and yield events; policies never read view caches.
 import { hashPriority, rootLottery } from './priority-free.mjs';
@@ -93,16 +94,21 @@ registerStrategy('random-level', c => {
     for (let current = depth; current > target; current--) yield* c.promote(node);
   };
 });
-registerStrategy('random-level-v2', c => {
-  let count = 0, lowest = null, highest = null;
+function randomLevelV2(c, state = { count: 0, lowest: null, highest: null }, logWidth = false) {
   return function* (node, depth) {
     let priority = 0n;
-    for (let bit = 0; bit < 64; bit++) priority = (priority << 1n) | BigInt(c.bit());
-    const target = targetDepth(priority, lowest, highest, count, depth);
-    const isRecord = lowest !== null && priority < lowest;
-    count++;
-    if (lowest === null || priority < lowest) lowest = priority;
-    if (highest === null || priority > highest) highest = priority;
+    const width = logWidth ? Math.floor(Math.log2(state.count + 1)) + 1 : 64;
+    if (logWidth && width > (state.width ?? 0)) {
+      if (state.lowest !== null) state.lowest = 2n * state.lowest + 1n;
+      if (state.highest !== null) state.highest = 2n * state.highest;
+      state.width = width;
+    }
+    for (let bit = 0; bit < width; bit++) priority = (priority << 1n) | BigInt(c.bit());
+    const target = targetDepth(priority, state.lowest, state.highest, state.count, depth);
+    const isRecord = state.lowest !== null && priority < state.lowest;
+    state.count++;
+    if (state.lowest === null || priority < state.lowest) state.lowest = priority;
+    if (state.highest === null || priority > state.highest) state.highest = priority;
     yield* c.event('target', `Repair level ${target}`, `Rolled ${priority}; choose a level from the previous interval. ${isRecord ? 'A strict new minimum promotes the leaf to the root.' : 'Repair the path at that level with at most two rotations.'} No per-node priority is retained.`, node);
     if (isRecord) {
       for (let current = depth; current > 0; current--) yield* c.promote(node);
@@ -119,5 +125,15 @@ registerStrategy('random-level-v2', c => {
     const parent = c.parent(node), grand = c.parent(parent);
     if ((c.left(parent) === node) === (c.left(grand) === parent)) yield* c.promote(parent);
     else { yield* c.promote(node); yield* c.promote(node); }
+  };
+}
+registerStrategy('random-level-v2', c => randomLevelV2(c));
+registerStrategy('random-level-v2-1', c => randomLevelV2(c, undefined, true));
+registerStrategy('random-level-v3', c => randomLevelV3(c));
+registerStrategy('random-level-v4', c => {
+  const state = { count: 0, lowest: null, highest: null };
+  const v2 = randomLevelV2(c, state), v3 = randomLevelV3(c, state);
+  return function* (node, depth) {
+    yield* (state.count > 0 && depth < Math.log(state.count) ? v2 : v3)(node, depth);
   };
 });

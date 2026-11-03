@@ -260,6 +260,71 @@ print(json.dumps(result))
   }
 });
 
+test('v2.1, v3 and v4 match Python with identical decision and priority bits', async () => {
+  const { LargeTree } = await import('../src/balance_trees/showcase/site/dist/large-model.mjs');
+  const keys = [...Array.from({ length: 40 }, (_, i) => i % 2 ? 40 - (i - 1) / 2 : i / 2), 0, -1];
+  let state = 1234567;
+  const bits = Array.from({ length: 10000 }, () => {
+    state ^= state << 13; state ^= state >>> 17; state ^= state << 5;
+    return (state >>> 0) & 1;
+  });
+  const code = `
+import json, sys
+from balance_trees.flavors import TreeFlavor
+from balance_trees.random_bits import RandomBits
+data = json.loads(sys.argv[1])
+class Bits:
+    bernoulli = RandomBits.bernoulli
+    def __init__(self):
+        self.count = 0
+        self.values = iter(data["bits"])
+    def bit(self):
+        self.count += 1
+        return next(self.values)
+results = {}
+for name in ("random-level-v2-1", "random-level-v3", "random-level-v4"):
+    tree = TreeFlavor.create(name)
+    tree.bits = Bits()
+    frames = []
+    for key in data["keys"]:
+        stats = tree.insert(key)
+        nodes, stack = [], [tree.tree.root]
+        while stack:
+            n = stack.pop()
+            nodes.append([n.key, n.left.key if n.left else None, n.right.key if n.right else None])
+            stack.extend(c for c in (n.left, n.right) if c)
+        frames.append(dict(nodes=sorted(nodes), bits=tree.bits.count, rotations=stats.rotations, visits=stats.visits))
+    results[name] = frames
+print(json.dumps(results))
+`;
+  const result = spawnSync(process.env.PYTHON ?? 'python3', ['-c', code, JSON.stringify({ keys, bits })], {
+    encoding: 'utf8', timeout: 10000, env: { ...process.env, PYTHONPATH: 'src' },
+  });
+  assert.equal(result.status, 0, result.stderr);
+  for (const [strategy, expected] of Object.entries(JSON.parse(result.stdout))) {
+    const tree = new LargeTree({ strategy, sequence: keys, seed: 0 });
+    let used = 0, insertion = 0, visits = 0;
+    tree.random = () => bits[used++];
+    while (tree.advance()) if (tree.current.kind === 'settled') {
+      const actual = tree.snapshot(), row = expected[insertion++];
+      const nodes = [];
+      const stack = [tree.root];
+      while (stack.length) {
+        const id = stack.pop(), left = tree.left[id], right = tree.right[id];
+        nodes.push([tree.keys[id], left < 0 ? null : tree.keys[left], right < 0 ? null : tree.keys[right]]);
+        if (left >= 0) stack.push(left);
+        if (right >= 0) stack.push(right);
+      }
+      assert.deepEqual(nodes.sort((a, b) => a[0] - b[0]), row.nodes, `${strategy}: insertion ${insertion}`);
+      assert.equal(actual.stats.random_bits, row.bits);
+      assert.equal(actual.stats.insertion_rotations, row.rotations);
+      assert.equal(actual.stats.visits - visits, row.visits);
+      visits = actual.stats.visits;
+    }
+    assert.equal(insertion, keys.length);
+  }
+});
+
 class TestSlider {
   constructor() { this.listeners = {}; this.value = '0'; this.captured = null; }
   addEventListener(type, listener) { this.listeners[type] = listener; }

@@ -59,5 +59,20 @@ export const FLAVORS = {
     "name": "Random level v2",
     "tag": "Local repair at sampled level",
     "note": "Choose a repair level using the original 64-bit interval bands. Ordinary insertions perform at most two local rotations; strict new minima promote the leaf to the root. Expected fewer than three rotations per insertion from empty under iid uniform rolls. Ancestor walks can be long; no logarithmic-depth guarantee."
+  },
+  "random-level-v2-1": {
+    "name": "Random level v2.1",
+    "tag": "Local repair, log-width priorities",
+    "note": "For insertion ordinal j starting at 1, use j.bit_length() fresh bits, then apply v2 target selection and local repair with remapped extrema. Strict new minima reach the root. The sampled priority range widens over time; v2's iid rotation bound does not transfer. No logarithmic-depth guarantee."
+  },
+  "random-level-v3": {
+    "name": "Random level v3",
+    "tag": "Sampled final level",
+    "note": "Keep v2 priority tracking, sample a final level from a depth-aware distribution, and promote the inserted leaf v1-style to that level. Every non-root insertion stays with probability 1/10; otherwise sample target k in 0..d-1 with weight (d / (2 ln(n)^2))^(d-k). No record-minimum override or balance guarantee."
+  },
+  "random-level-v4": {
+    "name": "Random level v4",
+    "tag": "Depth-switched v2/v3 hybrid",
+    "note": "Use v2 local repair when insertion depth d < ln(n), otherwise current v3 with a fixed 10% no-rotation gate, epsilon=1 and targets including the root. n counts previous insertions; equality and the empty tree use v3. Both branches share count and priority extrema. No balance guarantee."
   }
 };
