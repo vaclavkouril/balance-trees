@@ -1,27 +1,43 @@
+# Global Coding Standards
+
+1. **YAGNI**: Build only what is needed.
+2. **DRY**: Extract shared patterns after the second duplication, not before.
+3. **Fail Fast**: Prefer explicit errors over silent failures.
+4. **Simple First**: Write the obvious solution; optimize only when needed.
+5. **Delete Aggressively**: Less code means fewer bugs.
+6. **Semantic Naming**: Use descriptive, self-documenting names for variables,
+   parameters, and API endpoints. Favor comprehension over brevity, for example
+   `wait_until_obs_is_saved`.
+
 # Repository Guidelines
 
-## Project Structure & Module Organization
+- Python 3.11+ sources belong in `src/`, tests in `tests/`, benchmarks in
+  `benchmarks/`, and documentation in `docs/`. Browser assets live in
+  `src/balance_trees/showcase/site/dist/`. Keep hidden directories for tooling.
+- Use Ruff with the configuration in `pyproject.toml`. Keep tree operations and
+  invariant checks focused; explain non-obvious balancing rules in comments.
+- Add deterministic tests for behavior changes and regressions. Cover empty trees,
+  duplicates, insertion, lookup, and structural invariants after mutations.
+  Deletion is outside the current insertion-only implementation.
+- Preserve archived benchmark data. Use fresh output directories for new runs,
+  reuse matching results, and record seeds and methodology. Support performance
+  claims with reproducible inputs and explain complexity tradeoffs.
+- Keep setup and layout in `README.md`; see `docs/benchmarks.md` and
+  `benchmarks/README.md` for benchmark commands. Discover files with
+  `rg --files --hidden -g '!.git'`.
 
-This repository currently has no source code, tests, assets, or build configuration. The existing hidden directories (`.agents/`, `.codex/`, `.aws/`, and `.git/`) contain no visible project files; do not repurpose them for application code.
+Run from the repository root (Node.js 24 for browser checks; install Ruff for lint):
 
-When adding the first implementation, organize source under `src/`, automated tests under `tests/`, and supporting documentation under `docs/`. Keep benchmarks separate from correctness tests, for example in `benchmarks/`. Document the chosen language, toolchain, and actual directory layout in `README.md`.
+```sh
+PYTHONPATH=src python3 -m unittest discover -s tests -v
+node tests/test_showcase_browser.mjs
+node tests/test_large_showcase.mjs
+ruff check src tests benchmarks
+ruff format src tests benchmarks
+PYTHONPATH=src python3 -m balance_trees.showcase --port 8000
+PYTHONPATH=src python3 -m balance_trees.showcase.build --output _site
+```
 
-## Build, Test, and Development Commands
-
-No build, test, lint, or local execution commands are configured yet. Do not assume `npm test`, `make`, or another tool is supported.
-
-The first implementation should include reproducible setup instructions and explicit commands for building, testing, formatting, and running benchmarks. Run commands from the repository root and document required tool versions. Use `rg --files --hidden -g '!.git'` to inspect available files.
-
-## Coding Style & Naming Conventions
-
-No language-specific style or formatter has been established. Adopt the selected language's standard formatter and include its configuration with the initial code. Use consistent indentation, descriptive identifiers, and filenames that match the language's conventions. Keep tree operations and invariant checks small and focused; explain non-obvious balancing rules in comments.
-
-## Testing Guidelines
-
-No testing framework or coverage threshold is configured. Add automated tests alongside each implementation change. For balanced-tree implementations, cover empty trees, duplicate-key behavior, insertion, deletion, lookup, and structural invariants after mutations. Use deterministic seeds for randomized tests and include regression cases for fixed defects. Choose test names that describe the operation and expected behavior.
-
-## Commit & Pull Request Guidelines
-
-Git history is unavailable in this checkout, so no existing commit convention can be inferred. Use concise, imperative commit subjects such as `Add insertion invariant tests`.
-
-Pull requests should describe the problem, implementation, and validation commands with results. Link related issues when available. For algorithm or performance changes, explain complexity tradeoffs and provide reproducible benchmark inputs when claiming improvements.
+The static build requires a fresh output directory. Use concise imperative commit
+subjects. PRs should state the problem, resulting behavior, validation commands
+and results, and related issues when available.
