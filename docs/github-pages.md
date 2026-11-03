@@ -45,20 +45,19 @@ Open `http://127.0.0.1:8000`. Use a fresh output directory for each build, or re
 the previously generated `_site` directory before rebuilding. It is ignored by
 Git; the workflow always builds from the committed source.
 
-Only files from `src/balance_trees/showcase/site/dist/` enter the deployment,
-including `results.html`, `summary.html`, `random-level.html`, `random-level-v2.html`, recorded CSV/JSON
-measurements and SVG graphs. The separate random-level run is linked from all
-three existing pages; its downloads live in `random-level-results/` alongside
-the preserved original `results/` dataset.
-The separate v2 policy description and paired reports use `random-level-v2-results/`
-and are linked from the existing pages. Generate them using the command in
-[the v2 documentation](random-level-v2.md); Pages serves the recorded files.
-These are measurements recorded on the local computer; Pages does not rerun them.
-The separate `/v2-treap.html` page compares v2 with the stored-priority treap
-across random, increasing and converging inputs through 2,097,152 keys. It is
-linked from the visualizer and all reports; its graph and data downloads live
-in `v2-treap-results/`. Regenerate it without rerunning benchmarks with
-`PYTHONPATH=src python3 -m balance_trees.treap_comparison_report`.
+The public build includes only `index.html` (the tree visualizer),
+`v2-treap.html` (the treap-versus-v2 comparison), their CSS/JavaScript, and the
+comparison's `v2-treap-results/` graph and CSV/JSON downloads. Navigation links
+only these two pages. Historical report pages and datasets stay in the
+repository for local use and are excluded from deployment.
+
+Regenerate the comparison from saved measurements without rerunning benchmarks:
+
+```sh
+PYTHONPATH=src python3 -m balance_trees.treap_comparison_report
+```
+
+Pages serves these recorded measurements; it does not rerun benchmarks.
 The build sets browser-only mode, so GitHub Pages makes no calls to the local
 Python API. Relative asset and module URLs support `/balance-trees/`, a renamed
 repository, a user site, or a custom domain without editing the source.

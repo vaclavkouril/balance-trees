@@ -47,8 +47,8 @@ Parallel execution is used for shape and operation counts; elapsed-time
 comparisons are excluded. Whiskers show one standard error where three trials
 exist. A single trial supplies no estimate of uncertainty.
 
-The separate showcase page is `/v2-treap.html`, linked from the visualizer and
-all existing reports. Its SVG and CSV/JSON downloads live in
+The published comparison is `/v2-treap.html`, linked from the visualizer.
+It is the only report included in the public build. Its SVG and CSV/JSON downloads live in
 `src/balance_trees/showcase/site/dist/v2-treap-results/` and enter the normal
 static build. Regenerate the page from the saved results using the report
 command above; no benchmark rerun is needed.

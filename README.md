@@ -37,89 +37,25 @@ Export and import JSON traces to replay an exact Python run on any static host.
 See [the showcase guide and trace format](docs/showcase.md) for hosting,
 extension points, and exporting another implementation.
 
-### Local benchmark graphs and compact results
+### Treap vs random-level v2
 
-The showcase includes five additional static pages, linked from its sidebar:
-
-- **[Benchmark graphs](src/balance_trees/showcase/site/dist/results.html)**:
-  seven workload families, seven metrics, scalable SVG graphs, error bars,
-  measurement tables, and downloads.
-- **[All results](src/balance_trees/showcase/site/dist/summary.html)**:
-  compact bullet points for every strategy/workload, plus the complete matrix.
-- **[Random-level · thousands](src/balance_trees/showcase/site/dist/random-level.html)**:
-  separate measurements at 1,000, 2,000, 4,000, 8,000, 16,000, 32,000, 64,000
-  and 128,000 keys, with five trials for each of the seven input families.
-  The original 140 trials are preserved alongside 140 larger trials. Its data and downloads
-  are separate from the original comparison. Every graph includes a muted
-  dashed log₂(n) reference behind the measured curves.
-- **[Random-level · millions](src/balance_trees/showcase/site/dist/random-level-scale.html)**:
-  the repeated powers-of-two sweep through 2,097,152 keys, with seven workloads,
-  SVG graphs, full data downloads, and peak memory.
-- **[Random-level v2 · policy and reports](src/balance_trees/showcase/site/dist/random-level-v2.html)**:
-  policy description, expected rotation bound, paired comparisons with the
-  original at 1,000, 16,000 and 128,000 keys, tables and downloadable reports.
-
-These pages contain measurements from this computer for the **original ten Python
-strategies**, at **1,000, 4,000, 16,000 and 64,000 keys**, with three requested
-trials per group and seed 2026. Every group and every trial has an explicit
-status; a three-second subprocess deadline prevents a quadratic strategy from
-blocking the entire comparison. Timeouts are not plotted as completed results.
-The browser-only stored-priority treap is a visual reference, outside the ten
-registered Python strategies timed here.
+The published site contains the tree visualizer and the
+[treap-versus-v2 comparison](src/balance_trees/showcase/site/dist/v2-treap.html).
+The comparison overlays random, increasing and converging inputs across 20
+sizes through 2,097,152 keys, showing final mean node depth, final height and
+rotations per key. It includes measurement tables and CSV/JSON downloads.
 
 ```sh
-# Launch the preview and both result pages (Python 3.11+).
-PYTHONPATH=src python3 -m balance_trees.showcase --port 8000
-# http://127.0.0.1:8000/results.html
-# http://127.0.0.1:8000/summary.html
-# http://127.0.0.1:8000/random-level.html
-# http://127.0.0.1:8000/random-level-v2.html
-
-# Reproduce measurements in a NEW output directory, then regenerate the pages.
-PYTHONPATH=src python3 -m balance_trees.benchmark \
-  --sizes 1000 4000 16000 64000 --trials 3 --seed 2026 --timeout 3 \
-  --output benchmarks/results/my-large-run
-PYTHONPATH=src python3 -m balance_trees.benchmark_report \
-  --input benchmarks/results/my-large-run \
-  --output src/balance_trees/showcase/site/dist
-
-# Add the focused random-level page without replacing the comparison results.
-PYTHONPATH=src python3 -m balance_trees.benchmark \
-  --sizes 1000 2000 4000 8000 --trials 5 --seed 2026 --timeout 10 \
-  --strategies random-level --output benchmarks/results/my-random-level-run
-PYTHONPATH=src python3 -m balance_trees.benchmark_report \
-  --input benchmarks/results/my-random-level-run \
-  --output src/balance_trees/showcase/site/dist --random-level
-
-# Extend that run with larger instances, preserving its smaller measurements.
-PYTHONPATH=src python3 -m balance_trees.benchmark \
-  --sizes 16000 32000 64000 128000 --trials 5 --seed 2026 --timeout 10 \
-  --strategies random-level --output benchmarks/results/my-random-level-large
-PYTHONPATH=src python3 -m balance_trees.benchmark_merge \
-  --input benchmarks/results/my-random-level-run benchmarks/results/my-random-level-large \
-  --output benchmarks/results/my-random-level-combined
-PYTHONPATH=src python3 -m balance_trees.benchmark_report \
-  --input benchmarks/results/my-random-level-combined \
-  --output src/balance_trees/showcase/site/dist --random-level
-
-# Regenerate the separate v2 report from the tracked validation artifacts.
-PYTHONPATH=src python3 -m balance_trees.random_level_report \
-  --output src/balance_trees/showcase/site/dist
-# Build a portable static copy, including every graph and data download.
+# Regenerate the comparison from saved results; no benchmark rerun is needed.
+PYTHONPATH=src python3 -m balance_trees.treap_comparison_report
+# Build the public site in a fresh directory.
 PYTHONPATH=src python3 -m balance_trees.showcase.build --output _site
 ```
 
-`summary.html` and `results.html` can also be opened directly as local files;
-the report uses relative CSS/SVG/data paths and no external services. The
-interactive tree preview needs an HTTP server for modules and workers.
-See [benchmark methodology and reproduction](docs/benchmarks.md).
-
-A separate [memory-capped random-level sweep](benchmarks/README.md) tests exact
-powers of two from 2^10 through 2^20, including 65,536 and 1,048,576 keys, across
-all seven workloads. Raw results and peak memory are checked in under
-`benchmarks/random-level-scale/`.
-The repeat sweep in `benchmarks/random-level-scale-recheck/` extends the same
-workloads through 2^21 (2,097,152 keys), using the explicit insertion-depth cap.
+Historical report pages and benchmark data remain in the repository for local
+analysis and reproducibility. The public build excludes those pages and their
+asset folders. See [benchmark methodology](docs/benchmarks.md) and
+[benchmark commands](benchmarks/README.md) for the archived experiments.
 
 ### Public hosting on GitHub
 

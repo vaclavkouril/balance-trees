@@ -61,7 +61,7 @@ def generate_report(source: Path, output: Path) -> Path:
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Random level v2 and stored-priority treap measurements across random, increasing and converging inputs, up to two million keys.">
 <title>Random level v2 vs treap · Rotation Lab</title><link rel="stylesheet" href="./report.css"></head>
-<body><main><nav aria-label="Lab pages"><a href="./index.html">← Tree preview</a><a href="./results.html">Benchmark graphs</a><a href="./random-level.html">Random-level · thousands</a><a href="./random-level-scale.html">Random-level · millions</a><a href="./random-level-v2.html">Random-level v2 · policy</a><a href="./summary.html">Compact results</a><a href="#downloads">Downloads</a></nav>
+<body><main><nav aria-label="Lab pages"><a href="./index.html">← Tree preview</a><a href="#downloads">Downloads</a></nav>
 <header><span class="eyebrow">Rotation Lab / recorded comparison</span><h1>Random level v2 vs treap</h1>
 <p class="lede">Both strategies on random, increasing and converging inputs. Compare final mean node depth, final height and rotations per inserted key across every archived key count.</p></header>
 <div class="stats"><div class="stat"><strong>{len(sizes)}</strong><span>sequence sizes</span></div><div class="stat"><strong>{largest:,}</strong><span>largest key count</span></div><div class="stat"><strong>{len(trials)}</strong><span>completed trials</span></div><div class="stat"><strong>{reused}</strong><span>archived v2 trials reused</span></div></div>
@@ -77,7 +77,7 @@ def generate_report(source: Path, output: Path) -> Path:
 <li>Treap uses the existing Python visualizer's stored 32-bit random priorities, a min-heap and key-based tie breaking. It is a separate reference from the hash-priority strategy.</li>
 <li>Every fresh tree passed ordering, parent-pointer, cycle and complete-key-set checks. Treap depths also matched an independently reconstructed Cartesian tree.</li>
 <li>One trial gives no uncertainty estimate. Three-trial standard errors describe variation over balancing seeds conditional on the fixed input. These finite measurements do not prove a balance or complexity guarantee.</li>
-</ul><p>See the <a href="./random-level-v2.html">v2 policy report</a> for the local repair rule and expected rotation bound.</p></section>
+</ul><p>V2 chooses a repair level from a fresh 64-bit roll and the previous priority interval. Ordinary insertions repair a local path with at most two rotations; a strict new minimum promotes the inserted leaf to the root. The policy has no established logarithmic-depth guarantee.</p></section>
 <details class="panel"><summary>All {len(summaries)} measurement groups</summary><div class="table-wrap"><table><thead><tr><th>Strategy</th><th>Input</th><th>Keys</th><th>Trials</th><th>Mean depth ± SE</th><th>Final height ± SE</th><th>Rotations / key ± SE</th></tr></thead><tbody>{"".join(all_rows)}</tbody></table></div></details>
 <section id="downloads"><h2>Recorded data and graph</h2><div class="downloads">{downloads}</div><p class="meta">Raw trials include seeds and record provenance. Configuration includes the source archive checksum and execution method.</p></section>
 </main></body></html>"""
@@ -87,21 +87,13 @@ def generate_report(source: Path, output: Path) -> Path:
         shutil.copyfile(source / name, assets / name)
     destination = output / FILENAME
     destination.write_text(page, encoding="utf-8")
-    for name in (
-        "index.html",
-        "results.html",
-        "summary.html",
-        "random-level.html",
-        "random-level-scale.html",
-        "random-level-v2.html",
-    ):
-        path = output / name
-        if path.exists():
-            text = path.read_text(encoding="utf-8")
-            if 'href="./v2-treap.html"' not in text:
-                path.write_text(
-                    text.replace("</nav>", LINK + "</nav>", 1), encoding="utf-8"
-                )
+    preview = output / "index.html"
+    if preview.exists():
+        preview_html = preview.read_text(encoding="utf-8")
+        if 'href="./v2-treap.html"' not in preview_html:
+            preview.write_text(
+                preview_html.replace("</nav>", LINK + "</nav>", 1), encoding="utf-8"
+            )
     return destination
 
 
