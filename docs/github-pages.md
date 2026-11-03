@@ -54,6 +54,11 @@ The separate v2 policy description and paired reports use `random-level-v2-resul
 and are linked from the existing pages. Generate them using the command in
 [the v2 documentation](random-level-v2.md); Pages serves the recorded files.
 These are measurements recorded on the local computer; Pages does not rerun them.
+The separate `/v2-treap.html` page compares v2 with the stored-priority treap
+across random, increasing and converging inputs through 2,097,152 keys. It is
+linked from the visualizer and all reports; its graph and data downloads live
+in `v2-treap-results/`. Regenerate it without rerunning benchmarks with
+`PYTHONPATH=src python3 -m balance_trees.treap_comparison_report`.
 The build sets browser-only mode, so GitHub Pages makes no calls to the local
 Python API. Relative asset and module URLs support `/balance-trees/`, a renamed
 repository, a user site, or a custom domain without editing the source.

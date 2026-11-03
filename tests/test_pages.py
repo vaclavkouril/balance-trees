@@ -38,6 +38,7 @@ class PagesBuildTests(unittest.TestCase):
                 "random-level.html",
                 "random-level-scale.html",
                 "random-level-v2.html",
+                "v2-treap.html",
             ):
                 page = AssetReferences()
                 page.feed((output / filename).read_text())

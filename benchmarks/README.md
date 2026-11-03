@@ -11,6 +11,44 @@ graphs shipped with the website are in
 See [methodology and reproduction](../docs/benchmarks.md). Correctness tests are
 separate in `tests/`; a small subprocess test checks the benchmark/report pipeline.
 
+## Random level v2 against treap
+
+Open [the combined comparison](v2-treap/index.html) or the standalone
+[three-panel SVG](v2-treap/comparison.svg). Each panel overlays both strategies
+for random, increasing and converging insertion orders. Metrics are final mean
+node depth, final maximum depth (height), and primitive rotations per key.
+Depths count edges, starting at zero; mean depth is not height averaged over
+the insertion history.
+
+The sweep uses the union of all 20 archived benchmark sizes, from 1,000 to
+2,097,152 keys. It reuses the 27 matching archived v2 trials and runs the 129
+missing trials in four processes. There are three paired trials at 1,000,
+16,000 and 128,000 keys, and one paired trial at each other size. Seeds and
+permutations use the existing benchmark's deterministic derivation. The treap
+uses the existing Python showcase's stored 32-bit priorities and key tie breaker;
+it is distinct from the `hash-priority` strategy.
+
+```sh
+PYTHONPATH=src python3 benchmarks/compare_v2_treap.py --workers 4
+PYTHONPATH=src python3 -m balance_trees.treap_comparison_report
+PYTHONPATH=src python3 -m unittest discover -s tests -p test_v2_treap_comparison.py -v
+```
+
+The runner resumes its append-only checkpoint. `v2-treap/` retains raw trials,
+summaries, seed/machine configuration and the source archive's SHA-256 checksum.
+Every fresh trial validates ordering, parent pointers, cycles and the full key
+set; treap depths also match an independently reconstructed Cartesian tree.
+Small regression tests verify exact agreement with the existing showcase treap.
+Parallel execution is used for shape and operation counts; elapsed-time
+comparisons are excluded. Whiskers show one standard error where three trials
+exist. A single trial supplies no estimate of uncertainty.
+
+The separate showcase page is `/v2-treap.html`, linked from the visualizer and
+all existing reports. Its SVG and CSV/JSON downloads live in
+`src/balance_trees/showcase/site/dist/v2-treap-results/` and enter the normal
+static build. Regenerate the page from the saved results using the report
+command above; no benchmark rerun is needed.
+
 `random-level-v2/` retains the separate policy's 63-trial validation, group
 summaries and comparisons against paired trials from the original dataset.
 See [the policy, bound and reproduction instructions](../docs/random-level-v2.md).

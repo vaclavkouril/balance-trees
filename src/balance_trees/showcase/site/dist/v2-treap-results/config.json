@@ -1,0 +1,49 @@
+{
+  "sizes": [
+    1000,
+    1024,
+    2000,
+    2048,
+    4000,
+    4096,
+    8000,
+    8192,
+    16000,
+    16384,
+    32000,
+    32768,
+    64000,
+    65536,
+    128000,
+    131072,
+    262144,
+    524288,
+    1048576,
+    2097152
+  ],
+  "orders": [
+    "random",
+    "increasing",
+    "converging"
+  ],
+  "strategies": [
+    "random-level-v2",
+    "treap"
+  ],
+  "seed": 2026,
+  "workers": 4,
+  "python": "3.14.8 (main, Oct  2 2026, 10:23:31) [GCC 16.2.1 20260810]",
+  "platform": "Linux-6.18.57-2-lts-x86_64-with-glibc2.44",
+  "archive": "benchmarks/random-level-v2/trials.csv",
+  "archive_sha256": "0910d3daf419c1a08f83fb75d00ce054bc76b5614ce3415e2af5aa79921f12ff",
+  "size_sources": [
+    "benchmarks/random-level-scale-recheck/config.json",
+    "src/balance_trees/showcase/site/dist/random-level-results/config.json"
+  ],
+  "trials": "3 paired trials at archived v2 sizes, 1 elsewhere",
+  "metrics": "Final mean node depth, final maximum depth, primitive rotations per inserted key; depths count edges",
+  "execution": "Parallel processes; operation and shape metrics only; no timing comparisons",
+  "treap": "Showcase Python min-heap policy: Random(seed).getrandbits(32), ties ordered by key; priorities stored externally",
+  "validation": "BST order, parent pointers, acyclicity, complete key set; treap depths independently checked against Cartesian tree",
+  "wall_seconds": 142.47332172300003
+}
