@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="runs-maximum_height-title runs-maximum_height-desc">
 <title id="runs-maximum_height-title">Runs · Maximum final height · edges</title>
-<desc id="runs-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="runs-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Runs · Maximum final height · edges</text>
@@ -17,6 +17,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,260.47L690.00,222.64" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <circle cx="70.00" cy="225.79" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Maximum final height · edges=21; 3 trials</title></circle>
 <path d="M70.00,225.79L173.33,200.57" stroke="#2563eb" stroke-width="2" fill="none"/>
 <circle cx="173.33" cy="200.57" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Maximum final height · edges=29; 3 trials</title></circle>
@@ -87,4 +88,5 @@
 <path d="M586.67,131.20L638.33,118.59" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="118.59" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Maximum final height · edges=55; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>

@@ -109,7 +109,7 @@
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(720,0)">
 <title id="random-maximum_height-title">Random · Maximum final height · edges</title>
-<desc id="random-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="random-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Random · Maximum final height · edges</text>
@@ -126,6 +126,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,253.20L690.00,206.63" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <circle cx="70.00" cy="218.27" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Maximum final height · edges=19; 3 trials</title></circle>
 <path d="M70.00,218.27L173.33,194.99" stroke="#2563eb" stroke-width="2" fill="none"/>
 <circle cx="173.33" cy="194.99" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Maximum final height · edges=25; 3 trials</title></circle>
@@ -196,9 +197,10 @@
 <path d="M586.67,109.62L638.33,94.09" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="94.09" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Maximum final height · edges=51; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(1440,0)">
 <title id="random-mean_depth-title">Random · Mean final node depth · edges</title>
-<desc id="random-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="random-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Random · Mean final node depth · edges</text>
@@ -215,6 +217,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,215.34L690.00,123.35" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,218.27V215.72" stroke="#2563eb"/>
 <circle cx="70.00" cy="217.00" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean final node depth · edges=9.78418; 3 trials</title></circle>
 <path d="M70.00,217.00L173.33,195.05" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -305,9 +308,10 @@
 <path d="M586.67,105.77L638.33,93.82" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="93.82" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean final node depth · edges=25.8528; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(2160,0)">
 <title id="random-mean_random_bits-title">Random · Mean random bits / key</title>
-<desc id="random-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="random-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Random · Mean random bits / key</text>
@@ -324,6 +328,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,260.47L690.00,222.64" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,285.68V285.49" stroke="#2563eb"/>
 <circle cx="70.00" cy="285.58" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean random bits / key=2.03516; 3 trials</title></circle>
 <path d="M70.00,285.58L173.33,285.76" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -414,6 +419,7 @@
 <path d="M586.67,191.11L638.33,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean random bits / key=32; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(0,425)">
 <title id="increasing-mean_rotations-title">Increasing · Mean rotations / key</title>
 <desc id="increasing-mean_rotations-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
@@ -525,7 +531,7 @@
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(720,425)">
 <title id="increasing-maximum_height-title">Increasing · Maximum final height · edges</title>
-<desc id="increasing-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="increasing-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Increasing · Maximum final height · edges</text>
@@ -542,6 +548,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,263.97L690.00,230.34" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <circle cx="70.00" cy="221.94" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Maximum final height · edges=25; 3 trials</title></circle>
 <path d="M70.00,221.94L173.33,199.51" stroke="#2563eb" stroke-width="2" fill="none"/>
 <circle cx="173.33" cy="199.51" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Maximum final height · edges=33; 3 trials</title></circle>
@@ -612,9 +619,10 @@
 <path d="M586.67,154.67L638.33,149.07" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="149.07" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Maximum final height · edges=51; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(1440,425)">
 <title id="increasing-mean_depth-title">Increasing · Mean final node depth · edges</title>
-<desc id="increasing-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="increasing-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Increasing · Mean final node depth · edges</text>
@@ -631,6 +639,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,234.21L690.00,164.86" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,226.40V223.65" stroke="#2563eb"/>
 <circle cx="70.00" cy="225.02" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean final node depth · edges=11.5895; 3 trials</title></circle>
 <path d="M70.00,225.02L173.33,204.92" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -721,9 +730,10 @@
 <path d="M586.67,148.62L638.33,143.68" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="143.68" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean final node depth · edges=25.6649; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(2160,425)">
 <title id="increasing-mean_random_bits-title">Increasing · Mean random bits / key</title>
-<desc id="increasing-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="increasing-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Increasing · Mean random bits / key</text>
@@ -740,6 +750,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,260.47L690.00,222.64" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,285.84V285.76" stroke="#2563eb"/>
 <circle cx="70.00" cy="285.80" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean random bits / key=1.96777; 3 trials</title></circle>
 <path d="M70.00,285.80L173.33,285.71" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -830,6 +841,7 @@
 <path d="M586.67,191.11L638.33,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean random bits / key=32; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(0,850)">
 <title id="decreasing-mean_rotations-title">Decreasing · Mean rotations / key</title>
 <desc id="decreasing-mean_rotations-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
@@ -941,7 +953,7 @@
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(720,850)">
 <title id="decreasing-maximum_height-title">Decreasing · Maximum final height · edges</title>
-<desc id="decreasing-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="decreasing-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Decreasing · Maximum final height · edges</text>
@@ -958,6 +970,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,264.36L690.00,231.19" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <circle cx="70.00" cy="198.02" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Maximum final height · edges=34; 3 trials</title></circle>
 <path d="M70.00,198.02L173.33,189.73" stroke="#2563eb" stroke-width="2" fill="none"/>
 <circle cx="173.33" cy="189.73" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Maximum final height · edges=37; 3 trials</title></circle>
@@ -1028,9 +1041,10 @@
 <path d="M586.67,153.79L638.33,148.26" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="148.26" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Maximum final height · edges=52; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(1440,850)">
 <title id="decreasing-mean_depth-title">Decreasing · Mean final node depth · edges</title>
-<desc id="decreasing-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="decreasing-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Decreasing · Mean final node depth · edges</text>
@@ -1047,6 +1061,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,233.51L690.00,163.33" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,226.23V220.40" stroke="#2563eb"/>
 <circle cx="70.00" cy="223.32" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean final node depth · edges=11.7432; 3 trials</title></circle>
 <path d="M70.00,223.32L173.33,201.28" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -1137,9 +1152,10 @@
 <path d="M586.67,138.68L638.33,138.68" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="138.68" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean final node depth · edges=26.2143; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(2160,850)">
 <title id="decreasing-mean_random_bits-title">Decreasing · Mean random bits / key</title>
-<desc id="decreasing-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="decreasing-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Decreasing · Mean random bits / key</text>
@@ -1156,6 +1172,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,260.47L690.00,222.64" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,285.83V285.68" stroke="#2563eb"/>
 <circle cx="70.00" cy="285.76" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean random bits / key=1.97949; 3 trials</title></circle>
 <path d="M70.00,285.76L173.33,285.71" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -1246,6 +1263,7 @@
 <path d="M586.67,191.11L638.33,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean random bits / key=32; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(0,1275)">
 <title id="converging-mean_rotations-title">Converging · Mean rotations / key</title>
 <desc id="converging-mean_rotations-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
@@ -1357,7 +1375,7 @@
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(720,1275)">
 <title id="converging-maximum_height-title">Converging · Maximum final height · edges</title>
-<desc id="converging-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="converging-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Converging · Maximum final height · edges</text>
@@ -1374,6 +1392,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,275.86L690.00,256.49" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <circle cx="70.00" cy="227.43" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Maximum final height · edges=40; 3 trials</title></circle>
 <path d="M70.00,227.43L173.33,214.51" stroke="#2563eb" stroke-width="2" fill="none"/>
 <circle cx="173.33" cy="214.51" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Maximum final height · edges=48; 3 trials</title></circle>
@@ -1444,9 +1463,10 @@
 <path d="M586.67,211.29L638.33,211.29" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="211.29" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Maximum final height · edges=50; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(1440,1275)">
 <title id="converging-mean_depth-title">Converging · Mean final node depth · edges</title>
-<desc id="converging-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="converging-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Converging · Mean final node depth · edges</text>
@@ -1463,6 +1483,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,235.91L690.00,168.61" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,217.79V209.52" stroke="#2563eb"/>
 <circle cx="70.00" cy="213.66" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean final node depth · edges=13.9684; 3 trials</title></circle>
 <path d="M70.00,213.66L173.33,201.39" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -1553,9 +1574,10 @@
 <path d="M586.67,149.11L638.33,149.59" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="149.59" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean final node depth · edges=25.3907; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(2160,1275)">
 <title id="converging-mean_random_bits-title">Converging · Mean random bits / key</title>
-<desc id="converging-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="converging-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Converging · Mean random bits / key</text>
@@ -1572,6 +1594,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,260.47L690.00,222.64" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,285.90V285.74" stroke="#2563eb"/>
 <circle cx="70.00" cy="285.82" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean random bits / key=1.95964; 3 trials</title></circle>
 <path d="M70.00,285.82L173.33,285.73" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -1662,6 +1685,7 @@
 <path d="M586.67,191.11L638.33,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean random bits / key=32; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(0,1700)">
 <title id="pairs-mean_rotations-title">Pairs · Mean rotations / key</title>
 <desc id="pairs-mean_rotations-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
@@ -1773,7 +1797,7 @@
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(720,1700)">
 <title id="pairs-maximum_height-title">Pairs · Maximum final height · edges</title>
-<desc id="pairs-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="pairs-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Pairs · Maximum final height · edges</text>
@@ -1790,6 +1814,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,264.36L690.00,231.19" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <circle cx="70.00" cy="217.37" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Maximum final height · edges=27; 3 trials</title></circle>
 <path d="M70.00,217.37L173.33,203.55" stroke="#2563eb" stroke-width="2" fill="none"/>
 <circle cx="173.33" cy="203.55" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Maximum final height · edges=32; 3 trials</title></circle>
@@ -1860,9 +1885,10 @@
 <path d="M586.67,145.50L638.33,145.50" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="145.50" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Maximum final height · edges=53; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(1440,1700)">
 <title id="pairs-mean_depth-title">Pairs · Mean final node depth · edges</title>
-<desc id="pairs-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="pairs-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Pairs · Mean final node depth · edges</text>
@@ -1879,6 +1905,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,232.57L690.00,161.26" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,223.69V214.98" stroke="#2563eb"/>
 <circle cx="70.00" cy="219.34" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean final node depth · edges=12.2275; 3 trials</title></circle>
 <path d="M70.00,219.34L173.33,202.12" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -1969,9 +1996,10 @@
 <path d="M586.67,142.80L638.33,138.26" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="138.26" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean final node depth · edges=25.8706; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(2160,1700)">
 <title id="pairs-mean_random_bits-title">Pairs · Mean random bits / key</title>
-<desc id="pairs-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="pairs-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Pairs · Mean random bits / key</text>
@@ -1988,6 +2016,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,260.47L690.00,222.64" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,285.86V285.72" stroke="#2563eb"/>
 <circle cx="70.00" cy="285.79" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean random bits / key=1.96973; 3 trials</title></circle>
 <path d="M70.00,285.79L173.33,285.68" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -2078,6 +2107,7 @@
 <path d="M586.67,191.11L638.33,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean random bits / key=32; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(0,2125)">
 <title id="bitonic-mean_rotations-title">Bitonic · Mean rotations / key</title>
 <desc id="bitonic-mean_rotations-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
@@ -2189,7 +2219,7 @@
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(720,2125)">
 <title id="bitonic-maximum_height-title">Bitonic · Maximum final height · edges</title>
-<desc id="bitonic-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="bitonic-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Bitonic · Maximum final height · edges</text>
@@ -2206,6 +2236,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,259.45L690.00,220.40" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <circle cx="70.00" cy="223.65" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Maximum final height · edges=21; 3 trials</title></circle>
 <path d="M70.00,223.65L173.33,204.13" stroke="#2563eb" stroke-width="2" fill="none"/>
 <circle cx="173.33" cy="204.13" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Maximum final height · edges=27; 3 trials</title></circle>
@@ -2276,9 +2307,10 @@
 <path d="M586.67,122.76L638.33,122.76" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="122.76" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Maximum final height · edges=52; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(1440,2125)">
 <title id="bitonic-mean_depth-title">Bitonic · Mean final node depth · edges</title>
-<desc id="bitonic-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="bitonic-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Bitonic · Mean final node depth · edges</text>
@@ -2295,6 +2327,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,220.49L690.00,134.68" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,221.79V218.51" stroke="#2563eb"/>
 <circle cx="70.00" cy="220.15" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean final node depth · edges=10.0479; 3 trials</title></circle>
 <path d="M70.00,220.15L173.33,198.15" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -2385,9 +2418,10 @@
 <path d="M586.67,111.55L638.33,100.99" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="100.99" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean final node depth · edges=26.7109; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(2160,2125)">
 <title id="bitonic-mean_random_bits-title">Bitonic · Mean random bits / key</title>
-<desc id="bitonic-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="bitonic-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Bitonic · Mean random bits / key</text>
@@ -2404,6 +2438,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,260.47L690.00,222.64" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,285.59V285.56" stroke="#2563eb"/>
 <circle cx="70.00" cy="285.58" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean random bits / key=2.03646; 3 trials</title></circle>
 <path d="M70.00,285.58L173.33,285.70" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -2494,6 +2529,7 @@
 <path d="M586.67,191.11L638.33,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean random bits / key=32; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(0,2550)">
 <title id="runs-mean_rotations-title">Runs · Mean rotations / key</title>
 <desc id="runs-mean_rotations-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
@@ -2605,7 +2641,7 @@
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(720,2550)">
 <title id="runs-maximum_height-title">Runs · Maximum final height · edges</title>
-<desc id="runs-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="runs-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Runs · Maximum final height · edges</text>
@@ -2622,6 +2658,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,260.47L690.00,222.64" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <circle cx="70.00" cy="225.79" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Maximum final height · edges=21; 3 trials</title></circle>
 <path d="M70.00,225.79L173.33,200.57" stroke="#2563eb" stroke-width="2" fill="none"/>
 <circle cx="173.33" cy="200.57" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Maximum final height · edges=29; 3 trials</title></circle>
@@ -2692,9 +2729,10 @@
 <path d="M586.67,131.20L638.33,118.59" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="118.59" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Maximum final height · edges=55; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(1440,2550)">
 <title id="runs-mean_depth-title">Runs · Mean final node depth · edges</title>
-<desc id="runs-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="runs-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Runs · Mean final node depth · edges</text>
@@ -2711,6 +2749,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,220.15L690.00,133.92" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,218.26V215.85" stroke="#2563eb"/>
 <circle cx="70.00" cy="217.06" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean final node depth · edges=10.4303; 3 trials</title></circle>
 <path d="M70.00,217.06L173.33,195.63" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -2801,9 +2840,10 @@
 <path d="M586.67,119.01L638.33,98.01" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="98.01" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean final node depth · edges=26.9984; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g><g transform="translate(2160,2550)">
 <title id="runs-mean_random_bits-title">Runs · Mean random bits / key</title>
-<desc id="runs-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<desc id="runs-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
 <rect width="720" height="425" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Runs · Mean random bits / key</text>
@@ -2820,6 +2860,7 @@
 <path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
 <path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
 <path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path class="log-reference" d="M70.00,260.47L690.00,222.64" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
 <path d="M70.00,286.05V285.93" stroke="#2563eb"/>
 <circle cx="70.00" cy="285.99" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean random bits / key=1.9056; 3 trials</title></circle>
 <path d="M70.00,285.99L173.33,285.72" stroke="#2563eb" stroke-width="2" fill="none"/>
@@ -2910,4 +2951,5 @@
 <path d="M586.67,191.11L638.33,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
 <circle cx="638.33" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean random bits / key=32; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></g></svg>

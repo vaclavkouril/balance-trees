@@ -55,6 +55,8 @@ charts, and `all-sequences.svg`. Maximum final height is the greatest final dept
 observed across a group's completed seeds. Means have one-standard-error whiskers
 when repeated trials exist; a single large trial has no uncertainty estimate.
 Parallel runs compare shape and operation counts, without timing comparisons.
+Height, mean-depth and random-bit graphs include a dashed gray `log₂(n)` line
+as an unscaled numeric reference; it is not a fitted curve or a proven bound.
 
 The current report is published with the visualizer. Refresh it from the saved
 measurements, without rerunning benchmarks:

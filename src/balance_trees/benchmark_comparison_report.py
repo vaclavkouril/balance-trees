@@ -49,10 +49,18 @@ def chart_svg(results: dict, order: str, metric: str) -> str:
         (row[metric] + (row.get(metric + "_se") or 0) for row in groups.values()),
         default=1,
     )
+    show_log_reference = metric in ("maximum_height", "mean_depth", "mean_random_bits")
+    if show_log_reference:
+        upper = max(upper, math.log2(sizes[-1]))
     ymax = max(1, upper) * 1.12
     left, top, width, height = 70, 66, 620, 226
     title = f"{order.capitalize()} · {METRICS[metric]}"
     identity = order + "-" + metric
+    reference_description = (
+        " Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound."
+        if show_log_reference
+        else ""
+    )
 
     def x(size):
         return left + width * math.log(size / sizes[0]) / max(
@@ -65,7 +73,7 @@ def chart_svg(results: dict, order: str, metric: str) -> str:
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="{identity}-title {identity}-desc">',
         f'<title id="{identity}-title">{escaped(title)}</title>',
-        f'<desc id="{identity}-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>',
+        f'<desc id="{identity}-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.{reference_description}</desc>',
         "<style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>",
         '<rect width="720" height="425" rx="12" fill="white"/>',
         f'<text x="22" y="28" style="font-size:17px;font-weight:650">{escaped(title)}</text>',
@@ -84,6 +92,11 @@ def chart_svg(results: dict, order: str, metric: str) -> str:
         label = f"{size / 1048576:g}M" if size >= 1048576 else f"{size / 1024:g}k"
         parts.append(
             f'<path class="grid" d="M{xx:.2f},{top}v{height}"/><text x="{xx:.2f}" y="313" text-anchor="middle">{label}</text>'
+        )
+    if show_log_reference:
+        # log₂(n) is a straight line on these log-x, linear-y axes.
+        parts.append(
+            f'<path class="log-reference" d="M{x(sizes[0]):.2f},{y(math.log2(sizes[0])):.2f}L{x(sizes[-1]):.2f},{y(math.log2(sizes[-1])):.2f}" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>'
         )
     for position, strategy in enumerate(metadata["strategies"]):
         color = COLORS[position]
@@ -111,6 +124,10 @@ def chart_svg(results: dict, order: str, metric: str) -> str:
         legend_x, legend_y = 22 + position % 2 * 350, 351 + position // 2 * 22
         parts.append(
             f'<path d="M{legend_x},{legend_y}h20" stroke="{color}" stroke-width="3"{dashed}/><text x="{legend_x + 27}" y="{legend_y + 4}">{escaped(LABELS[strategy])}</text>'
+        )
+    if show_log_reference:
+        parts.append(
+            '<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>'
         )
     parts.append(
         '<text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>'
@@ -312,6 +329,7 @@ def generate_report(
 <li>The two geometric implementations match on all operation/shape metrics in {compared} paired completed trials; mismatches: {mismatch}. Their curves can overlap. The alternate additionally records the sampled move count in an insertion annotation, which is not one of the reported metrics.</li>
 <li>Three seeds per group through {metadata["repeat_through"]:,} keys; one seed above that size. Inputs are fixed per size and shared across strategies. Balancing seeds are paired. Single large trials give no uncertainty estimate.</li>
 <li>Root depth is zero. Mean depth averages all nodes in the final tree. Rotations and random bits are totals divided by inserted keys. Maximum final height is the greatest final depth across all completed seeds in that group.</li>
+<li>Height, mean-depth and random-bit charts include a dashed gray log₂(n) line. This is an unscaled numeric reference for growth, not a fitted curve or a proven bound for any strategy.</li>
 <li>Every completed tree passes BST order, parent-pointer, cycle and full-key-set checks. Stored treap depths also match an independently reconstructed Cartesian tree. Validation is included in the process memory cap and deadline.</li>
 <li>Trials run concurrently in isolated processes. Runtime comparisons are omitted. Memory limits and wall deadlines include instrumentation and validation overhead. Raw outcomes and missing measurements are retained, never treated as zeros.</li>
 <li>The worker source was copied before running and its SHA-256 checksums recorded. Source snapshot: the parent run directory's source folder. No logarithmic-height guarantee or general performance claim follows from these finite samples.</li>

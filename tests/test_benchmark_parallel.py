@@ -1,4 +1,6 @@
 import json
+import math
+import re
 import tempfile
 import unittest
 from dataclasses import asdict
@@ -6,13 +8,58 @@ from pathlib import Path
 from unittest.mock import patch
 from xml.etree import ElementTree
 
-from balance_trees.benchmark_comparison_report import generate_report
+from balance_trees.benchmark_comparison_report import (
+    METRICS,
+    chart_svg,
+    generate_report,
+)
 from balance_trees.benchmark_parallel import comparison_strategy, run_comparison
 from balance_trees.measurement import run_trial
 from balance_trees.sequences import ORDERS, insertion_order
 
 
 class ParallelBenchmarkTests(unittest.TestCase):
+    def test_log_reference_has_unscaled_values_and_stays_visible_above_small_data(self):
+        sizes = [1024, 1048576]
+        results = dict(
+            metadata=dict(sizes=sizes, strategies=["treap"]),
+            trials=[dict(n=size, status="complete") for size in sizes],
+            summaries=[
+                dict(
+                    strategy="treap",
+                    order="random",
+                    n=size,
+                    status="complete",
+                    completed_trials=1,
+                    **dict.fromkeys(METRICS, 1),
+                )
+                for size in sizes
+            ],
+        )
+        ns = {"svg": "http://www.w3.org/2000/svg"}
+        for metric in METRICS:
+            svg = ElementTree.fromstring(chart_svg(results, "random", metric))
+            reference = svg.find("svg:path[@class='log-reference']", ns)
+            if metric == "mean_rotations":
+                self.assertIsNone(reference)
+                continue
+            self.assertIsNotNone(reference)
+            self.assertEqual(reference.attrib["stroke-dasharray"], "7 5")
+            coordinates = [
+                float(value) for value in re.findall(r"[\d.]+", reference.attrib["d"])
+            ]
+            axis_max = max(
+                float(label.text)
+                for label in svg.findall("svg:text[@text-anchor='end']", ns)
+            )
+            for size, ordinate in zip(sizes, coordinates[1::2]):
+                self.assertGreaterEqual(ordinate, 66)
+                self.assertLessEqual(ordinate, 292)
+                self.assertAlmostEqual(
+                    (292 - ordinate) / 226 * axis_max, math.log2(size), places=2
+                )
+            self.assertIn("log₂(n) · numeric reference", "".join(svg.itertext()))
+
     def test_alternate_geometric_matches_the_main_implementation(self):
         for order in ORDERS:
             values = insertion_order(order, 64, 17)
