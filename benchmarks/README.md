@@ -65,8 +65,10 @@ charts, and `all-sequences.svg`. Maximum final height is the greatest final dept
 observed across a group's completed seeds. Means have one-standard-error whiskers
 when repeated trials exist; a single large trial has no uncertainty estimate.
 Parallel runs compare shape and operation counts, without timing comparisons.
-Height, mean-depth and random-bit graphs include a dashed gray `log₂(n)` line
-as an unscaled numeric reference; it is not a fitted curve or a proven bound.
+Height, mean-depth and random-bit graphs include a dashed gray `c·log₂(n)`
+guide. Each chart uses the largest endpoint value/log₂(n) ratio across its
+implementations, with a minimum coefficient of 1. The legend prints that
+coefficient; this is descriptive scaling, not a proven bound.
 
 The current report is published with the visualizer. Refresh it from the saved
 measurements, without rerunning benchmarks:
@@ -81,3 +83,37 @@ PYTHONPATH=src python3 -m balance_trees.benchmark_comparison_report \
 Only this requested web report and its supporting downloads are bundled. Raw
 working directories remain ignored; the source ZIP contains the implementations
 measured in that run, independently of later visualizer changes.
+
+## Native extension of the comparison
+
+Append C++ geometric repair to the saved five-strategy run without changing
+any original measurements:
+
+```sh
+PYTHONPATH=src python3 -m balance_trees.benchmark_native \
+  --baseline benchmarks/results/target-strategies-20261105 \
+  --output benchmarks/results/target-strategies-native-v2-20261105
+PYTHONPATH=src python3 -m balance_trees.benchmark_comparison_report \
+  --input benchmarks/results/target-strategies-native-v2-20261105 \
+  --output src/balance_trees/showcase/site/dist/benchmarks \
+  --visualizer-href ../index.html
+```
+
+The native runner snapshots and builds C++20 in Release mode, reuses the original
+seven input generators and seed derivation, and checkpoints/resumes every trial.
+It uses the full configured size schedule, three seeds through 65,536 keys, one
+above, a 768 MiB native address-space cap, and a 360-second wall deadline. A failed
+input family stops only its larger native cases. Each completed tree validates
+its structure and exact keys. Different PRNGs mean native and Python histories
+are not paired, despite matching seed values.
+
+The report includes a sixth overlay curve, a native implementation appendix,
+native insertion times and memory, 28 native-only SVGs and
+`native-all-sequences.svg`, alongside the 28 combined figures and overview.
+Native insertion timing excludes parsing, startup, reservation and validation;
+there is no comparable Python timing in the original experiment. Native RSS uses
+Linux `/proc/self/status` VmHWM to exclude the launcher's pre-exec RSS history.
+Node storage is separately reported as reserved array bytes, excluding inputs,
+allocator/process overhead and validation. All sources and raw records are
+downloadable from the report. The `v2` run uses the corrected RSS measurement;
+the interrupted first native working directory is not used in the report.

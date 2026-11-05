@@ -4,6 +4,11 @@ Saved measurements and old report sites have been removed. Generate fresh runs
 in a new directory under `benchmarks/results/`; generated output is ignored by
 Git and is not bundled with the visualizer or static build.
 
+The explicitly retained target-strategy comparison is an exception: its report
+and native extension are bundled with the visualizer. See
+[the native comparison workflow](../benchmarks/README.md#native-extension-of-the-comparison)
+for the saved baseline, native timing boundaries, and published downloads.
+
 ## Run
 
 Python 3.11+ and the standard library are sufficient. From the repository root:

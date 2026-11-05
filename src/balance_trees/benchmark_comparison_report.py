@@ -15,8 +15,9 @@ LABELS = {
     "interval-target-local-repair": "Interval repair",
     "random-level": "Random level · leaf promotion",
     "treap": "Stored-priority treap",
+    "geometric-target-local-repair-native": "C++ geometric repair",
 }
-COLORS = ("#2563eb", "#9333ea", "#059669", "#d97706", "#dc2626")
+COLORS = ("#2563eb", "#9333ea", "#059669", "#d97706", "#dc2626", "#0891b2")
 METRICS = {
     "mean_rotations": "Mean rotations / key",
     "maximum_height": "Maximum final height · edges",
@@ -31,6 +32,22 @@ def escaped(value):
 
 def formatted(value, metric):
     return f"{value:,.0f}" if metric == "maximum_height" else f"{value:.3f}"
+
+
+def log_reference_constant(results: dict, order: str, metric: str) -> float:
+    """Align the guide with the largest measured endpoint ratio, never below 1."""
+    endpoints = {}
+    for row in results["summaries"]:
+        if row["order"] != order or row["status"] != "complete":
+            continue
+        previous = endpoints.get(row["strategy"])
+        if previous is None or row["n"] > previous["n"]:
+            endpoints[row["strategy"]] = row
+    return (
+        max(1.0, *(row[metric] / math.log2(row["n"]) for row in endpoints.values()))
+        if endpoints
+        else 1.0
+    )
 
 
 def chart_svg(results: dict, order: str, metric: str) -> str:
@@ -50,14 +67,16 @@ def chart_svg(results: dict, order: str, metric: str) -> str:
         default=1,
     )
     show_log_reference = metric in ("maximum_height", "mean_depth", "mean_random_bits")
+    constant = log_reference_constant(results, order, metric)
+    guide_label = f"{constant:.3g}·log₂(n) · endpoint guide"
     if show_log_reference:
-        upper = max(upper, math.log2(sizes[-1]))
+        upper = max(upper, constant * math.log2(sizes[-1]))
     ymax = max(1, upper) * 1.12
     left, top, width, height = 70, 66, 620, 226
     title = f"{order.capitalize()} · {METRICS[metric]}"
     identity = order + "-" + metric
     reference_description = (
-        " Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound."
+        f" Dashed gray line: {guide_label}. c=max(1, largest endpoint value/log₂(n) across implementations). Descriptive scaling, not a proven bound."
         if show_log_reference
         else ""
     )
@@ -70,14 +89,15 @@ def chart_svg(results: dict, order: str, metric: str) -> str:
     def y(value):
         return top + height * (1 - value / ymax)
 
+    canvas_height = 447 if len(metadata["strategies"]) > 5 else 425
     parts = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="{identity}-title {identity}-desc">',
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 {canvas_height}" role="img" aria-labelledby="{identity}-title {identity}-desc">',
         f'<title id="{identity}-title">{escaped(title)}</title>',
-        f'<desc id="{identity}-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.{reference_description}</desc>',
+        f'<desc id="{identity}-desc">Measurements for {len(metadata["strategies"])} implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.{reference_description}</desc>',
         "<style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>",
-        '<rect width="720" height="425" rx="12" fill="white"/>',
+        f'<rect width="720" height="{canvas_height}" rx="12" fill="white"/>',
         f'<text x="22" y="28" style="font-size:17px;font-weight:650">{escaped(title)}</text>',
-        '<text x="22" y="48" style="font-size:11px;fill:#64748b">Five implementations · source and seeds recorded · no timing comparison</text>',
+        f'<text x="22" y="48" style="font-size:11px;fill:#64748b">{len(metadata["strategies"])} implementations · source and seeds recorded · no timing comparison</text>',
     ]
     for tick in range(6):
         value = ymax * tick / 5
@@ -94,12 +114,12 @@ def chart_svg(results: dict, order: str, metric: str) -> str:
             f'<path class="grid" d="M{xx:.2f},{top}v{height}"/><text x="{xx:.2f}" y="313" text-anchor="middle">{label}</text>'
         )
     if show_log_reference:
-        # log₂(n) is a straight line on these log-x, linear-y axes.
+        # Multiplication changes the numeric guide, never just its pixel offset.
         parts.append(
-            f'<path class="log-reference" d="M{x(sizes[0]):.2f},{y(math.log2(sizes[0])):.2f}L{x(sizes[-1]):.2f},{y(math.log2(sizes[-1])):.2f}" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>'
+            f'<path class="log-reference" data-constant="{constant:.17g}" d="M{x(sizes[0]):.2f},{y(constant * math.log2(sizes[0])):.2f}L{x(sizes[-1]):.2f},{y(constant * math.log2(sizes[-1])):.2f}" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>{guide_label}: descriptive scaling, not a proven bound</title></path>'
         )
     for position, strategy in enumerate(metadata["strategies"]):
-        color = COLORS[position]
+        color = COLORS[position % len(COLORS)]
         previous = None
         dashed = ' stroke-dasharray="6 4"' if "alternate" in strategy else ""
         for size in sizes:
@@ -126,8 +146,9 @@ def chart_svg(results: dict, order: str, metric: str) -> str:
             f'<path d="M{legend_x},{legend_y}h20" stroke="{color}" stroke-width="3"{dashed}/><text x="{legend_x + 27}" y="{legend_y + 4}">{escaped(LABELS[strategy])}</text>'
         )
     if show_log_reference:
+        legend_y = 417 if canvas_height > 425 else 395
         parts.append(
-            '<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>'
+            f'<path d="M372,{legend_y}h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="{legend_y + 4}">{guide_label}</text>'
         )
     parts.append(
         '<text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>'
@@ -144,6 +165,64 @@ def metric_cells(row):
             value += " ± " + f"{error:.3f}"
         cells.append(f"<td>{value}</td>")
     return "".join(cells)
+
+
+def render_native_appendix(results: dict, output: Path) -> str:
+    native = "geometric-target-local-repair-native"
+    records = [row for row in results["trials"] if row["strategy"] == native]
+    if not records:
+        return ""
+    metadata = results["metadata"]
+    native_results = {
+        "metadata": {**metadata, "strategies": [native]},
+        "trials": records,
+        "summaries": [row for row in results["summaries"] if row["strategy"] == native],
+    }
+    table_rows, figures, overview = [], [], []
+    for order_index, order in enumerate(metadata["orders"]):
+        completed = [
+            row
+            for row in native_results["summaries"]
+            if row["order"] == order and row["status"] == "complete"
+        ]
+        if completed:
+            last = max(completed, key=lambda row: row["n"])
+            table_rows.append(
+                f'<tr data-order="{order}"><td>{order}</td><td>{last["n"]:,}</td>{metric_cells(last)}'
+                f"<td>{last['elapsed_seconds']:.4f}</td><td>{last['peak_rss_mib']:.1f}</td>"
+                f"<td>{last['node_storage_bytes'] / last['n']:.1f}</td></tr>"
+            )
+        order_figures = []
+        for metric_index, metric in enumerate(METRICS):
+            svg = chart_svg(native_results, order, metric).replace(
+                f"{order}-{metric}", f"native-{order}-{metric}"
+            )
+            filename = f"native-{order}-{metric}.svg"
+            (output / "figures" / filename).write_text(svg)
+            order_figures.append(
+                f'<figure>{svg}<figcaption><a href="./figures/{filename}" download>Download native SVG</a></figcaption></figure>'
+            )
+            inner = svg[svg.index(">") + 1 : svg.rindex("</svg>")]
+            overview.append(
+                f'<g transform="translate({metric_index * 720},{order_index * 425})">{inner}</g>'
+            )
+        figures.append(
+            f'<div data-order="{order}"><h3>{order.capitalize()}</h3><div class="charts">{"".join(order_figures)}</div></div>'
+        )
+    height = len(metadata["orders"]) * 425
+    (output / "native-all-sequences.svg").write_text(
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="2880" height="{height}" viewBox="0 0 2880 {height}"><rect width="100%" height="100%" fill="white"/>{"".join(overview)}</svg>'
+    )
+    complete_count = sum(row["status"] == "complete" for row in records)
+    return f"""<section id="native-implementation"><h2>C++ geometric repair · native benchmark extension</h2>
+<p>The five Python implementations above retain their original measurements. C++ adds {complete_count} completed trials using the same seven input generators, input seeds, size schedule and rotation seed values. The combined charts include C++ as the sixth curve; the native-only SVGs below make its scale easier to inspect.</p>
+<p><strong>Implementation:</strong> signed 64-bit keys and three 32-bit indices in separate contiguous arrays: 20 bytes of reserved array payload per key. No priorities, heights or balance fields persist in nodes. Nodes are reserved before timing. SplitMix64 supplies buffered words, consumed one bit at a time without discarding unused bits. Rotation traces are disabled; counters stay enabled. The factory creates a fresh geometric strategy for each trial.</p>
+<p><strong>Comparability:</strong> capped geometric sampling and the straight/bent repair match Python under identical explicit bits, including duplicate behavior and rotation distances. Seed values drive different PRNGs (SplitMix64 vs Mersenne Twister), so these benchmark histories and shape metrics need not match exactly and are not paired random streams. Means have ±1 SE only for repeated seeds; largest final height is the maximum across seeds.</p>
+<p><strong>Timing and memory:</strong> native trials run sequentially in isolated Linux processes with a {metadata["native_settings"]["memory_mib"]} MiB address-space cap and {metadata["native_settings"]["timeout_seconds"]:g}-second wall deadline. Insertion timing excludes input generation/parsing, startup, capacity reservation and validation. RSS includes input storage, tree arrays, validation and process overhead. The original parallel Python run did not record comparable times, so no speedup is inferred. Compiler: {escaped(metadata["compiler"])}; CMake Release (-O3 -DNDEBUG with this GNU compiler), C++20. Full build settings are in config.json and the source archive.</p>
+<p><strong>Validation:</strong> every completed native tree passes iterative BST ordering, parent-link, acyclicity and reachability checks; all stored keys match their input slots. Original Python resource boundaries remain recorded; C++ size ceilings are reported independently. These finite runs establish neither logarithmic height nor constant traversal work.</p>
+<h3>Largest completed native group per input family</h3><div class="table-wrap"><table><thead><tr><th>Input</th><th>Keys</th>{"".join(f"<th>{escaped(title)}</th>" for title in METRICS.values())}<th>Insert seconds</th><th>Peak RSS MiB</th><th>Node bytes/key</th></tr></thead><tbody>{"".join(table_rows)}</tbody></table></div>
+<p><a href="./native-all-sequences.svg" download>Download all native charts as one SVG</a> · <a href="./source.zip" download>Download measured Python and C++ sources</a> · <a href="./trials.csv" download>All native timings and memory measurements</a></p>
+<details><summary>Native geometric repair · {len(metadata["orders"]) * len(METRICS)} standalone SVGs</summary>{"".join(figures)}</details></section>"""
 
 
 def generate_report(
@@ -200,7 +279,9 @@ def generate_report(
             stop = next(iter(failures), None)
             if stop:
                 limit = f"{stop['status']} at {stop['n']:,}"
-            elif metadata.get("global_stop_reason"):
+            elif metadata.get("global_stop_reason") or (
+                metadata.get("python_stop_reason") and not strategy.endswith("-native")
+            ):
                 limit = "Larger probes stopped at shared validation-memory boundary"
             else:
                 limit = "Reached configured size ceiling"
@@ -213,6 +294,7 @@ def generate_report(
                 all_rows.append(
                     f'<tr data-order="{order}"><td>{order}</td><td>{escaped(LABELS[strategy])}</td><td>{row["n"]:,}</td><td>{row["completed_trials"]}</td>{metric_cells(row)}</tr>'
                 )
+    canvas_height = 447 if len(metadata["strategies"]) > 5 else 425
     charts = []
     overview_groups = []
     for order_index, order in enumerate(metadata["orders"]):
@@ -226,12 +308,12 @@ def generate_report(
             )
             inner = svg[svg.index(">") + 1 : svg.rindex("</svg>")]
             overview_groups.append(
-                f'<g transform="translate({metric_index * 720},{order_index * 425})">{inner}</g>'
+                f'<g transform="translate({metric_index * 720},{order_index * canvas_height})">{inner}</g>'
             )
         charts.append(
             f'<section data-order="{order}"><h2>{order.capitalize()} input</h2><div class="charts">{"".join(order_figures)}</div></section>'
         )
-    overview = f'<svg xmlns="http://www.w3.org/2000/svg" width="2880" height="{len(metadata["orders"]) * 425}" viewBox="0 0 2880 {len(metadata["orders"]) * 425}"><rect width="100%" height="100%" fill="white"/>{"".join(overview_groups)}</svg>'
+    overview = f'<svg xmlns="http://www.w3.org/2000/svg" width="2880" height="{len(metadata["orders"]) * canvas_height}" viewBox="0 0 2880 {len(metadata["orders"]) * canvas_height}"><rect width="100%" height="100%" fill="white"/>{"".join(overview_groups)}</svg>'
     (output / "all-sequences.svg").write_text(overview)
     for filename in (
         "results.json",
@@ -242,8 +324,10 @@ def generate_report(
     ):
         shutil.copyfile(source / filename, output / filename)
     with ZipFile(output / "source.zip", "w", compression=ZIP_DEFLATED) as archive:
-        for path in sorted((source / "source").rglob("*.py")):
-            archive.write(path, path.relative_to(source / "source"))
+        archive.write(Path(__file__), "report_renderer.py")
+        for path in sorted((source / "source").rglob("*")):
+            if path.is_file() and path.suffix in (".py", ".cpp", ".hpp", ".txt", ".md"):
+                archive.write(path, path.relative_to(source / "source"))
     pairs = {
         (row["order"], row["n"], row["trial"]): row
         for row in records
@@ -283,9 +367,12 @@ def generate_report(
         )
     )
     common_label = f"{common_size:,}" if common_size else "No common completed size"
+    stop_reason = metadata.get("global_stop_reason") or metadata.get(
+        "python_stop_reason"
+    )
     boundary_note = (
-        '<p class="note">' + escaped(metadata["global_stop_reason"]) + "</p>"
-        if metadata.get("global_stop_reason")
+        '<p class="note">Python boundary: ' + escaped(stop_reason) + "</p>"
+        if stop_reason
         else ""
     )
     findings = []
@@ -313,27 +400,30 @@ def generate_report(
         if visualizer_href
         else ""
     )
+    native_appendix = render_native_appendix(results, output)
+    if native_appendix:
+        navigation += '<p><a href="#native-implementation">Jump to C++ results and implementation notes ↓</a></p>'
     html_text = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Target strategy benchmark report</title>
 <style>:root{{color-scheme:light}}*{{box-sizing:border-box}}body{{margin:0;background:#f3f5f8;color:#17283c;font:15px/1.6 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:28px}}h1{{font-size:clamp(30px,4vw,48px);line-height:1.15;letter-spacing:-1px}}h2{{font-size:22px}}a{{color:#245fd0}}section,details{{background:white;border:1px solid #dce3eb;border-radius:14px;padding:22px;margin:22px 0}}.stats,.charts{{display:grid;gap:16px}}.stats{{grid-template-columns:repeat(4,1fr)}}.stat{{background:white;padding:18px;border:1px solid #dce3eb;border-radius:12px}}.stat strong{{display:block;font-size:27px}}.stat span,.note{{color:#526275;font-size:13px}}.charts{{grid-template-columns:repeat(2,minmax(0,1fr))}}figure{{margin:0;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}}figure svg{{width:100%;display:block}}figcaption{{padding:0 14px 10px;text-align:right;font-size:12px}}.table-wrap{{overflow:auto;max-height:75vh}}table{{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}}th,td{{padding:8px;border-bottom:1px solid #dce3eb;text-align:right}}th{{background:#eef2f7;position:sticky;top:0}}th:nth-child(-n+2),td:nth-child(-n+2){{text-align:left}}.downloads{{display:flex;gap:18px;flex-wrap:wrap}}select{{font:inherit;padding:8px;border:1px solid #ccd5e0;border-radius:8px;background:white}}[hidden]{{display:none!important}}summary{{cursor:pointer;font-weight:bold}}@media(max-width:800px){{main{{padding:14px}}.charts{{grid-template-columns:1fr}}.stats{{grid-template-columns:repeat(2,1fr)}}section,details{{padding:14px}}}}</style></head><body><main>
-{navigation}<header><p class="note">Rotation Lab · parallel measurements on this computer</p><h1>Geometric, interval, random level and treap</h1><p>All seven sequence families. Five implementations. Compare rotations, final tree depths and logical random-bit use as key counts increase.</p></header>
-<div class="stats"><div class="stat"><strong>{statuses["complete"]:,}</strong><span>completed trials</span></div><div class="stat"><strong>{common_label}</strong><span>largest size completed by every pair</span></div><div class="stat"><strong>{max((r["n"] for r in records if r["status"] == "complete"), default=0):,}</strong><span>largest completed tree</span></div><div class="stat"><strong>{metadata["workers"]}</strong><span>parallel workers · {metadata["memory_mib"]} MiB cap each</span></div></div>
+{navigation}<header><p class="note">Rotation Lab · measurements on this computer</p><h1>Geometric, interval, random level and treap</h1><p>{len(metadata["orders"])} sequence families. {len(metadata["strategies"])} implementations. Compare rotations, final tree depths and logical random-bit use as key counts increase.</p></header>
+<div class="stats"><div class="stat"><strong>{statuses["complete"]:,}</strong><span>completed trials</span></div><div class="stat"><strong>{common_label}</strong><span>largest size completed by every pair</span></div><div class="stat"><strong>{max((r["n"] for r in records if r["status"] == "complete"), default=0):,}</strong><span>largest completed tree</span></div><div class="stat"><strong>{metadata["workers"]}</strong><span>Python workers · {metadata["memory_mib"]} MiB cap each</span></div></div>
 <p class="note">{escaped(metadata["cpu"])} · Python {escaped(metadata["python"].split()[0])} · seed {metadata["seed"]} · per-trial deadline {metadata["timeout_seconds"]:g} s. Outcomes: {escaped(dict(statuses))}.</p>
 <p><label for="workload">Sequence type </label><select id="workload">{options}</select></p>
 {findings_section}
-<section><h2>Comparison at the largest common size: {common_label}</h2><p class="note">Averages are over completed paired trials; ± one standard error when repeats exist. Maximum final height is the largest final node depth observed across those trials, not height averaged across seeds or time. Larger partially completed groups are excluded.</p><div class="table-wrap"><table>{table_header}<tbody>{"".join(common_rows)}</tbody></table></div></section>
+<section><h2>Comparison at the largest common size: {common_label}</h2><p class="note">Averages are over completed trials; ± one standard error when repeats exist. Python random streams are paired across strategies; C++ uses a different PRNG. Maximum final height is the largest final node depth observed across those trials, not height averaged across seeds or time. Larger partially completed groups are excluded.</p><div class="table-wrap"><table>{table_header}<tbody>{"".join(common_rows)}</tbody></table></div></section>
 {"".join(charts)}
-<section><h2>How large did each implementation reach?</h2><p>Trials advance through increasing sizes. Direct resource failures and probes stopped at a shared pipeline boundary are distinguished below. These are resource-limited measurements of this Python implementation, not algorithmic size limits.</p>{boundary_note}<div class="table-wrap"><table><thead><tr><th>Input</th><th>Implementation</th><th>Largest complete size</th><th>Next boundary</th></tr></thead><tbody>{"".join(reach_rows)}</tbody></table></div></section>
+<section><h2>How large did each implementation reach?</h2><p>Trials advance through increasing sizes. Direct resource failures and probes stopped at a shared pipeline boundary are distinguished below. These are resource-limited measurements of these implementations and validators, not algorithmic size limits.</p>{boundary_note}<div class="table-wrap"><table><thead><tr><th>Input</th><th>Implementation</th><th>Largest complete size</th><th>Next boundary</th></tr></thead><tbody>{"".join(reach_rows)}</tbody></table></div></section>
 <details><summary>All {len(complete)} fully completed measurement groups</summary><div class="table-wrap"><table>{table_header}<tbody>{"".join(all_rows)}</tbody></table></div></details>
 <section><h2>Method and interpretation</h2><ul>
 <li>Measured implementations are the current Python geometric repair, its alternate RandomLevelV213 implementation, interval-target local repair, exact perfect-tree target leaf promotion, and the existing stored-priority treap with 32-bit priorities and key tie breaking.</li>
 <li>The two geometric implementations match on all operation/shape metrics in {compared} paired completed trials; mismatches: {mismatch}. Their curves can overlap. The alternate additionally records the sampled move count in an insertion annotation, which is not one of the reported metrics.</li>
-<li>Three seeds per group through {metadata["repeat_through"]:,} keys; one seed above that size. Inputs are fixed per size and shared across strategies. Balancing seeds are paired. Single large trials give no uncertainty estimate.</li>
+<li>{metadata["small_trials"]} seeds per group through {metadata["repeat_through"]:,} keys; one seed above that size. Inputs are fixed per size and shared across strategies. Python balancing streams are paired; C++ uses an independent PRNG stream. Single large trials give no uncertainty estimate.</li>
 <li>Root depth is zero. Mean depth averages all nodes in the final tree. Rotations and random bits are totals divided by inserted keys. Maximum final height is the greatest final depth across all completed seeds in that group.</li>
-<li>Height, mean-depth and random-bit charts include a dashed gray log₂(n) line. This is an unscaled numeric reference for growth, not a fitted curve or a proven bound for any strategy.</li>
+<li>Height, mean-depth and random-bit charts include a dashed gray c·log₂(n) guide. For each chart, c is the largest value/log₂(n) ratio at each implementation's last completed point, with a minimum of 1. The legend states c. This descriptive endpoint scaling is not a proven bound; random bits per key can remain constant even though the guide grows.</li>
 <li>Every completed tree passes BST order, parent-pointer, cycle and full-key-set checks. Stored treap depths also match an independently reconstructed Cartesian tree. Validation is included in the process memory cap and deadline.</li>
-<li>Trials run concurrently in isolated processes. Runtime comparisons are omitted. Memory limits and wall deadlines include instrumentation and validation overhead. Raw outcomes and missing measurements are retained, never treated as zeros.</li>
+<li>Python trials run concurrently in isolated processes; the native extension runs sequentially. Cross-language runtime comparisons are omitted. Memory limits and wall deadlines include instrumentation and validation overhead. Raw outcomes and missing measurements are retained, never treated as zeros.</li>
 <li>The worker source was copied before running and its SHA-256 checksums recorded. Source snapshot: the parent run directory's source folder. No logarithmic-height guarantee or general performance claim follows from these finite samples.</li>
-</ul></section><section><h2>Downloads</h2><div class="downloads">{downloads}</div></section>
+</ul></section>{native_appendix}<section><h2>Downloads</h2><div class="downloads">{downloads}</div></section>
 </main><script>document.getElementById('workload').addEventListener('change',event=>{{for(const element of document.querySelectorAll('[data-order]'))element.hidden=event.target.value!=='all'&&element.dataset.order!==event.target.value;}});</script></body></html>"""
     destination = output / "index.html"
     destination.write_text(html_text)

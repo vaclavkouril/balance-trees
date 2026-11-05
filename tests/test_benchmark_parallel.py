@@ -58,7 +58,38 @@ class ParallelBenchmarkTests(unittest.TestCase):
                 self.assertAlmostEqual(
                     (292 - ordinate) / 226 * axis_max, math.log2(size), places=2
                 )
-            self.assertIn("log₂(n) · numeric reference", "".join(svg.itertext()))
+            self.assertIn("1·log₂(n) · endpoint guide", "".join(svg.itertext()))
+
+    def test_log_reference_scales_up_to_largest_completed_endpoint(self):
+        results = dict(
+            metadata=dict(sizes=[1024, 1048576], strategies=["treap"]),
+            trials=[dict(n=1048576, status="complete")],
+            summaries=[
+                dict(
+                    strategy="treap",
+                    order="random",
+                    n=1024,
+                    status="complete",
+                    completed_trials=1,
+                    **dict.fromkeys(METRICS, 100),
+                ),
+                dict(
+                    strategy="treap",
+                    order="random",
+                    n=1048576,
+                    status="complete",
+                    completed_trials=1,
+                    **dict.fromkeys(METRICS, 40),
+                ),
+            ],
+        )
+        ns = {"svg": "http://www.w3.org/2000/svg"}
+        svg = ElementTree.fromstring(chart_svg(results, "random", "mean_depth"))
+        reference = svg.find("svg:path[@class='log-reference']", ns)
+        self.assertEqual(float(reference.attrib["data-constant"]), 2)
+        self.assertIn("2·log₂(n)", "".join(svg.itertext()))
+        # It uses the last completed point, rather than fitting an early outlier.
+        self.assertNotEqual(float(reference.attrib["data-constant"]), 10)
 
     def test_alternate_geometric_matches_the_main_implementation(self):
         for order in ORDERS:
