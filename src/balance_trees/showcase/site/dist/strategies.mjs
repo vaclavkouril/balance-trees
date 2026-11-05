@@ -79,7 +79,7 @@ export function targetDepth(priority, lowest, highest, count, insertionDepth) {
     if (priority - lowest < cumulative || depth === levels - 1) return depth;
   }
 }
-registerStrategy('random-level', c => {
+registerStrategy('interval-target-promotion', c => {
   let count = 0, lowest = null, highest = null;
   return function* (node, depth) {
     let priority = 0n;
@@ -94,7 +94,7 @@ registerStrategy('random-level', c => {
     for (let current = depth; current > target; current--) yield* c.promote(node);
   };
 });
-function randomLevelV2(c, state = { count: 0, lowest: null, highest: null }, logWidth = false) {
+function intervalTargetLocalRepair(c, state = { count: 0, lowest: null, highest: null }, logWidth = false) {
   return function* (node, depth) {
     let priority = 0n;
     const width = logWidth ? Math.floor(Math.log2(state.count + 1)) + 1 : 64;
@@ -114,25 +114,63 @@ function randomLevelV2(c, state = { count: 0, lowest: null, highest: null }, log
       for (let current = depth; current > 0; current--) yield* c.promote(node);
       return;
     }
-    if (depth <= target) return;
-    if (depth === target + 1) { yield* c.promote(node); return; }
-    for (let current = depth; current > target + 2; current--) {
-      c.visit();
-      yield* c.event('visit', `Inspect ancestor ${c.key(node)}`, 'Walk to the sampled repair level before rotating.', node);
-      node = c.parent(node);
-    }
-    c.visit();
-    const parent = c.parent(node), grand = c.parent(parent);
-    if ((c.left(parent) === node) === (c.left(grand) === parent)) yield* c.promote(parent);
-    else { yield* c.promote(node); yield* c.promote(node); }
+    yield* repairAtTargetDepth(c, node, depth, target);
   };
 }
-registerStrategy('random-level-v2', c => randomLevelV2(c));
-registerStrategy('random-level-v2-1', c => randomLevelV2(c, undefined, true));
+function* repairAtTargetDepth(c, node, depth, target) {
+  if (depth <= target) return;
+  if (depth === target + 1) { yield* c.promote(node); return; }
+  for (let current = depth; current > target + 2; current--) {
+    c.visit();
+    yield* c.event('visit', `Inspect ancestor ${c.key(node)}`, 'Walk to the sampled repair level before rotating.', node);
+    node = c.parent(node);
+  }
+  c.visit();
+  const parent = c.parent(node), grand = c.parent(parent);
+  if ((c.left(parent) === node) === (c.left(grand) === parent)) yield* c.promote(parent);
+  else { yield* c.promote(node); yield* c.promote(node); }
+}
+registerStrategy('random-level', c => {
+  let count = 0;
+  return function* (node, depth) {
+    count++;
+    let target = 0;
+    if (count > 1) {
+      const levels = Math.floor(Math.log2(count)) + 1;
+      let label = 0;
+      do {
+        label = 0;
+        for (let bit = 0; bit < levels; bit++) label = 2 * label + c.bit();
+      } while (label === 0);
+      target = Math.floor(Math.log2(label));
+    }
+    yield* c.event('target', `Perfect-tree target depth ${target}`,
+      `Sample a vertex uniformly from the smallest perfect tree containing ${count} vertices. Promote this leaf only when deeper than the target.`, node);
+    for (let current = depth; current > target; current--) yield* c.promote(node);
+  };
+});
+registerStrategy('geometric-target-local-repair', c => {
+  let count = 0;
+  return function* (node, depth) {
+    count++;
+    const levels = Math.ceil(Math.log2(count)) + 1;
+    let move = 0;
+    while (move < levels) {
+      if (c.bit() === 0) break;
+      move++;
+    }
+    const target = Math.max(0, levels - move - 1);
+    yield* c.event('target', `Geometric repair depth ${target}`,
+      `L=${levels}; leading ones=${move}. Stay at or above the target; otherwise repair a path with at most two rotations.`, node);
+    yield* repairAtTargetDepth(c, node, depth, target);
+  };
+});
+registerStrategy('interval-target-local-repair', c => intervalTargetLocalRepair(c));
+registerStrategy('random-level-v2-1', c => intervalTargetLocalRepair(c, undefined, true));
 registerStrategy('random-level-v3', c => randomLevelV3(c));
 registerStrategy('random-level-v4', c => {
   const state = { count: 0, lowest: null, highest: null };
-  const v2 = randomLevelV2(c, state), v3 = randomLevelV3(c, state);
+  const v2 = intervalTargetLocalRepair(c, state), v3 = randomLevelV3(c, state);
   return function* (node, depth) {
     yield* (state.count > 0 && depth < Math.log(state.count) ? v2 : v3)(node, depth);
   };

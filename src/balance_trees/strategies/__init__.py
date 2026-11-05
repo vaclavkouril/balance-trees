@@ -4,11 +4,13 @@ from fractions import Fraction
 
 from .base import NoRebalance, RebalanceContext, Strategy
 from .fixed import ConstantWalk, InverseDepthWalk
+from .geometric_target_local_repair import GeometricTargetLocalRepair
 from .halving import HalvingWalk
 from .hashed import HashPriority
+from .interval_target_local_repair import IntervalTargetLocalRepair
 from .lottery import RecountRoot, WindowRoot
 from .paper import GeometricStop, Zig, ZigZag
-from .random_level import TreapPriority
+from .random_level import RandomLevel, TreapPriority
 from .random_level_v2 import RandomLevelV2
 from .random_level_v2_1 import RandomLevelV21
 from .random_level_v3 import RandomLevelV3
@@ -72,16 +74,28 @@ for identifier, spec in {
         "Recompute SplitMix64 key/seed priorities for treap-style comparisons. No priority table or fresh insertion bits; finite hashes are not independent priorities.",
     ),
     "random-level": StrategySpec(
+        RandomLevel,
+        "Random level · perfect-tree target",
+        "Sampled leaf destination",
+        "Sample a vertex uniformly from the smallest perfect tree containing n nodes, including the new leaf. Promote the inserted leaf to that depth if deeper; otherwise leave it unchanged. No priority extrema or height guarantee.",
+    ),
+    "interval-target-promotion": StrategySpec(
         TreapPriority,
-        "Random level",
+        "Interval-target leaf promotion (original random level)",
         "Priority-free depth heuristic",
         "Roll 64 fair bits and choose a depth from the previous observed priority interval. New minima reach the root; new maxima stay leaves. Stores only a count and two extrema; no balance guarantee.",
     ),
-    "random-level-v2": StrategySpec(
-        RandomLevelV2,
-        "Random level v2",
+    "interval-target-local-repair": StrategySpec(
+        IntervalTargetLocalRepair,
+        "Interval-target local repair",
         "Local repair at sampled level",
         "Choose a repair level using the original 64-bit interval bands. Ordinary insertions perform at most two local rotations; strict new minima promote the leaf to the root. Expected fewer than three rotations per insertion from empty under iid uniform rolls. Ancestor walks can be long; no logarithmic-depth guarantee.",
+    ),
+    "geometric-target-local-repair": StrategySpec(
+        GeometricTargetLocalRepair,
+        "Geometric target local repair",
+        "Perfect-tree reference, at most two rotations",
+        "Sample target depth with capped leading fair bits and L=ceil(log2(n))+1, including the new leaf. Stay at or above the target; otherwise repair a straight or bent ancestor path with at most two rotations. No record exceptions or height guarantee.",
     ),
     "random-level-v2-1": StrategySpec(
         RandomLevelV21,
@@ -112,10 +126,13 @@ __all__ = [
     "STRATEGIES",
     "ConstantWalk",
     "GeometricStop",
+    "GeometricTargetLocalRepair",
     "HalvingWalk",
     "HashPriority",
+    "IntervalTargetLocalRepair",
     "InverseDepthWalk",
     "NoRebalance",
+    "RandomLevel",
     "RandomLevelV2",
     "RandomLevelV3",
     "RandomLevelV4",

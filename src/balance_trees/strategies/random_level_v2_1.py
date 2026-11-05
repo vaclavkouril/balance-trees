@@ -3,11 +3,11 @@
 from dataclasses import dataclass
 
 from .base import RebalanceContext
-from .random_level_v2 import RandomLevelV2
+from .interval_target_local_repair import IntervalTargetLocalRepair
 
 
 @dataclass(slots=True)
-class RandomLevelV21(RandomLevelV2):
+class RandomLevelV21(IntervalTargetLocalRepair):
     """For insertion ordinal j (starting at 1), use j.bit_length() fresh bits.
 
     When the width grows from b to b + 1 bits, the stored extrema are remapped

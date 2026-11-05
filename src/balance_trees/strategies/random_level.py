@@ -1,10 +1,30 @@
-"""Treap-like random priorities with interval-based target-depth balancing."""
+"""Perfect-tree leaf promotion and the archived interval-based promotion policy."""
 
 from dataclasses import dataclass
 
 from .base import RebalanceContext
+from .perfect_tree_target import sample_perfect_tree_depth
 
 PRIORITY_BITS = 64
+
+
+@dataclass(slots=True)
+class RandomLevel:
+    """Promote the inserted leaf to a sampled perfect-tree depth, if deeper.
+
+    Sample uniformly over vertices of the smallest perfect tree containing
+    n vertices, where n includes the new leaf. Every rotation promotes the
+    inserted vertex; no rotation is needed when its depth is <= the target.
+    Unlike local repair, a deep leaf may require more than two rotations.
+    """
+
+    inserted_count: int = 0
+
+    def rebalance(self, context: RebalanceContext) -> None:
+        self.inserted_count += 1
+        target_depth = sample_perfect_tree_depth(self.inserted_count, context.bits)
+        for _ in range(max(0, context.stats.insertion_depth - target_depth)):
+            context.promote(context.inserted, distance=0)
 
 
 @dataclass(slots=True)

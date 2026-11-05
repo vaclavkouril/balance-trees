@@ -5,11 +5,15 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from balance_trees.benchmark_report import generate_report
+
 
 @unittest.skipUnless(sys.platform.startswith("linux"), "Linux resource limits")
 class RandomLevelScaleTests(unittest.TestCase):
     def test_sweep_validates_every_workload_and_records_memory(self):
-        script = Path(__file__).resolve().parents[1] / "benchmarks/random_level_scale.py"
+        script = (
+            Path(__file__).resolve().parents[1] / "benchmarks/random_level_scale.py"
+        )
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary) / "run"
             subprocess.run(
@@ -40,9 +44,17 @@ class RandomLevelScaleTests(unittest.TestCase):
             memory = json.loads((output / "memory.json").read_text())
             self.assertLessEqual(memory["address_space_limit_bytes"], 256 * 1024**2)
             self.assertGreater(memory["peak_child_rss_bytes"], 0)
+            self.assertEqual(
+                results["metadata"]["strategies"], ["interval-target-promotion"]
+            )
+            site = Path(temporary) / "site"
+            generate_report(output, site, random_level_scale=True)
+            self.assertTrue((site / "random-level-scale.html").is_file())
 
     def test_oversized_inputs_fail_with_recorded_memory_errors(self):
-        script = Path(__file__).resolve().parents[1] / "benchmarks/random_level_scale.py"
+        script = (
+            Path(__file__).resolve().parents[1] / "benchmarks/random_level_scale.py"
+        )
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary) / "run"
             process = subprocess.run(

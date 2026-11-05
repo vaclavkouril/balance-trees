@@ -49,7 +49,7 @@ Do not modify the insertion engines or tree renderer for a new policy.
 
 For deterministic ancestor inspections, use `context.visit(node)` so work and
 Python traces remain visible; the browser adapter supplies `visit()` for the
-same counter. The separate `random-level-v2` policy demonstrates this hook.
+same counter. The separate `interval-target-local-repair` policy demonstrates this hook.
 
 Refresh the local metadata catalog after changing a descriptor:
 

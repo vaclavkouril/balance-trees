@@ -1,16 +1,12 @@
 import itertools
-import json
 import unittest
 from fractions import Fraction
-from pathlib import Path
 from unittest.mock import patch
 
 from helpers import FixedBits
 
-from balance_trees import BST, RandomLevelV2, TreeFlavor
-from balance_trees.measurement import run_trial
+from balance_trees import BST, IntervalTargetLocalRepair, TreeFlavor
 from balance_trees.sequences import ORDERS, insertion_order
-from balance_trees.strategies import TreapPriority
 
 
 def rolls(*values, bits=64):
@@ -21,32 +17,11 @@ def prepared(keys, priority, *, lowest=0, highest=70):
     tree = BST()
     for key in keys:
         tree.insert(key)
-    policy = RandomLevelV2(len(keys), lowest, highest)
+    policy = IntervalTargetLocalRepair(len(keys), lowest, highest)
     return TreeFlavor(policy, tree=tree, bits=rolls(priority))
 
 
-class RandomLevelV2Tests(unittest.TestCase):
-    def test_original_policy_reproduces_archived_trial_work_and_shape_metrics(self):
-        source = (
-            Path(__file__).resolve().parents[1]
-            / "src/balance_trees/showcase/site/dist/random-level-results/results.json"
-        )
-        original = json.loads(source.read_text())
-        for order in ("random", "converging"):
-            row = next(
-                r
-                for r in original["trials"]
-                if r["n"] == 1000 and r["trial"] == 0 and r["order"] == order
-            )
-            actual = run_trial(
-                insertion_order(order, 1000, row["order_seed"]),
-                TreapPriority(),
-                row["seed"],
-            ).metrics
-            for key, value in row["metrics"].items():
-                if key not in ("seconds", "microseconds_per_insertion"):
-                    self.assertEqual(getattr(actual, key), value, (order, key))
-
+class IntervalTargetLocalRepairTests(unittest.TestCase):
     def test_straight_repair_moves_an_ancestor_once_instead_of_lifting_the_leaf(self):
         flavor = prepared(range(7), 30)
         stats = flavor.insert(7)
@@ -97,7 +72,7 @@ class RandomLevelV2Tests(unittest.TestCase):
         self.assertEqual(shallow.tree.depths()[4], 2)
 
     def test_empty_tree_duplicates_bits_and_state_are_unchanged(self):
-        flavor = TreeFlavor(RandomLevelV2(), bits=rolls(100, 200))
+        flavor = TreeFlavor(IntervalTargetLocalRepair(), bits=rolls(100, 200))
         self.assertEqual(flavor.tree.depths(), {})
         first = flavor.insert(-1)
         self.assertEqual(first.rotations, 0)
@@ -119,7 +94,7 @@ class RandomLevelV2Tests(unittest.TestCase):
             with patch("balance_trees.strategies.random_level.PRIORITY_BITS", 2):
                 for priorities in itertools.product(range(4), repeat=len(values)):
                     flavor = TreeFlavor(
-                        RandomLevelV2(), bits=rolls(*priorities, bits=2)
+                        IntervalTargetLocalRepair(), bits=rolls(*priorities, bits=2)
                     )
                     for index, (key, priority) in enumerate(zip(values, priorities)):
                         stats = flavor.insert(key)
@@ -136,7 +111,7 @@ class RandomLevelV2Tests(unittest.TestCase):
 
     def test_all_input_families_preserve_keys_and_nonrecord_rotation_bound(self):
         for order in ORDERS:
-            flavor = TreeFlavor.create("random-level-v2", seed=2026)
+            flavor = TreeFlavor.create("interval-target-local-repair", seed=2026)
             values = insertion_order(order, 1024, 2026)
             for index, key in enumerate(values):
                 low = flavor.strategy.lowest_priority

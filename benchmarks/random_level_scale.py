@@ -40,7 +40,7 @@ def main():
             sizes=[1 << power for power in range(args.min_power, args.max_power + 1)],
             trials=args.trials,
             seed=args.seed,
-            strategies=["random-level"],
+            strategies=["interval-target-promotion"],
             orders=list(ORDERS),
             timeout=args.timeout,
         )

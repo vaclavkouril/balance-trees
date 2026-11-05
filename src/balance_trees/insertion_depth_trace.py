@@ -167,7 +167,7 @@ def trace_insertions(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--strategy", default="random-level-v2")
+    parser.add_argument("--strategy", default="interval-target-local-repair")
     parser.add_argument("--order", default="random")
     parser.add_argument("--size", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=2026)

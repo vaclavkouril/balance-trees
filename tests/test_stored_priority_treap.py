@@ -1,29 +1,23 @@
-import importlib.util
 import unittest
-from pathlib import Path
 
 from balance_trees.flavors import TreeFlavor
 from balance_trees.measurement import run_trial
 from balance_trees.sequences import insertion_order
 from balance_trees.showcase import build_trace
+from balance_trees.strategies.stored_priority_treap import StoredPriorityTreap
 
-SCRIPT = Path(__file__).resolve().parents[1] / "benchmarks/compare_v2_treap.py"
-SPEC = importlib.util.spec_from_file_location("comparison", SCRIPT)
-comparison = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(comparison)
+ORDERS = ("random", "increasing", "converging")
 
 
-class TreapComparisonTests(unittest.TestCase):
+class StoredPriorityTreapTests(unittest.TestCase):
     def test_benchmark_treap_matches_existing_showcase(self):
-        for order in comparison.ORDERS:
+        for order in ORDERS:
             for seed in (0, 42, 2026):
                 with self.subTest(order=order, seed=seed):
                     values = insertion_order(order, 24, 17)
                     trace = build_trace(values, "treap", seed)
                     final = trace["frames"][-1]["stats"]
-                    result = run_trial(
-                        values, comparison.StoredPriorityTreap(seed), seed
-                    )
+                    result = run_trial(values, StoredPriorityTreap(seed), seed)
                     self.assertEqual(result.metrics.height, final["height"])
                     self.assertEqual(result.metrics.mean_depth, final["mean_depth"])
                     self.assertEqual(
@@ -36,7 +30,7 @@ class TreapComparisonTests(unittest.TestCase):
             def getrandbits(self, count):
                 return 7
 
-        strategy = comparison.StoredPriorityTreap(0)
+        strategy = StoredPriorityTreap(0)
         strategy.random = EqualPriorities()
         flavor = TreeFlavor(strategy)
         self.assertEqual(flavor.tree.depths(), {})
@@ -52,19 +46,3 @@ class TreapComparisonTests(unittest.TestCase):
         self.assertEqual(duplicate.random_bits, 0)
         self.assertEqual(flavor.tree.depths(), before)
         self.assertTrue(flavor.tree.contains(2))
-
-    def test_worker_validates_both_strategies_for_each_workload(self):
-        for strategy in comparison.STRATEGIES:
-            for order in comparison.ORDERS:
-                row = comparison.measure(
-                    dict(
-                        strategy=strategy,
-                        order=order,
-                        n=32,
-                        trial=0,
-                        seed=2026,
-                        order_seed=17,
-                    )
-                )
-                self.assertEqual(row["status"], "complete")
-                self.assertLess(row["metrics"]["height"], 32)

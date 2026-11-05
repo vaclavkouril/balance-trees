@@ -3,6 +3,7 @@ import unittest
 from balance_trees import BST, TreeFlavor
 from balance_trees.strategies import (
     STRATEGIES,
+    RandomLevel,
     StrategyFactory,
     StrategySpec,
     TreapPriority,
@@ -35,8 +36,8 @@ class StrategyFactoryTests(unittest.TestCase):
 
     def test_random_level_versions_are_distinct_with_independent_state(self):
         original = TreeFlavor.create("random-level", seed=42)
-        revised = TreeFlavor.create("random-level-v2", seed=42)
-        self.assertIs(type(original.strategy), TreapPriority)
+        revised = TreeFlavor.create("interval-target-local-repair", seed=42)
+        self.assertIs(type(original.strategy), RandomLevel)
         self.assertIsNot(type(original.strategy), type(revised.strategy))
         for key in range(12):
             revised.insert(key)
@@ -69,7 +70,9 @@ class PriorityStream:
 
 
 class RandomLevelTests(unittest.TestCase):
-    def test_sampled_depth_at_or_below_leaf_keeps_insertion_links_and_updates_state(self):
+    def test_sampled_depth_at_or_below_leaf_keeps_insertion_links_and_updates_state(
+        self,
+    ):
         for keys, key, depth in (
             ([0, -1, -2, -3, -4, -5, -6], 1, 1),
             ([0, 4, 3, 2, 1, -1, -2], 5, 2),
@@ -93,7 +96,9 @@ class RandomLevelTests(unittest.TestCase):
                 self.assertEqual(tree.depths(), expected.depths())
                 self.assertTrue(tree.contains(key))
                 self.assertEqual(policy.inserted_count, 8)
-                self.assertEqual((policy.lowest_priority, policy.highest_priority), (0, 70))
+                self.assertEqual(
+                    (policy.lowest_priority, policy.highest_priority), (0, 70)
+                )
 
     def test_shallower_sample_rotates_leaf_by_exact_depth_difference(self):
         for priority, target in ((0, 0), (10, 1), (30, 2)):

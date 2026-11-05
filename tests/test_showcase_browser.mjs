@@ -205,7 +205,7 @@ test('recomputed priorities match Python exactly without storing node priorities
   }
 });
 
-test('both random-level versions match Python for an identical 64-bit priority stream', async () => {
+test('archived interval policies match Python for an identical 64-bit priority stream', async () => {
   const { LargeTree } = await import('../src/balance_trees/showcase/site/dist/large-model.mjs');
   const keys = [0, 20, 1, 19, 2, 18, 3, 17, 4, 16, 5, 15, 6, 14, 7, 13, 8, 12, 9, 11, 10, 10, -1];
   const priorities = [100n, 200n, 300n, 400n, 500n, 600n, 700n, 800n, 250n, 50n, 50n, (1n << 64n) - 1n, 1n << 63n, 51n, 0n, 0n, 1n, 2n, 1n << 62n, 20n, 21n, 10n];
@@ -221,7 +221,7 @@ class Bits:
         return next(self.stream)
 data = json.loads(sys.argv[1])
 result = {}
-for name in ("random-level", "random-level-v2"):
+for name in ("interval-target-promotion", "interval-target-local-repair"):
     flavor = TreeFlavor.create(name)
     flavor.bits = Bits(data["priorities"])
     frames = []
@@ -260,7 +260,7 @@ print(json.dumps(result))
   }
 });
 
-test('v2.1, v3 and v4 match Python with identical decision and priority bits', async () => {
+test('new target samplers and hybrid policies match Python with identical bits', async () => {
   const { LargeTree } = await import('../src/balance_trees/showcase/site/dist/large-model.mjs');
   const keys = [...Array.from({ length: 40 }, (_, i) => i % 2 ? 40 - (i - 1) / 2 : i / 2), 0, -1];
   let state = 1234567;
@@ -282,7 +282,7 @@ class Bits:
         self.count += 1
         return next(self.values)
 results = {}
-for name in ("random-level-v2-1", "random-level-v3", "random-level-v4"):
+for name in ("random-level", "geometric-target-local-repair", "random-level-v2-1", "random-level-v3", "random-level-v4"):
     tree = TreeFlavor.create(name)
     tree.bits = Bits()
     frames = []

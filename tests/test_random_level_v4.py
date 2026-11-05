@@ -5,7 +5,9 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from balance_trees.strategies import RandomLevelV4, create_strategy
-from balance_trees.strategies.random_level_v2 import RandomLevelV2
+from balance_trees.strategies.interval_target_local_repair import (
+    IntervalTargetLocalRepair,
+)
 from balance_trees.strategies.random_level_v3 import RandomLevelV3
 
 
@@ -18,7 +20,9 @@ class RandomLevelV4Tests(unittest.TestCase):
             with self.subTest(count=count, depth=depth):
                 policy = RandomLevelV4(inserted_count=count)
                 context = SimpleNamespace(stats=SimpleNamespace(insertion_depth=depth))
-                with patch.object(RandomLevelV2, "rebalance", autospec=True) as v2:
+                with patch.object(
+                    IntervalTargetLocalRepair, "rebalance", autospec=True
+                ) as v2:
                     with patch.object(RandomLevelV3, "rebalance", autospec=True) as v3:
                         policy.rebalance(context)
                         selected, other = (v2, v3) if expected == 2 else (v3, v2)
@@ -54,7 +58,7 @@ class RandomLevelV4Tests(unittest.TestCase):
             state.inserted_count += 1
 
         with patch.object(
-            RandomLevelV2, "rebalance", autospec=True, side_effect=v2_step
+            IntervalTargetLocalRepair, "rebalance", autospec=True, side_effect=v2_step
         ):
             with patch.object(
                 RandomLevelV3, "rebalance", autospec=True, side_effect=v3_step

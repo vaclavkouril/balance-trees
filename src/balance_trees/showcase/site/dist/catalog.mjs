@@ -51,14 +51,24 @@ export const FLAVORS = {
     "note": "Recompute SplitMix64 key/seed priorities for treap-style comparisons. No priority table or fresh insertion bits; finite hashes are not independent priorities."
   },
   "random-level": {
-    "name": "Random level",
+    "name": "Random level · perfect-tree target",
+    "tag": "Sampled leaf destination",
+    "note": "Sample a vertex uniformly from the smallest perfect tree containing n nodes, including the new leaf. Promote the inserted leaf to that depth if deeper; otherwise leave it unchanged. No priority extrema or height guarantee."
+  },
+  "interval-target-promotion": {
+    "name": "Interval-target leaf promotion (original random level)",
     "tag": "Priority-free depth heuristic",
     "note": "Roll 64 fair bits and choose a depth from the previous observed priority interval. New minima reach the root; new maxima stay leaves. Stores only a count and two extrema; no balance guarantee."
   },
-  "random-level-v2": {
-    "name": "Random level v2",
+  "interval-target-local-repair": {
+    "name": "Interval-target local repair",
     "tag": "Local repair at sampled level",
     "note": "Choose a repair level using the original 64-bit interval bands. Ordinary insertions perform at most two local rotations; strict new minima promote the leaf to the root. Expected fewer than three rotations per insertion from empty under iid uniform rolls. Ancestor walks can be long; no logarithmic-depth guarantee."
+  },
+  "geometric-target-local-repair": {
+    "name": "Geometric target local repair",
+    "tag": "Perfect-tree reference, at most two rotations",
+    "note": "Sample target depth with capped leading fair bits and L=ceil(log2(n))+1, including the new leaf. Stay at or above the target; otherwise repair a straight or bent ancestor path with at most two rotations. No record exceptions or height guarantee."
   },
   "random-level-v2-1": {
     "name": "Random level v2.1",

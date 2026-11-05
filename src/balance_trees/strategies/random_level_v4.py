@@ -4,7 +4,7 @@ import math
 from dataclasses import dataclass
 
 from .base import RebalanceContext
-from .random_level_v2 import RandomLevelV2
+from .interval_target_local_repair import IntervalTargetLocalRepair
 from .random_level_v3 import RandomLevelV3
 
 
@@ -22,6 +22,6 @@ class RandomLevelV4(RandomLevelV3):
         if self.inserted_count > 0 and context.stats.insertion_depth < math.log(
             self.inserted_count
         ):
-            RandomLevelV2.rebalance(self, context)
+            IntervalTargetLocalRepair.rebalance(self, context)
         else:
             RandomLevelV3.rebalance(self, context)
