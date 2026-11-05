@@ -6,12 +6,14 @@ on:
       - ".github/workflows/pages.yml"
       - "src/**"
       - "tests/**"
+      - "docs/proofs/geometric-repair.pdf"
       - "pyproject.toml"
   pull_request:
     paths:
       - ".github/workflows/pages.yml"
       - "src/**"
       - "tests/**"
+      - "docs/proofs/geometric-repair.pdf"
       - "pyproject.toml"
   workflow_dispatch:
 

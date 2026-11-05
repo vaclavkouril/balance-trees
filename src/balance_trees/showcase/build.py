@@ -11,6 +11,7 @@ from .server import STATIC
 ENGINE_META = '<meta name="rotation-lab-engine" content="auto">'
 PUBLIC_PAGES = ("index.html",)
 PUBLIC_DIRECTORIES = ("benchmarks",)
+PUBLIC_DOCUMENTS = ("geometric-repair.pdf",)
 
 
 def catalog_source() -> str:
@@ -46,11 +47,11 @@ def build_site(output: Path) -> Path:
         return [
             name
             for name in names
-            if name not in (*PUBLIC_PAGES, *PUBLIC_DIRECTORIES)
+            if name not in (*PUBLIC_PAGES, *PUBLIC_DIRECTORIES, *PUBLIC_DOCUMENTS)
             and Path(name).suffix not in (".css", ".mjs")
         ]
 
-    # Publish the visualizer, its runtime assets and the current benchmark report.
+    # Publish the visualizer, runtime assets, benchmark report and proof.
     # A fresh destination prevents obsolete pages surviving a previous build.
     shutil.copytree(STATIC, output, ignore=exclude_unpublished_assets)
     (output / "catalog.mjs").write_text(catalog_source(), encoding="utf-8")

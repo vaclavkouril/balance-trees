@@ -84,6 +84,16 @@ class PagesBuildTests(unittest.TestCase):
                     relative = url.path.removeprefix("/experimental-balance-trees/")
                     self.assertTrue((output / relative).is_file(), reference)
 
+    def test_published_proof_matches_the_source_pdf(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = build_site(Path(temporary) / "website")
+            source = (
+                Path(__file__).resolve().parents[1] / "docs/proofs/geometric-repair.pdf"
+            )
+            self.assertEqual(
+                (output / "geometric-repair.pdf").read_bytes(), source.read_bytes()
+            )
+
     def test_public_build_does_not_change_local_mode_or_copy_site_metadata(self):
         original = (STATIC / "index.html").read_bytes()
         with tempfile.TemporaryDirectory() as temporary:

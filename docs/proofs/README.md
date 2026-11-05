@@ -38,6 +38,10 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error \
   -outdir=/tmp/geometric-repair-paper docs/proofs/geometric-repair.tex
 ```
 
+After updating the paper, copy the final PDF to both `docs/proofs/` and
+`src/balance_trees/showcase/site/dist/`. The Pages tests check that the two
+copies match so the website cannot silently publish an older proof.
+
 The bounded independent transition check covers all ordered BST shapes with up
 to six existing keys, each insertion gap, and every possible sampled target.
 The adversarial explorer uses exact rational probabilities and the production
