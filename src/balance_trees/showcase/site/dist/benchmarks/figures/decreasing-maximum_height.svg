@@ -1,92 +1,112 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="decreasing-maximum_height-title decreasing-maximum_height-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 447" role="img" aria-labelledby="decreasing-maximum_height-title decreasing-maximum_height-desc">
 <title id="decreasing-maximum_height-title">Decreasing · Maximum final height · edges</title>
-<desc id="decreasing-maximum_height-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
+<desc id="decreasing-maximum_height-desc">Measurements for 6 implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: 3.48·log₂(n) · endpoint guide. c=max(1, largest endpoint value/log₂(n) across implementations). Descriptive scaling, not a proven bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
-<rect width="720" height="425" rx="12" fill="white"/>
+<rect width="720" height="447" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Decreasing · Maximum final height · edges</text>
-<text x="22" y="48" style="font-size:11px;fill:#64748b">Five implementations · source and seeds recorded · no timing comparison</text>
+<text x="22" y="48" style="font-size:11px;fill:#64748b">6 implementations · source and seeds recorded · no timing comparison</text>
 <path class="grid" d="M70,292.00h620"/><text x="61" y="296.00" text-anchor="end">0</text>
-<path class="grid" d="M70,246.80h620"/><text x="61" y="250.80" text-anchor="end">16.4</text>
-<path class="grid" d="M70,201.60h620"/><text x="61" y="205.60" text-anchor="end">32.7</text>
-<path class="grid" d="M70,156.40h620"/><text x="61" y="160.40" text-anchor="end">49.1</text>
-<path class="grid" d="M70,111.20h620"/><text x="61" y="115.20" text-anchor="end">65.4</text>
-<path class="grid" d="M70,66.00h620"/><text x="61" y="70.00" text-anchor="end">81.8</text>
+<path class="grid" d="M70,246.80h620"/><text x="61" y="250.80" text-anchor="end">18.7</text>
+<path class="grid" d="M70,201.60h620"/><text x="61" y="205.60" text-anchor="end">37.4</text>
+<path class="grid" d="M70,156.40h620"/><text x="61" y="160.40" text-anchor="end">56.1</text>
+<path class="grid" d="M70,111.20h620"/><text x="61" y="115.20" text-anchor="end">74.8</text>
+<path class="grid" d="M70,66.00h620"/><text x="61" y="70.00" text-anchor="end">93.4</text>
 <path class="grid" d="M70.00,66v226"/><text x="70.00" y="313" text-anchor="middle">1k</text>
-<path class="grid" d="M173.33,66v226"/><text x="173.33" y="313" text-anchor="middle">4k</text>
-<path class="grid" d="M380.00,66v226"/><text x="380.00" y="313" text-anchor="middle">64k</text>
-<path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
-<path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
-<path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
-<path class="log-reference" d="M70.00,264.36L690.00,231.19" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
-<circle cx="70.00" cy="198.02" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Maximum final height · edges=34; 3 trials</title></circle>
-<path d="M70.00,198.02L173.33,189.73" stroke="#2563eb" stroke-width="2" fill="none"/>
-<circle cx="173.33" cy="189.73" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Maximum final height · edges=37; 3 trials</title></circle>
-<path d="M173.33,189.73L276.67,173.14" stroke="#2563eb" stroke-width="2" fill="none"/>
-<circle cx="276.67" cy="173.14" r="3" fill="#2563eb"><title>Geometric repair: n=16,384; Maximum final height · edges=43; 3 trials</title></circle>
-<path d="M276.67,173.14L380.00,162.08" stroke="#2563eb" stroke-width="2" fill="none"/>
-<circle cx="380.00" cy="162.08" r="3" fill="#2563eb"><title>Geometric repair: n=65,536; Maximum final height · edges=47; 3 trials</title></circle>
-<path d="M380.00,162.08L483.33,153.79" stroke="#2563eb" stroke-width="2" fill="none"/>
-<circle cx="483.33" cy="153.79" r="3" fill="#2563eb"><title>Geometric repair: n=262,144; Maximum final height · edges=50; 1 trials</title></circle>
-<path d="M483.33,153.79L586.67,123.38" stroke="#2563eb" stroke-width="2" fill="none"/>
-<circle cx="586.67" cy="123.38" r="3" fill="#2563eb"><title>Geometric repair: n=1,048,576; Maximum final height · edges=61; 1 trials</title></circle>
-<path d="M586.67,123.38L638.33,90.21" stroke="#2563eb" stroke-width="2" fill="none"/>
-<circle cx="638.33" cy="90.21" r="3" fill="#2563eb"><title>Geometric repair: n=2,097,152; Maximum final height · edges=73; 1 trials</title></circle>
+<path class="grid" d="M247.14,66v226"/><text x="247.14" y="313" text-anchor="middle">16k</text>
+<path class="grid" d="M424.29,66v226"/><text x="424.29" y="313" text-anchor="middle">256k</text>
+<path class="grid" d="M512.86,66v226"/><text x="512.86" y="313" text-anchor="middle">1M</text>
+<path class="grid" d="M601.43,66v226"/><text x="601.43" y="313" text-anchor="middle">4M</text>
+<path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">16M</text>
+<path class="log-reference" data-constant="3.4761904761904763" d="M70.00,207.92L690.00,90.21" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>3.48·log₂(n) · endpoint guide: descriptive scaling, not a proven bound</title></path>
+<circle cx="70.00" cy="209.77" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Maximum final height · edges=34; 3 trials</title></circle>
+<path d="M70.00,209.77L158.57,202.51" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="158.57" cy="202.51" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Maximum final height · edges=37; 3 trials</title></circle>
+<path d="M158.57,202.51L247.14,188.00" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="247.14" cy="188.00" r="3" fill="#2563eb"><title>Geometric repair: n=16,384; Maximum final height · edges=43; 3 trials</title></circle>
+<path d="M247.14,188.00L335.71,178.32" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="335.71" cy="178.32" r="3" fill="#2563eb"><title>Geometric repair: n=65,536; Maximum final height · edges=47; 3 trials</title></circle>
+<path d="M335.71,178.32L424.29,171.07" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="171.07" r="3" fill="#2563eb"><title>Geometric repair: n=262,144; Maximum final height · edges=50; 1 trials</title></circle>
+<path d="M424.29,171.07L512.86,144.46" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="144.46" r="3" fill="#2563eb"><title>Geometric repair: n=1,048,576; Maximum final height · edges=61; 1 trials</title></circle>
+<path d="M512.86,144.46L557.14,115.44" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="115.44" r="3" fill="#2563eb"><title>Geometric repair: n=2,097,152; Maximum final height · edges=73; 1 trials</title></circle>
 <path d="M22,351h20" stroke="#2563eb" stroke-width="3"/><text x="49" y="355">Geometric repair</text>
-<circle cx="70.00" cy="198.02" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,024; Maximum final height · edges=34; 3 trials</title></circle>
-<path d="M70.00,198.02L173.33,189.73" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<circle cx="173.33" cy="189.73" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=4,096; Maximum final height · edges=37; 3 trials</title></circle>
-<path d="M173.33,189.73L276.67,173.14" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<circle cx="276.67" cy="173.14" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=16,384; Maximum final height · edges=43; 3 trials</title></circle>
-<path d="M276.67,173.14L380.00,162.08" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<circle cx="380.00" cy="162.08" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=65,536; Maximum final height · edges=47; 3 trials</title></circle>
-<path d="M380.00,162.08L483.33,153.79" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<circle cx="483.33" cy="153.79" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=262,144; Maximum final height · edges=50; 1 trials</title></circle>
-<path d="M483.33,153.79L586.67,123.38" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<circle cx="586.67" cy="123.38" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,048,576; Maximum final height · edges=61; 1 trials</title></circle>
-<path d="M586.67,123.38L638.33,90.21" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<circle cx="638.33" cy="90.21" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=2,097,152; Maximum final height · edges=73; 1 trials</title></circle>
+<circle cx="70.00" cy="209.77" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,024; Maximum final height · edges=34; 3 trials</title></circle>
+<path d="M70.00,209.77L158.57,202.51" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="158.57" cy="202.51" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=4,096; Maximum final height · edges=37; 3 trials</title></circle>
+<path d="M158.57,202.51L247.14,188.00" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="247.14" cy="188.00" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=16,384; Maximum final height · edges=43; 3 trials</title></circle>
+<path d="M247.14,188.00L335.71,178.32" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="335.71" cy="178.32" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=65,536; Maximum final height · edges=47; 3 trials</title></circle>
+<path d="M335.71,178.32L424.29,171.07" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="424.29" cy="171.07" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=262,144; Maximum final height · edges=50; 1 trials</title></circle>
+<path d="M424.29,171.07L512.86,144.46" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="512.86" cy="144.46" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,048,576; Maximum final height · edges=61; 1 trials</title></circle>
+<path d="M512.86,144.46L557.14,115.44" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="557.14" cy="115.44" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=2,097,152; Maximum final height · edges=73; 1 trials</title></circle>
 <path d="M372,351h20" stroke="#9333ea" stroke-width="3" stroke-dasharray="6 4"/><text x="399" y="355">Geometric repair · alternate</text>
-<circle cx="70.00" cy="225.66" r="3" fill="#059669"><title>Interval repair: n=1,024; Maximum final height · edges=24; 3 trials</title></circle>
-<path d="M70.00,225.66L173.33,195.25" stroke="#059669" stroke-width="2" fill="none"/>
-<circle cx="173.33" cy="195.25" r="3" fill="#059669"><title>Interval repair: n=4,096; Maximum final height · edges=35; 3 trials</title></circle>
-<path d="M173.33,195.25L276.67,178.67" stroke="#059669" stroke-width="2" fill="none"/>
-<circle cx="276.67" cy="178.67" r="3" fill="#059669"><title>Interval repair: n=16,384; Maximum final height · edges=41; 3 trials</title></circle>
-<path d="M276.67,178.67L380.00,142.73" stroke="#059669" stroke-width="2" fill="none"/>
-<circle cx="380.00" cy="142.73" r="3" fill="#059669"><title>Interval repair: n=65,536; Maximum final height · edges=54; 3 trials</title></circle>
-<path d="M380.00,142.73L483.33,145.50" stroke="#059669" stroke-width="2" fill="none"/>
-<circle cx="483.33" cy="145.50" r="3" fill="#059669"><title>Interval repair: n=262,144; Maximum final height · edges=53; 1 trials</title></circle>
-<path d="M483.33,145.50L586.67,128.91" stroke="#059669" stroke-width="2" fill="none"/>
-<circle cx="586.67" cy="128.91" r="3" fill="#059669"><title>Interval repair: n=1,048,576; Maximum final height · edges=59; 1 trials</title></circle>
-<path d="M586.67,128.91L638.33,104.04" stroke="#059669" stroke-width="2" fill="none"/>
-<circle cx="638.33" cy="104.04" r="3" fill="#059669"><title>Interval repair: n=2,097,152; Maximum final height · edges=68; 1 trials</title></circle>
+<circle cx="70.00" cy="233.95" r="3" fill="#059669"><title>Interval repair: n=1,024; Maximum final height · edges=24; 3 trials</title></circle>
+<path d="M70.00,233.95L158.57,207.35" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="158.57" cy="207.35" r="3" fill="#059669"><title>Interval repair: n=4,096; Maximum final height · edges=35; 3 trials</title></circle>
+<path d="M158.57,207.35L247.14,192.83" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="247.14" cy="192.83" r="3" fill="#059669"><title>Interval repair: n=16,384; Maximum final height · edges=41; 3 trials</title></circle>
+<path d="M247.14,192.83L335.71,161.39" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="335.71" cy="161.39" r="3" fill="#059669"><title>Interval repair: n=65,536; Maximum final height · edges=54; 3 trials</title></circle>
+<path d="M335.71,161.39L424.29,163.81" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="163.81" r="3" fill="#059669"><title>Interval repair: n=262,144; Maximum final height · edges=53; 1 trials</title></circle>
+<path d="M424.29,163.81L512.86,149.30" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="149.30" r="3" fill="#059669"><title>Interval repair: n=1,048,576; Maximum final height · edges=59; 1 trials</title></circle>
+<path d="M512.86,149.30L557.14,127.53" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="127.53" r="3" fill="#059669"><title>Interval repair: n=2,097,152; Maximum final height · edges=68; 1 trials</title></circle>
 <path d="M22,373h20" stroke="#059669" stroke-width="3"/><text x="49" y="377">Interval repair</text>
-<circle cx="70.00" cy="220.13" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,024; Maximum final height · edges=26; 3 trials</title></circle>
-<path d="M70.00,220.13L173.33,195.25" stroke="#d97706" stroke-width="2" fill="none"/>
-<circle cx="173.33" cy="195.25" r="3" fill="#d97706"><title>Random level · leaf promotion: n=4,096; Maximum final height · edges=35; 3 trials</title></circle>
-<path d="M173.33,195.25L276.67,153.79" stroke="#d97706" stroke-width="2" fill="none"/>
-<circle cx="276.67" cy="153.79" r="3" fill="#d97706"><title>Random level · leaf promotion: n=16,384; Maximum final height · edges=50; 3 trials</title></circle>
-<path d="M276.67,153.79L380.00,131.68" stroke="#d97706" stroke-width="2" fill="none"/>
-<circle cx="380.00" cy="131.68" r="3" fill="#d97706"><title>Random level · leaf promotion: n=65,536; Maximum final height · edges=58; 3 trials</title></circle>
-<path d="M380.00,131.68L483.33,137.21" stroke="#d97706" stroke-width="2" fill="none"/>
-<circle cx="483.33" cy="137.21" r="3" fill="#d97706"><title>Random level · leaf promotion: n=262,144; Maximum final height · edges=56; 1 trials</title></circle>
-<path d="M483.33,137.21L586.67,101.27" stroke="#d97706" stroke-width="2" fill="none"/>
-<circle cx="586.67" cy="101.27" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,048,576; Maximum final height · edges=69; 1 trials</title></circle>
-<path d="M586.67,101.27L638.33,95.74" stroke="#d97706" stroke-width="2" fill="none"/>
-<circle cx="638.33" cy="95.74" r="3" fill="#d97706"><title>Random level · leaf promotion: n=2,097,152; Maximum final height · edges=71; 1 trials</title></circle>
+<circle cx="70.00" cy="229.11" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,024; Maximum final height · edges=26; 3 trials</title></circle>
+<path d="M70.00,229.11L158.57,207.35" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="158.57" cy="207.35" r="3" fill="#d97706"><title>Random level · leaf promotion: n=4,096; Maximum final height · edges=35; 3 trials</title></circle>
+<path d="M158.57,207.35L247.14,171.07" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="247.14" cy="171.07" r="3" fill="#d97706"><title>Random level · leaf promotion: n=16,384; Maximum final height · edges=50; 3 trials</title></circle>
+<path d="M247.14,171.07L335.71,151.72" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="335.71" cy="151.72" r="3" fill="#d97706"><title>Random level · leaf promotion: n=65,536; Maximum final height · edges=58; 3 trials</title></circle>
+<path d="M335.71,151.72L424.29,156.55" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="156.55" r="3" fill="#d97706"><title>Random level · leaf promotion: n=262,144; Maximum final height · edges=56; 1 trials</title></circle>
+<path d="M424.29,156.55L512.86,125.11" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="125.11" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,048,576; Maximum final height · edges=69; 1 trials</title></circle>
+<path d="M512.86,125.11L557.14,120.27" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="120.27" r="3" fill="#d97706"><title>Random level · leaf promotion: n=2,097,152; Maximum final height · edges=71; 1 trials</title></circle>
 <path d="M372,373h20" stroke="#d97706" stroke-width="3"/><text x="399" y="377">Random level · leaf promotion</text>
-<circle cx="70.00" cy="228.42" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,024; Maximum final height · edges=23; 3 trials</title></circle>
-<path d="M70.00,228.42L173.33,214.60" stroke="#dc2626" stroke-width="2" fill="none"/>
-<circle cx="173.33" cy="214.60" r="3" fill="#dc2626"><title>Stored-priority treap: n=4,096; Maximum final height · edges=28; 3 trials</title></circle>
-<path d="M173.33,214.60L276.67,203.55" stroke="#dc2626" stroke-width="2" fill="none"/>
-<circle cx="276.67" cy="203.55" r="3" fill="#dc2626"><title>Stored-priority treap: n=16,384; Maximum final height · edges=32; 3 trials</title></circle>
-<path d="M276.67,203.55L380.00,181.43" stroke="#dc2626" stroke-width="2" fill="none"/>
-<circle cx="380.00" cy="181.43" r="3" fill="#dc2626"><title>Stored-priority treap: n=65,536; Maximum final height · edges=40; 3 trials</title></circle>
-<path d="M380.00,181.43L483.33,164.85" stroke="#dc2626" stroke-width="2" fill="none"/>
-<circle cx="483.33" cy="164.85" r="3" fill="#dc2626"><title>Stored-priority treap: n=262,144; Maximum final height · edges=46; 1 trials</title></circle>
-<path d="M483.33,164.85L586.67,153.79" stroke="#dc2626" stroke-width="2" fill="none"/>
-<circle cx="586.67" cy="153.79" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,048,576; Maximum final height · edges=50; 1 trials</title></circle>
-<path d="M586.67,153.79L638.33,148.26" stroke="#dc2626" stroke-width="2" fill="none"/>
-<circle cx="638.33" cy="148.26" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Maximum final height · edges=52; 1 trials</title></circle>
+<circle cx="70.00" cy="236.37" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,024; Maximum final height · edges=23; 3 trials</title></circle>
+<path d="M70.00,236.37L158.57,224.28" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="158.57" cy="224.28" r="3" fill="#dc2626"><title>Stored-priority treap: n=4,096; Maximum final height · edges=28; 3 trials</title></circle>
+<path d="M158.57,224.28L247.14,214.60" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="247.14" cy="214.60" r="3" fill="#dc2626"><title>Stored-priority treap: n=16,384; Maximum final height · edges=32; 3 trials</title></circle>
+<path d="M247.14,214.60L335.71,195.25" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="335.71" cy="195.25" r="3" fill="#dc2626"><title>Stored-priority treap: n=65,536; Maximum final height · edges=40; 3 trials</title></circle>
+<path d="M335.71,195.25L424.29,180.74" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="180.74" r="3" fill="#dc2626"><title>Stored-priority treap: n=262,144; Maximum final height · edges=46; 1 trials</title></circle>
+<path d="M424.29,180.74L512.86,171.07" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="171.07" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,048,576; Maximum final height · edges=50; 1 trials</title></circle>
+<path d="M512.86,171.07L557.14,166.23" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="166.23" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Maximum final height · edges=52; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
-<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
+<circle cx="70.00" cy="231.53" r="3" fill="#0891b2"><title>C++ geometric repair: n=1,024; Maximum final height · edges=25; 3 trials</title></circle>
+<path d="M70.00,231.53L158.57,207.35" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="158.57" cy="207.35" r="3" fill="#0891b2"><title>C++ geometric repair: n=4,096; Maximum final height · edges=35; 3 trials</title></circle>
+<path d="M158.57,207.35L247.14,180.74" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="247.14" cy="180.74" r="3" fill="#0891b2"><title>C++ geometric repair: n=16,384; Maximum final height · edges=46; 3 trials</title></circle>
+<path d="M247.14,180.74L335.71,175.90" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="335.71" cy="175.90" r="3" fill="#0891b2"><title>C++ geometric repair: n=65,536; Maximum final height · edges=48; 3 trials</title></circle>
+<path d="M335.71,175.90L424.29,161.39" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="161.39" r="3" fill="#0891b2"><title>C++ geometric repair: n=262,144; Maximum final height · edges=54; 1 trials</title></circle>
+<path d="M424.29,161.39L512.86,137.21" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="137.21" r="3" fill="#0891b2"><title>C++ geometric repair: n=1,048,576; Maximum final height · edges=64; 1 trials</title></circle>
+<path d="M512.86,137.21L557.14,142.04" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="142.04" r="3" fill="#0891b2"><title>C++ geometric repair: n=2,097,152; Maximum final height · edges=62; 1 trials</title></circle>
+<path d="M557.14,142.04L601.43,134.79" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="601.43" cy="134.79" r="3" fill="#0891b2"><title>C++ geometric repair: n=4,194,304; Maximum final height · edges=65; 1 trials</title></circle>
+<path d="M601.43,134.79L645.71,113.02" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="645.71" cy="113.02" r="3" fill="#0891b2"><title>C++ geometric repair: n=8,388,608; Maximum final height · edges=74; 1 trials</title></circle>
+<path d="M645.71,113.02L690.00,100.93" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="690.00" cy="100.93" r="3" fill="#0891b2"><title>C++ geometric repair: n=16,777,216; Maximum final height · edges=79; 1 trials</title></circle>
+<path d="M372,395h20" stroke="#0891b2" stroke-width="3"/><text x="399" y="399">C++ geometric repair</text>
+<path d="M372,417h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="421">3.48·log₂(n) · endpoint guide</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>

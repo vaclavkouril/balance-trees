@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="native-runs-maximum_height-title native-runs-maximum_height-desc">
+<title id="native-runs-maximum_height-title">Runs · Maximum final height · edges</title>
+<desc id="native-runs-maximum_height-desc">Measurements for 1 implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: 2.79·log₂(n) · endpoint guide. c=max(1, largest endpoint value/log₂(n) across implementations). Descriptive scaling, not a proven bound.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
+<rect width="720" height="425" rx="12" fill="white"/>
+<text x="22" y="28" style="font-size:17px;font-weight:650">Runs · Maximum final height · edges</text>
+<text x="22" y="48" style="font-size:11px;fill:#64748b">1 implementations · source and seeds recorded · no timing comparison</text>
+<path class="grid" d="M70,292.00h620"/><text x="61" y="296.00" text-anchor="end">0</text>
+<path class="grid" d="M70,246.80h620"/><text x="61" y="250.80" text-anchor="end">15.5</text>
+<path class="grid" d="M70,201.60h620"/><text x="61" y="205.60" text-anchor="end">30.9</text>
+<path class="grid" d="M70,156.40h620"/><text x="61" y="160.40" text-anchor="end">46.4</text>
+<path class="grid" d="M70,111.20h620"/><text x="61" y="115.20" text-anchor="end">61.8</text>
+<path class="grid" d="M70,66.00h620"/><text x="61" y="70.00" text-anchor="end">77.3</text>
+<path class="grid" d="M70.00,66v226"/><text x="70.00" y="313" text-anchor="middle">1k</text>
+<path class="grid" d="M247.14,66v226"/><text x="247.14" y="313" text-anchor="middle">16k</text>
+<path class="grid" d="M424.29,66v226"/><text x="424.29" y="313" text-anchor="middle">256k</text>
+<path class="grid" d="M512.86,66v226"/><text x="512.86" y="313" text-anchor="middle">1M</text>
+<path class="grid" d="M601.43,66v226"/><text x="601.43" y="313" text-anchor="middle">4M</text>
+<path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">16M</text>
+<path class="log-reference" data-constant="2.7916666666666665" d="M70.00,210.36L690.00,96.06" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>2.79·log₂(n) · endpoint guide: descriptive scaling, not a proven bound</title></path>
+<circle cx="70.00" cy="230.59" r="3" fill="#2563eb"><title>C++ geometric repair: n=1,024; Maximum final height · edges=21; 3 trials</title></circle>
+<path d="M70.00,230.59L158.57,204.27" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="158.57" cy="204.27" r="3" fill="#2563eb"><title>C++ geometric repair: n=4,096; Maximum final height · edges=30; 3 trials</title></circle>
+<path d="M158.57,204.27L247.14,186.72" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="247.14" cy="186.72" r="3" fill="#2563eb"><title>C++ geometric repair: n=16,384; Maximum final height · edges=36; 3 trials</title></circle>
+<path d="M247.14,186.72L335.71,166.25" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="335.71" cy="166.25" r="3" fill="#2563eb"><title>C++ geometric repair: n=65,536; Maximum final height · edges=43; 3 trials</title></circle>
+<path d="M335.71,166.25L424.29,151.63" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="151.63" r="3" fill="#2563eb"><title>C++ geometric repair: n=262,144; Maximum final height · edges=48; 1 trials</title></circle>
+<path d="M424.29,151.63L512.86,134.08" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="134.08" r="3" fill="#2563eb"><title>C++ geometric repair: n=1,048,576; Maximum final height · edges=54; 1 trials</title></circle>
+<path d="M512.86,134.08L557.14,90.21" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="90.21" r="3" fill="#2563eb"><title>C++ geometric repair: n=2,097,152; Maximum final height · edges=69; 1 trials</title></circle>
+<path d="M557.14,90.21L601.43,93.14" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="601.43" cy="93.14" r="3" fill="#2563eb"><title>C++ geometric repair: n=4,194,304; Maximum final height · edges=68; 1 trials</title></circle>
+<path d="M601.43,93.14L645.71,98.99" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="645.71" cy="98.99" r="3" fill="#2563eb"><title>C++ geometric repair: n=8,388,608; Maximum final height · edges=66; 1 trials</title></circle>
+<path d="M645.71,98.99L690.00,96.06" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="690.00" cy="96.06" r="3" fill="#2563eb"><title>C++ geometric repair: n=16,777,216; Maximum final height · edges=67; 1 trials</title></circle>
+<path d="M22,351h20" stroke="#2563eb" stroke-width="3"/><text x="49" y="355">C++ geometric repair</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">2.79·log₂(n) · endpoint guide</text>
+<text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>

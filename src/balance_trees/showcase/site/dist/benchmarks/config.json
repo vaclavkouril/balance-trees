@@ -22,7 +22,8 @@
     "geometric-target-local-repair-alternate",
     "interval-target-local-repair",
     "random-level",
-    "treap"
+    "treap",
+    "geometric-target-local-repair-native"
   ],
   "orders": [
     "random",
@@ -115,11 +116,46 @@
     "geometric-target-local-repair-alternate": {
       "name": "Geometric local repair \u00b7 alternate",
       "note": "Unmodified alternate implementation RandomLevelV213; records move count in stats.priority."
+    },
+    "geometric-target-local-repair-native": {
+      "name": "C++ geometric repair",
+      "note": "20-byte indexed node payload; buffered SplitMix64 bits; no rotation trace allocation."
     }
   },
-  "global_stop_reason": "After every implementation/input pair completed 2,097,152 keys, a 4,194,304-key probe hit the 768 MiB cap inside the common BST validator (seen.add(id(node))). The main required validation allocations at that size are estimated at 816 MiB, before interpreter overhead. Remaining higher-size probes were cancelled or not launched to avoid repeating this shared validation-memory bottleneck.",
   "validation_memory_estimate_mib_at_4194304": 816.00146484375,
   "cancelled_worker_processes": 4,
   "finished_at": "2026-11-05T14:45:49.346141+00:00",
-  "wall_seconds": 9731.950406
+  "wall_seconds": 9731.950406,
+  "native_settings": {
+    "sizes": [
+      1024,
+      4096,
+      16384,
+      65536,
+      262144,
+      1048576,
+      2097152,
+      4194304,
+      8388608,
+      16777216
+    ],
+    "timeout_seconds": 360,
+    "memory_mib": 768
+  },
+  "native_started_at": "2026-11-05T17:15:10.865285+00:00",
+  "baseline_sha256": "de3ea3f140b0783b073c5bb0f5ffe324dbd51d703be2245d900bfc39df7fd5ef",
+  "compiler": "c++ (GCC) 16.2.1 20260810",
+  "native_build": "CMake Release; C++20; sequential isolated workers; exact node reserve",
+  "native_sampling": "Original input generator and order seeds; original 64-bit rotation seed values, consumed by SplitMix64 rather than Python MT. Streams are not paired.",
+  "native_timing": "Insertion and aggregate counters only; input generation/parsing, node reservation, startup and final validation excluded. No Python timing comparison is available in the baseline.",
+  "native_source_sha256": {
+    "native/CMakeLists.txt": "150e4937d5eb8fe6f063cc4b76f45666b7e6905efaccb9f2969bb65e3e5da04a",
+    "native/benchmark.cpp": "cc47f24113a8d84ba26db13058765072bc1485bd48914c53b50525a9c5d27c3a",
+    "native/include/balance_trees/tree.hpp": "d7efe53743cb1115c88aef5c377a1cdf192971ba18b028ab34c29d754f6354b7",
+    "native/main.cpp": "6e91cef18880a349ba126ae559e2411ff6efde23f387e986de0357015642c7d6",
+    "native/tree.cpp": "a6a07a859c79ad702fbb367b1918739ce1533c5cfc133524d4f1fd14d11ef9ac"
+  },
+  "python_stop_reason": "After every implementation/input pair completed 2,097,152 keys, a 4,194,304-key probe hit the 768 MiB cap inside the common BST validator (seen.add(id(node))). The main required validation allocations at that size are estimated at 816 MiB, before interpreter overhead. Remaining higher-size probes were cancelled or not launched to avoid repeating this shared validation-memory bottleneck.",
+  "native_finished_at": "2026-11-05T17:20:51.292619+00:00",
+  "native_session_wall_seconds": 331.0435485720009
 }

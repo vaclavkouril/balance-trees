@@ -1,112 +1,136 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="increasing-mean_random_bits-title increasing-mean_random_bits-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 447" role="img" aria-labelledby="increasing-mean_random_bits-title increasing-mean_random_bits-desc">
 <title id="increasing-mean_random_bits-title">Increasing · Mean random bits / key</title>
-<desc id="increasing-mean_random_bits-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: log₂(n), an unscaled numeric reference, not a fitted bound.</desc>
+<desc id="increasing-mean_random_bits-desc">Measurements for 6 implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: 3.05·log₂(n) · endpoint guide. c=max(1, largest endpoint value/log₂(n) across implementations). Descriptive scaling, not a proven bound.</desc>
 <style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
-<rect width="720" height="425" rx="12" fill="white"/>
+<rect width="720" height="447" rx="12" fill="white"/>
 <text x="22" y="28" style="font-size:17px;font-weight:650">Increasing · Mean random bits / key</text>
-<text x="22" y="48" style="font-size:11px;fill:#64748b">Five implementations · source and seeds recorded · no timing comparison</text>
+<text x="22" y="48" style="font-size:11px;fill:#64748b">6 implementations · source and seeds recorded · no timing comparison</text>
 <path class="grid" d="M70,292.00h620"/><text x="61" y="296.00" text-anchor="end">0</text>
-<path class="grid" d="M70,246.80h620"/><text x="61" y="250.80" text-anchor="end">14.3</text>
-<path class="grid" d="M70,201.60h620"/><text x="61" y="205.60" text-anchor="end">28.7</text>
-<path class="grid" d="M70,156.40h620"/><text x="61" y="160.40" text-anchor="end">43</text>
-<path class="grid" d="M70,111.20h620"/><text x="61" y="115.20" text-anchor="end">57.3</text>
-<path class="grid" d="M70,66.00h620"/><text x="61" y="70.00" text-anchor="end">71.7</text>
+<path class="grid" d="M70,246.80h620"/><text x="61" y="250.80" text-anchor="end">16.4</text>
+<path class="grid" d="M70,201.60h620"/><text x="61" y="205.60" text-anchor="end">32.8</text>
+<path class="grid" d="M70,156.40h620"/><text x="61" y="160.40" text-anchor="end">49.2</text>
+<path class="grid" d="M70,111.20h620"/><text x="61" y="115.20" text-anchor="end">65.5</text>
+<path class="grid" d="M70,66.00h620"/><text x="61" y="70.00" text-anchor="end">81.9</text>
 <path class="grid" d="M70.00,66v226"/><text x="70.00" y="313" text-anchor="middle">1k</text>
-<path class="grid" d="M173.33,66v226"/><text x="173.33" y="313" text-anchor="middle">4k</text>
-<path class="grid" d="M380.00,66v226"/><text x="380.00" y="313" text-anchor="middle">64k</text>
-<path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
-<path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
-<path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
-<path class="log-reference" d="M70.00,260.47L690.00,222.64" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>log₂(n): unscaled numeric reference, not a fitted bound</title></path>
-<path d="M70.00,285.84V285.76" stroke="#2563eb"/>
-<circle cx="70.00" cy="285.80" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean random bits / key=1.96777; 3 trials</title></circle>
-<path d="M70.00,285.80L173.33,285.71" stroke="#2563eb" stroke-width="2" fill="none"/>
-<path d="M173.33,285.74V285.68" stroke="#2563eb"/>
-<circle cx="173.33" cy="285.71" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Mean random bits / key=1.99552; 3 trials</title></circle>
-<path d="M173.33,285.71L276.67,285.69" stroke="#2563eb" stroke-width="2" fill="none"/>
-<path d="M276.67,285.71V285.68" stroke="#2563eb"/>
-<circle cx="276.67" cy="285.69" r="3" fill="#2563eb"><title>Geometric repair: n=16,384; Mean random bits / key=2.00108; 3 trials</title></circle>
-<path d="M276.67,285.69L380.00,285.69" stroke="#2563eb" stroke-width="2" fill="none"/>
-<path d="M380.00,285.69V285.68" stroke="#2563eb"/>
-<circle cx="380.00" cy="285.69" r="3" fill="#2563eb"><title>Geometric repair: n=65,536; Mean random bits / key=2.00265; 3 trials</title></circle>
-<path d="M380.00,285.69L483.33,285.66" stroke="#2563eb" stroke-width="2" fill="none"/>
-<circle cx="483.33" cy="285.66" r="3" fill="#2563eb"><title>Geometric repair: n=262,144; Mean random bits / key=2.00962; 1 trials</title></circle>
-<path d="M483.33,285.66L586.67,285.70" stroke="#2563eb" stroke-width="2" fill="none"/>
-<circle cx="586.67" cy="285.70" r="3" fill="#2563eb"><title>Geometric repair: n=1,048,576; Mean random bits / key=1.99865; 1 trials</title></circle>
-<path d="M586.67,285.70L638.33,285.70" stroke="#2563eb" stroke-width="2" fill="none"/>
-<circle cx="638.33" cy="285.70" r="3" fill="#2563eb"><title>Geometric repair: n=2,097,152; Mean random bits / key=1.99901; 1 trials</title></circle>
+<path class="grid" d="M247.14,66v226"/><text x="247.14" y="313" text-anchor="middle">16k</text>
+<path class="grid" d="M424.29,66v226"/><text x="424.29" y="313" text-anchor="middle">256k</text>
+<path class="grid" d="M512.86,66v226"/><text x="512.86" y="313" text-anchor="middle">1M</text>
+<path class="grid" d="M601.43,66v226"/><text x="601.43" y="313" text-anchor="middle">4M</text>
+<path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">16M</text>
+<path class="log-reference" data-constant="3.0476190476190474" d="M70.00,207.92L690.00,90.21" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>3.05·log₂(n) · endpoint guide: descriptive scaling, not a proven bound</title></path>
+<path d="M70.00,286.61V286.54" stroke="#2563eb"/>
+<circle cx="70.00" cy="286.57" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean random bits / key=1.96777; 3 trials</title></circle>
+<path d="M70.00,286.57L158.57,286.49" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M158.57,286.52V286.47" stroke="#2563eb"/>
+<circle cx="158.57" cy="286.49" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Mean random bits / key=1.99552; 3 trials</title></circle>
+<path d="M158.57,286.49L247.14,286.48" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M247.14,286.49V286.47" stroke="#2563eb"/>
+<circle cx="247.14" cy="286.48" r="3" fill="#2563eb"><title>Geometric repair: n=16,384; Mean random bits / key=2.00108; 3 trials</title></circle>
+<path d="M247.14,286.48L335.71,286.48" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M335.71,286.48V286.47" stroke="#2563eb"/>
+<circle cx="335.71" cy="286.48" r="3" fill="#2563eb"><title>Geometric repair: n=65,536; Mean random bits / key=2.00265; 3 trials</title></circle>
+<path d="M335.71,286.48L424.29,286.46" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="286.46" r="3" fill="#2563eb"><title>Geometric repair: n=262,144; Mean random bits / key=2.00962; 1 trials</title></circle>
+<path d="M424.29,286.46L512.86,286.49" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="286.49" r="3" fill="#2563eb"><title>Geometric repair: n=1,048,576; Mean random bits / key=1.99865; 1 trials</title></circle>
+<path d="M512.86,286.49L557.14,286.49" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="286.49" r="3" fill="#2563eb"><title>Geometric repair: n=2,097,152; Mean random bits / key=1.99901; 1 trials</title></circle>
 <path d="M22,351h20" stroke="#2563eb" stroke-width="3"/><text x="49" y="355">Geometric repair</text>
-<path d="M70.00,285.84V285.76" stroke="#9333ea"/>
-<circle cx="70.00" cy="285.80" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,024; Mean random bits / key=1.96777; 3 trials</title></circle>
-<path d="M70.00,285.80L173.33,285.71" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<path d="M173.33,285.74V285.68" stroke="#9333ea"/>
-<circle cx="173.33" cy="285.71" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=4,096; Mean random bits / key=1.99552; 3 trials</title></circle>
-<path d="M173.33,285.71L276.67,285.69" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<path d="M276.67,285.71V285.68" stroke="#9333ea"/>
-<circle cx="276.67" cy="285.69" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=16,384; Mean random bits / key=2.00108; 3 trials</title></circle>
-<path d="M276.67,285.69L380.00,285.69" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<path d="M380.00,285.69V285.68" stroke="#9333ea"/>
-<circle cx="380.00" cy="285.69" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=65,536; Mean random bits / key=2.00265; 3 trials</title></circle>
-<path d="M380.00,285.69L483.33,285.66" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<circle cx="483.33" cy="285.66" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=262,144; Mean random bits / key=2.00962; 1 trials</title></circle>
-<path d="M483.33,285.66L586.67,285.70" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<circle cx="586.67" cy="285.70" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,048,576; Mean random bits / key=1.99865; 1 trials</title></circle>
-<path d="M586.67,285.70L638.33,285.70" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-<circle cx="638.33" cy="285.70" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=2,097,152; Mean random bits / key=1.99901; 1 trials</title></circle>
+<path d="M70.00,286.61V286.54" stroke="#9333ea"/>
+<circle cx="70.00" cy="286.57" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,024; Mean random bits / key=1.96777; 3 trials</title></circle>
+<path d="M70.00,286.57L158.57,286.49" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<path d="M158.57,286.52V286.47" stroke="#9333ea"/>
+<circle cx="158.57" cy="286.49" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=4,096; Mean random bits / key=1.99552; 3 trials</title></circle>
+<path d="M158.57,286.49L247.14,286.48" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<path d="M247.14,286.49V286.47" stroke="#9333ea"/>
+<circle cx="247.14" cy="286.48" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=16,384; Mean random bits / key=2.00108; 3 trials</title></circle>
+<path d="M247.14,286.48L335.71,286.48" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<path d="M335.71,286.48V286.47" stroke="#9333ea"/>
+<circle cx="335.71" cy="286.48" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=65,536; Mean random bits / key=2.00265; 3 trials</title></circle>
+<path d="M335.71,286.48L424.29,286.46" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="424.29" cy="286.46" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=262,144; Mean random bits / key=2.00962; 1 trials</title></circle>
+<path d="M424.29,286.46L512.86,286.49" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="512.86" cy="286.49" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,048,576; Mean random bits / key=1.99865; 1 trials</title></circle>
+<path d="M512.86,286.49L557.14,286.49" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="557.14" cy="286.49" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=2,097,152; Mean random bits / key=1.99901; 1 trials</title></circle>
 <path d="M372,351h20" stroke="#9333ea" stroke-width="3" stroke-dasharray="6 4"/><text x="399" y="355">Geometric repair · alternate</text>
-<path d="M70.00,90.21V90.21" stroke="#059669"/>
-<circle cx="70.00" cy="90.21" r="3" fill="#059669"><title>Interval repair: n=1,024; Mean random bits / key=64; 3 trials</title></circle>
-<path d="M70.00,90.21L173.33,90.21" stroke="#059669" stroke-width="2" fill="none"/>
-<path d="M173.33,90.21V90.21" stroke="#059669"/>
-<circle cx="173.33" cy="90.21" r="3" fill="#059669"><title>Interval repair: n=4,096; Mean random bits / key=64; 3 trials</title></circle>
-<path d="M173.33,90.21L276.67,90.21" stroke="#059669" stroke-width="2" fill="none"/>
-<path d="M276.67,90.21V90.21" stroke="#059669"/>
-<circle cx="276.67" cy="90.21" r="3" fill="#059669"><title>Interval repair: n=16,384; Mean random bits / key=64; 3 trials</title></circle>
-<path d="M276.67,90.21L380.00,90.21" stroke="#059669" stroke-width="2" fill="none"/>
-<path d="M380.00,90.21V90.21" stroke="#059669"/>
-<circle cx="380.00" cy="90.21" r="3" fill="#059669"><title>Interval repair: n=65,536; Mean random bits / key=64; 3 trials</title></circle>
-<path d="M380.00,90.21L483.33,90.21" stroke="#059669" stroke-width="2" fill="none"/>
-<circle cx="483.33" cy="90.21" r="3" fill="#059669"><title>Interval repair: n=262,144; Mean random bits / key=64; 1 trials</title></circle>
-<path d="M483.33,90.21L586.67,90.21" stroke="#059669" stroke-width="2" fill="none"/>
-<circle cx="586.67" cy="90.21" r="3" fill="#059669"><title>Interval repair: n=1,048,576; Mean random bits / key=64; 1 trials</title></circle>
-<path d="M586.67,90.21L638.33,90.21" stroke="#059669" stroke-width="2" fill="none"/>
-<circle cx="638.33" cy="90.21" r="3" fill="#059669"><title>Interval repair: n=2,097,152; Mean random bits / key=64; 1 trials</title></circle>
+<path d="M70.00,115.44V115.44" stroke="#059669"/>
+<circle cx="70.00" cy="115.44" r="3" fill="#059669"><title>Interval repair: n=1,024; Mean random bits / key=64; 3 trials</title></circle>
+<path d="M70.00,115.44L158.57,115.44" stroke="#059669" stroke-width="2" fill="none"/>
+<path d="M158.57,115.44V115.44" stroke="#059669"/>
+<circle cx="158.57" cy="115.44" r="3" fill="#059669"><title>Interval repair: n=4,096; Mean random bits / key=64; 3 trials</title></circle>
+<path d="M158.57,115.44L247.14,115.44" stroke="#059669" stroke-width="2" fill="none"/>
+<path d="M247.14,115.44V115.44" stroke="#059669"/>
+<circle cx="247.14" cy="115.44" r="3" fill="#059669"><title>Interval repair: n=16,384; Mean random bits / key=64; 3 trials</title></circle>
+<path d="M247.14,115.44L335.71,115.44" stroke="#059669" stroke-width="2" fill="none"/>
+<path d="M335.71,115.44V115.44" stroke="#059669"/>
+<circle cx="335.71" cy="115.44" r="3" fill="#059669"><title>Interval repair: n=65,536; Mean random bits / key=64; 3 trials</title></circle>
+<path d="M335.71,115.44L424.29,115.44" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="115.44" r="3" fill="#059669"><title>Interval repair: n=262,144; Mean random bits / key=64; 1 trials</title></circle>
+<path d="M424.29,115.44L512.86,115.44" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="115.44" r="3" fill="#059669"><title>Interval repair: n=1,048,576; Mean random bits / key=64; 1 trials</title></circle>
+<path d="M512.86,115.44L557.14,115.44" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="115.44" r="3" fill="#059669"><title>Interval repair: n=2,097,152; Mean random bits / key=64; 1 trials</title></circle>
 <path d="M22,373h20" stroke="#059669" stroke-width="3"/><text x="49" y="377">Interval repair</text>
-<path d="M70.00,263.51V263.49" stroke="#d97706"/>
-<circle cx="70.00" cy="263.50" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,024; Mean random bits / key=9.03841; 3 trials</title></circle>
-<path d="M70.00,263.50L173.33,257.29" stroke="#d97706" stroke-width="2" fill="none"/>
-<path d="M173.33,257.29V257.28" stroke="#d97706"/>
-<circle cx="173.33" cy="257.29" r="3" fill="#d97706"><title>Random level · leaf promotion: n=4,096; Mean random bits / key=11.0101; 3 trials</title></circle>
-<path d="M173.33,257.29L276.67,251.00" stroke="#d97706" stroke-width="2" fill="none"/>
-<path d="M276.67,251.00V251.00" stroke="#d97706"/>
-<circle cx="276.67" cy="251.00" r="3" fill="#d97706"><title>Random level · leaf promotion: n=16,384; Mean random bits / key=13.0049; 3 trials</title></circle>
-<path d="M276.67,251.00L380.00,244.70" stroke="#d97706" stroke-width="2" fill="none"/>
-<path d="M380.00,244.70V244.70" stroke="#d97706"/>
-<circle cx="380.00" cy="244.70" r="3" fill="#d97706"><title>Random level · leaf promotion: n=65,536; Mean random bits / key=15.001; 3 trials</title></circle>
-<path d="M380.00,244.70L483.33,238.40" stroke="#d97706" stroke-width="2" fill="none"/>
-<circle cx="483.33" cy="238.40" r="3" fill="#d97706"><title>Random level · leaf promotion: n=262,144; Mean random bits / key=17.0005; 1 trials</title></circle>
-<path d="M483.33,238.40L586.67,232.09" stroke="#d97706" stroke-width="2" fill="none"/>
-<circle cx="586.67" cy="232.09" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,048,576; Mean random bits / key=19.0001; 1 trials</title></circle>
-<path d="M586.67,232.09L638.33,228.94" stroke="#d97706" stroke-width="2" fill="none"/>
-<circle cx="638.33" cy="228.94" r="3" fill="#d97706"><title>Random level · leaf promotion: n=2,097,152; Mean random bits / key=20.0001; 1 trials</title></circle>
+<path d="M70.00,267.07V267.06" stroke="#d97706"/>
+<circle cx="70.00" cy="267.06" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,024; Mean random bits / key=9.03841; 3 trials</title></circle>
+<path d="M70.00,267.06L158.57,261.63" stroke="#d97706" stroke-width="2" fill="none"/>
+<path d="M158.57,261.63V261.62" stroke="#d97706"/>
+<circle cx="158.57" cy="261.63" r="3" fill="#d97706"><title>Random level · leaf promotion: n=4,096; Mean random bits / key=11.0101; 3 trials</title></circle>
+<path d="M158.57,261.63L247.14,256.12" stroke="#d97706" stroke-width="2" fill="none"/>
+<path d="M247.14,256.12V256.12" stroke="#d97706"/>
+<circle cx="247.14" cy="256.12" r="3" fill="#d97706"><title>Random level · leaf promotion: n=16,384; Mean random bits / key=13.0049; 3 trials</title></circle>
+<path d="M247.14,256.12L335.71,250.62" stroke="#d97706" stroke-width="2" fill="none"/>
+<path d="M335.71,250.62V250.61" stroke="#d97706"/>
+<circle cx="335.71" cy="250.62" r="3" fill="#d97706"><title>Random level · leaf promotion: n=65,536; Mean random bits / key=15.001; 3 trials</title></circle>
+<path d="M335.71,250.62L424.29,245.10" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="245.10" r="3" fill="#d97706"><title>Random level · leaf promotion: n=262,144; Mean random bits / key=17.0005; 1 trials</title></circle>
+<path d="M424.29,245.10L512.86,239.58" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="239.58" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,048,576; Mean random bits / key=19.0001; 1 trials</title></circle>
+<path d="M512.86,239.58L557.14,236.82" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="236.82" r="3" fill="#d97706"><title>Random level · leaf promotion: n=2,097,152; Mean random bits / key=20.0001; 1 trials</title></circle>
 <path d="M372,373h20" stroke="#d97706" stroke-width="3"/><text x="399" y="377">Random level · leaf promotion</text>
-<path d="M70.00,191.11V191.11" stroke="#dc2626"/>
-<circle cx="70.00" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,024; Mean random bits / key=32; 3 trials</title></circle>
-<path d="M70.00,191.11L173.33,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
-<path d="M173.33,191.11V191.11" stroke="#dc2626"/>
-<circle cx="173.33" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=4,096; Mean random bits / key=32; 3 trials</title></circle>
-<path d="M173.33,191.11L276.67,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
-<path d="M276.67,191.11V191.11" stroke="#dc2626"/>
-<circle cx="276.67" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=16,384; Mean random bits / key=32; 3 trials</title></circle>
-<path d="M276.67,191.11L380.00,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
-<path d="M380.00,191.11V191.11" stroke="#dc2626"/>
-<circle cx="380.00" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=65,536; Mean random bits / key=32; 3 trials</title></circle>
-<path d="M380.00,191.11L483.33,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
-<circle cx="483.33" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=262,144; Mean random bits / key=32; 1 trials</title></circle>
-<path d="M483.33,191.11L586.67,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
-<circle cx="586.67" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,048,576; Mean random bits / key=32; 1 trials</title></circle>
-<path d="M586.67,191.11L638.33,191.11" stroke="#dc2626" stroke-width="2" fill="none"/>
-<circle cx="638.33" cy="191.11" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean random bits / key=32; 1 trials</title></circle>
+<path d="M70.00,203.72V203.72" stroke="#dc2626"/>
+<circle cx="70.00" cy="203.72" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,024; Mean random bits / key=32; 3 trials</title></circle>
+<path d="M70.00,203.72L158.57,203.72" stroke="#dc2626" stroke-width="2" fill="none"/>
+<path d="M158.57,203.72V203.72" stroke="#dc2626"/>
+<circle cx="158.57" cy="203.72" r="3" fill="#dc2626"><title>Stored-priority treap: n=4,096; Mean random bits / key=32; 3 trials</title></circle>
+<path d="M158.57,203.72L247.14,203.72" stroke="#dc2626" stroke-width="2" fill="none"/>
+<path d="M247.14,203.72V203.72" stroke="#dc2626"/>
+<circle cx="247.14" cy="203.72" r="3" fill="#dc2626"><title>Stored-priority treap: n=16,384; Mean random bits / key=32; 3 trials</title></circle>
+<path d="M247.14,203.72L335.71,203.72" stroke="#dc2626" stroke-width="2" fill="none"/>
+<path d="M335.71,203.72V203.72" stroke="#dc2626"/>
+<circle cx="335.71" cy="203.72" r="3" fill="#dc2626"><title>Stored-priority treap: n=65,536; Mean random bits / key=32; 3 trials</title></circle>
+<path d="M335.71,203.72L424.29,203.72" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="203.72" r="3" fill="#dc2626"><title>Stored-priority treap: n=262,144; Mean random bits / key=32; 1 trials</title></circle>
+<path d="M424.29,203.72L512.86,203.72" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="203.72" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,048,576; Mean random bits / key=32; 1 trials</title></circle>
+<path d="M512.86,203.72L557.14,203.72" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="203.72" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean random bits / key=32; 1 trials</title></circle>
 <path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
-<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">log₂(n) · numeric reference</text>
+<path d="M70.00,286.57V286.34" stroke="#0891b2"/>
+<circle cx="70.00" cy="286.45" r="3" fill="#0891b2"><title>C++ geometric repair: n=1,024; Mean random bits / key=2.01042; 3 trials</title></circle>
+<path d="M70.00,286.45L158.57,286.49" stroke="#0891b2" stroke-width="2" fill="none"/>
+<path d="M158.57,286.53V286.45" stroke="#0891b2"/>
+<circle cx="158.57" cy="286.49" r="3" fill="#0891b2"><title>C++ geometric repair: n=4,096; Mean random bits / key=1.99731; 3 trials</title></circle>
+<path d="M158.57,286.49L247.14,286.46" stroke="#0891b2" stroke-width="2" fill="none"/>
+<path d="M247.14,286.47V286.44" stroke="#0891b2"/>
+<circle cx="247.14" cy="286.46" r="3" fill="#0891b2"><title>C++ geometric repair: n=16,384; Mean random bits / key=2.00972; 3 trials</title></circle>
+<path d="M247.14,286.46L335.71,286.49" stroke="#0891b2" stroke-width="2" fill="none"/>
+<path d="M335.71,286.50V286.48" stroke="#0891b2"/>
+<circle cx="335.71" cy="286.49" r="3" fill="#0891b2"><title>C++ geometric repair: n=65,536; Mean random bits / key=1.99766; 3 trials</title></circle>
+<path d="M335.71,286.49L424.29,286.48" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="286.48" r="3" fill="#0891b2"><title>C++ geometric repair: n=262,144; Mean random bits / key=2.00263; 1 trials</title></circle>
+<path d="M424.29,286.48L512.86,286.49" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="286.49" r="3" fill="#0891b2"><title>C++ geometric repair: n=1,048,576; Mean random bits / key=1.9986; 1 trials</title></circle>
+<path d="M512.86,286.49L557.14,286.48" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="286.48" r="3" fill="#0891b2"><title>C++ geometric repair: n=2,097,152; Mean random bits / key=1.99956; 1 trials</title></circle>
+<path d="M557.14,286.48L601.43,286.48" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="601.43" cy="286.48" r="3" fill="#0891b2"><title>C++ geometric repair: n=4,194,304; Mean random bits / key=1.99922; 1 trials</title></circle>
+<path d="M601.43,286.48L645.71,286.48" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="645.71" cy="286.48" r="3" fill="#0891b2"><title>C++ geometric repair: n=8,388,608; Mean random bits / key=1.9999; 1 trials</title></circle>
+<path d="M645.71,286.48L690.00,286.48" stroke="#0891b2" stroke-width="2" fill="none"/>
+<circle cx="690.00" cy="286.48" r="3" fill="#0891b2"><title>C++ geometric repair: n=16,777,216; Mean random bits / key=2.00018; 1 trials</title></circle>
+<path d="M372,395h20" stroke="#0891b2" stroke-width="3"/><text x="399" y="399">C++ geometric repair</text>
+<path d="M372,417h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="421">3.05·log₂(n) · endpoint guide</text>
 <text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>
