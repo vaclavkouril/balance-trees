@@ -4,14 +4,39 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from balance_trees.benchmark import summarize
 from balance_trees.benchmark_merge import merge_runs
-from balance_trees.showcase.server import STATIC
 
 
 class BenchmarkMergeTests(unittest.TestCase):
     def setUp(self):
-        self.recorded = json.loads(
-            (STATIC / "random-level-results/results.json").read_text()
+        records = [
+            dict(
+                strategy="none",
+                order="increasing",
+                n=size,
+                trial=0,
+                seed=2026,
+                order_seed=17,
+                status="complete",
+                metrics=dict(
+                    mean_depth=(size - 1) / 2, height=size - 1, mean_rotations=0
+                ),
+            )
+            for size in (4, 8)
+        ]
+        self.recorded = dict(
+            metadata=dict(
+                sizes=[4, 8],
+                seed=2026,
+                strategies=["none"],
+                trials=1,
+                started_at="2026-01-01",
+                finished_at="2026-01-02",
+                wall_seconds=1,
+            ),
+            trials=records,
+            summaries=summarize(records),
         )
 
     def write_run(self, root, name, sizes):
@@ -27,17 +52,15 @@ class BenchmarkMergeTests(unittest.TestCase):
     def test_disjoint_runs_preserve_trials_summaries_and_batch_metadata(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            first, old = self.write_run(root, "first", [1000])
-            second, new = self.write_run(root, "second", [2000])
+            first, old = self.write_run(root, "first", [4])
+            second, new = self.write_run(root, "second", [8])
             combined = merge_runs([first, second], root / "merged")
             self.assertEqual(combined["trials"], old["trials"] + new["trials"])
-            self.assertEqual(combined["metadata"]["sizes"], [1000, 2000])
+            self.assertEqual(combined["metadata"]["sizes"], [4, 8])
             self.assertEqual(
                 combined["metadata"]["batches"], [old["metadata"], new["metadata"]]
             )
-            expected = [
-                row for row in self.recorded["summaries"] if row["n"] in (1000, 2000)
-            ]
+            expected = [row for row in self.recorded["summaries"] if row["n"] in (4, 8)]
             self.assertEqual(combined["summaries"], expected)
             self.assertEqual(json.loads((first / "results.json").read_text()), old)
             for filename in (
@@ -53,8 +76,8 @@ class BenchmarkMergeTests(unittest.TestCase):
     def test_overlapping_sizes_and_incompatible_settings_are_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            first, _ = self.write_run(root, "first", [1000])
-            second, changed = self.write_run(root, "second", [2000])
+            first, _ = self.write_run(root, "first", [4])
+            second, changed = self.write_run(root, "second", [8])
             with self.assertRaisesRegex(ValueError, "disjoint"):
                 merge_runs([first, first], root / "overlap")
             changed["metadata"]["seed"] += 1

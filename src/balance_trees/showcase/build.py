@@ -9,7 +9,7 @@ from ..strategies import strategy_factory
 from .server import STATIC
 
 ENGINE_META = '<meta name="rotation-lab-engine" content="auto">'
-PUBLIC_PAGES = ("index.html", "v2-treap.html")
+PUBLIC_PAGES = ("index.html",)
 
 
 def catalog_source() -> str:
@@ -45,11 +45,10 @@ def build_site(output: Path) -> Path:
         return [
             name
             for name in names
-            if name not in (*PUBLIC_PAGES, "v2-treap-results")
-            and Path(name).suffix not in (".css", ".mjs")
+            if name not in PUBLIC_PAGES and Path(name).suffix not in (".css", ".mjs")
         ]
 
-    # Publish current pages and their assets; retain historical data locally.
+    # Publish the visualizer and its runtime assets only.
     # A fresh destination prevents obsolete pages surviving a previous build.
     shutil.copytree(STATIC, output, ignore=exclude_unpublished_assets)
     (output / "catalog.mjs").write_text(catalog_source(), encoding="utf-8")

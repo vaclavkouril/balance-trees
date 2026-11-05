@@ -19,9 +19,10 @@
 - Add deterministic tests for behavior changes and regressions. Cover empty trees,
   duplicates, insertion, lookup, and structural invariants after mutations.
   Deletion is outside the current insertion-only implementation.
-- Preserve archived benchmark data. Use fresh output directories for new runs,
-  reuse matching results, and record seeds and methodology. Support performance
-  claims with reproducible inputs and explain complexity tradeoffs.
+- Keep generated benchmark results out of source control. Use fresh output
+  directories, record seeds and methodology, and retain results only when
+  requested. Support performance claims with reproducible inputs and explain
+  complexity tradeoffs.
 - Keep setup and layout in `README.md`; see `docs/benchmarks.md` and
   `benchmarks/README.md` for benchmark commands. Discover files with
   `rg --files --hidden -g '!.git'`.

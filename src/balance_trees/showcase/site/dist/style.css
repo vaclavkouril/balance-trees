@@ -266,8 +266,6 @@ dialog::backdrop { background: rgb(0 0 0 / .55); }
 .event-entry[data-kind="coin"] .event-marker, .event-entry[data-kind="compare"] .event-marker { background: var(--focus); }
 .event-entry[data-kind="duplicate"] .event-marker { background: var(--demoted); }
 #density { width: 100%; }
-.results-nav { display: grid; gap: 7px; margin: 8px 0 16px; font-size: 13px; }
-.results-nav a { color: var(--accent, #3b6eaa); }
 .preview-help { font-size: 12px; line-height: 1.5; }
 .hidden-label { fill: var(--muted); font-size: 11px; text-anchor: middle; }
 .compact-preview .priority-label { display: none; }

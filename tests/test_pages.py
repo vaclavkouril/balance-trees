@@ -49,13 +49,8 @@ class PagesBuildTests(unittest.TestCase):
             self.assertEqual(
                 {path.name for path in output.glob("*.html")}, set(PUBLIC_PAGES)
             )
-            self.assertEqual(
-                {path.name for path in output.iterdir() if path.is_dir()},
-                {"v2-treap-results"},
-            )
-            self.assertTrue((output / "v2-treap-results/comparison.svg").is_file())
-            # Filtering publication must leave archived measurements intact.
-            self.assertTrue((STATIC / "random-level-results/results.json").is_file())
+            self.assertFalse(any(path.is_dir() for path in output.iterdir()))
+            self.assertFalse(any(STATIC.glob("*results*")))
 
     def test_staged_assets_resolve_under_a_github_project_path(self):
         with tempfile.TemporaryDirectory() as temporary:

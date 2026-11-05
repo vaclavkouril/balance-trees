@@ -1,8 +1,7 @@
 # Treap-like balance without stored priorities
 
-The original `random-level` policy and the separate `random-level-v2` policy
-are compared in [the version 2 investigation](random-level-v2.md), including
-the growing-rotation diagnosis and the new expected bound below three.
+See [target-based strategies](perfect-tree-targets.md) for random level,
+Interval-target local repair and the capped geometric repair policy.
 
 ## Plan and acceptance criteria
 
@@ -114,49 +113,6 @@ are zero even if it travels far upward. Use rotation counts to assess that
 travel; zero recorded distance is not evidence that every rotation stays near
 the leaf's original location.
 
-## Experiment and results
-
-The current ten-strategy comparison, including the reviewed `random-level`
-policy, covers 1,000–64,000 keys on this computer with elapsed-time measurements,
-all statuses and static graph/summary pages. See [local benchmarks](benchmarks.md).
-The smaller comparison below is the earlier operation-count study and excludes
-`random-level`.
-
-Reproduce the completed **2,268 trials** (nine strategies × seven families ×
-three sizes × twelve independent seeds):
-
-```sh
-PYTHONPATH=src python -m balance_trees.experiment \
-  --sizes 64 256 1024 --trials 12 --seed 2026 \
-  --output benchmarks/results/priority-free-new --progress
-```
-
-The output directory must be new. The completed local run is under
-`benchmarks/results/priority-free-20261022/`, with text/Markdown reports, CSVs,
-per-key uncertainty, and complete seed/configuration metadata. Random permutations
-are fixed within each size; SE measures trial seed variation. These are operation
-counts and depth measurements, not elapsed-time benchmarks.
-
-At `n=1024`, average final node depth (mean ± SE):
-
-| Input | Halving | Paper ZigZag | Recount root | Window root (64) | Recomputed priority |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Increasing | 22.71 ± 2.22 | 11.75 ± 0.22 | 10.90 ± 0.19 | 19.40 ± 0.54 | 11.13 ± 0.20 |
-| Converging | 346.89 ± 2.34 | 11.16 ± 0.15 | 10.92 ± 0.16 | 33.04 ± 0.79 | 10.89 ± 0.16 |
-| Pairs | 36.75 ± 3.15 | 69.42 ± 1.98 | 10.84 ± 0.10 | 21.58 ± 0.69 | 11.13 ± 0.24 |
-| Random | 17.47 ± 0.86 | 11.93 ± 0.38 | 11.06 ± 0.14 | 10.95 ± 0.18 | 11.24 ± 0.25 |
-
-Across all seven families at this size, recount averaged 512.5 scans per
-insertion; the capped version averaged 62.03. The recomputed-priority version
-needed no recount scans. Recount and recomputed-priority mean rotations ranged
-from approximately 0.99 to 1.97. Observed maxima are not theoretical bounds.
-
-**Decision:** use recount as the exact metadata-free research reference, and
-recomputed priority for practical large visual demonstrations when a fixed
-external seed is acceptable. Keep the window strategy as an explicitly weaker
-local experiment. These finite results do not establish asymptotic bounds for
-any heuristic.
-
 ## Implementation and validation
 
 `strategies/lottery.py` shares recount/capped logic; `strategies/hashed.py` contains
@@ -170,8 +126,5 @@ including all insertion permutations through four keys; bound inspections and
 rotations for capped runs; check duplicate behavior, incomplete counts, signed
 keys, collisions, stable heap order, and Python/JavaScript priority parity.
 Both new and existing strategies are covered by invariant and model-agreement
-tests. A separate one-million-key random run of the recomputed-priority browser
-engine finished with height 49 and mean depth 23.736643, no priority array, and
-no fresh insertion bits. This is a functional demonstration, not a bound or a
-performance comparison. The visualizer shows recount scans, candidate coins, recomputed priority
+tests. The visualizer shows recount scans, candidate coins, recomputed priority
 comparisons, and primitive rotations in its clickable event timeline.

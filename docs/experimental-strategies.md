@@ -76,4 +76,4 @@ maximum in different batches. Its plot uses mean rotations per inserted key.
 Reference curves are numeric guides and provide no empirical or theoretical
 upper bound. Rotation charts in the standard report use a linear vertical
 scale and a `log2(log2(n))` reference; other metrics retain their logarithmic
-vertical scale and `log2(n)` guide. Existing recorded reports remain preserved.
+vertical scale and `log2(n)` guide. Generated reports stay within the chosen experiment output directory.

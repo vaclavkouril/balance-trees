@@ -1,5 +1,4 @@
 import json
-import shutil
 import subprocess
 import tempfile
 import unittest
@@ -9,7 +8,7 @@ from unittest.mock import patch
 
 from balance_trees.benchmark import run_benchmarks
 from balance_trees.benchmark_report import chart_svg, generate_report
-from balance_trees.showcase.server import STATIC
+from balance_trees.sequences import ORDERS
 
 
 class BenchmarkTests(unittest.TestCase):
@@ -40,12 +39,22 @@ class BenchmarkTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             source = root / "run"
-            shutil.copytree(STATIC / "random-level-results", source)
+            run_benchmarks(
+                source,
+                sizes=[8],
+                trials=1,
+                seed=2026,
+                strategies=["interval-target-promotion"],
+                orders=list(ORDERS),
+                timeout=5,
+            )
             (source / "memory.json").write_text(
-                json.dumps({
-                    "peak_child_rss_bytes": 300 * 1024**2,
-                    "address_space_limit_bytes": 1024**3,
-                })
+                json.dumps(
+                    {
+                        "peak_child_rss_bytes": 300 * 1024**2,
+                        "address_space_limit_bytes": 1024**3,
+                    }
+                )
             )
             site = root / "site"
             site.mkdir()

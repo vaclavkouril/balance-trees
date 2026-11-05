@@ -208,10 +208,8 @@ strategies and input families, treap heap ordering, trace validation, CSV input,
 backward stepping, jumps, and automatic stopping. Native browser layout testing
 requires an environment where browser processes and networking are permitted.
 
-## Recorded results
+## Website scope
 
-The sidebar links to `results.html` (graphs) and `summary.html` (compact bullet
-points and every result). These show recorded Python benchmarks, independent
-of browser playback. All SVGs, raw trials, summaries and machine/seed metadata
-are included in static builds and GitHub Pages. No benchmark runs in the browser
-or on the Pages builder. See [benchmark methodology](benchmarks.md).
+Only the interactive visualizer is currently retained. Old benchmark report
+pages and saved results have been removed ahead of the next website. Generate
+fresh measurements separately using [the benchmark guide](benchmarks.md).
