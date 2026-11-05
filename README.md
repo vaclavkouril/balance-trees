@@ -74,6 +74,9 @@ See [benchmark methodology](docs/benchmarks.md) and
 ## Layout
 
 - `src/balance_trees/`: BST, rotations, strategies, measurements, CLI tools.
+- `src/native/`: alternate C++20 implementation with compact indexed nodes,
+  geometric repair, and an extensible strategy factory; see
+  [native build and parity testing](docs/native.md).
 - `src/balance_trees/showcase/`: local trace API and browser visualizer.
 - `tests/`: correctness, sampling, invariants, CLI and browser checks.
 - `benchmarks/`: reproducible runners, separate from correctness tests.
