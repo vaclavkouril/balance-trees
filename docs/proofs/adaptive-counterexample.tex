@@ -1,0 +1,113 @@
+\section{An adaptive counterexample}
+
+The following lower bound is for the algorithm specified above and the ideal
+independent fair-bit model. It does not concern the distinct algorithms
+analyzed by Brodal. The adversary sees the current tree before choosing each
+next key, and all choices are made before the next insertion's random bits.
+
+\begin{theorem}[Linear adaptive depth and repair]\label{thm:adaptive-lower}
+There is an adaptive sequence of distinct rational keys and a key $x$ in the
+initial prefix such that, after $n$ successful insertions,
+$\mathbb E[\operatorname{depth}_n(x)]=\Omega(n)$. Along an infinite subsequence
+of insertions, the expected number of counted repair visits is also $\Omega(n)$.
+The expectations include all random bits, including those in the initial prefix.
+\end{theorem}
+
+\begin{proof}
+Throughout, $x$ will be the largest inserted key, so its root-to-node path
+consists entirely of right edges. Let $n$ include the next key, and write
+$k=\lceil\log_2 n\rceil$. Assume for the moment that $k\geq2$ and that the
+present depth $d$ of $x$ satisfies $d>k+2$. We specify two types of insertion.
+All required gaps exist because the rational order is dense.
+For definiteness, choose the midpoint of each bounded gap and one less than
+the upper endpoint for an unbounded-below gap; after failure, repeatedly
+insert one less than the current minimum. Thus every choice is a deterministic
+function of the observed tree and the prescribed schedule.
+
+For an \emph{attack}, let $g$ be the node at depth $k$ on the path to $x$,
+and insert a fresh key in $g$'s left subtree, smaller than every key already
+in that subtree. If the subtree is empty, insert at its root gap. The insertion
+path is $k$ right edges followed by one or more left edges. There are three
+cases. With probability $1/2$, $T=k$: a left child of $g$ is promoted once,
+so $g$, its right subtree, and $x$ move down one level. This includes the
+case where the new leaf is the left child of $g$. With probability $1/4$,
+$T=k-1$: the selected two-edge path is right--left, so the double rotation
+leaves $g$ at its old depth and leaves $d$ unchanged. With probability $1/4$,
+$T\leq k-2$: the selected path is right--right and the single rotation moves
+$x$ up one level. Thus an attack changes $d$ by $+1,0,-1$ with respective
+probabilities $1/2,1/4,1/4$.
+
+For a \emph{probe}, insert a fresh key in the gap immediately below $x$,
+choosing it within $x$'s left subtree. The insertion path reaches $x$, and
+its insertion depth is at least $d+1$. Since $d>k+2$, every target $T\leq k$
+selects a right--right path strictly above $x$. Exactly one rotation occurs,
+moving $x$ up one level. By the exact visit formula, the probe has
+\[ V=(d_{\mathrm{ins}}-T-1)_+\geq d-k. \]
+Neither kind of key exceeds $x$, which remains the maximum.
+
+We use nine attacks followed by one probe, repeatedly, as long as the
+condition $d>k+2$ holds. If it fails, the adversary switches to any rule for
+choosing further fresh keys below $x$. To initialize, insert $m$ distinct keys
+in decreasing order and let $x$ be the first, largest key. On the event that
+each sampled target in this prefix is zero, every new minimum rotates to the
+root, leaving a right chain with $d_m(x)=m-1$. This event has strictly positive
+probability for every fixed $m$.
+
+It remains to choose a fixed $m$ so that the subsequent condition holds forever
+with positive probability. Couple each future attack to an independent random
+variable taking values $+1,0,-1$ with probabilities $1/2,1/4,1/4$; assign
+$-1$ to each future probe. The coupling can read the first two latent fair bits
+for an attack: zero gives $+1$, one then zero gives $0$, and two ones give
+$-1$. Latent bits are independent even when a sampler stops before reading
+them. Let $Z_s$ be the sum of the first $s$ such scheduled increments, with
+$Z_0=0$. The sums of successive ten-increment blocks are independent and have
+mean $9/4-1=5/4$. The strong law of large numbers, and the bounded remainder
+within each block, imply
+\[ \frac{Z_s}{s}\longrightarrow\frac18 \quad\text{almost surely}. \]
+Consequently
+\[ M=\sup_{s\geq1}\bigl(\lceil\log_2(s+1)\rceil-Z_{s-1}\bigr) \]
+is finite almost surely. Choose a finite integer $B$ with $\Prb(M\leq B)>0$,
+then choose a fixed $m\geq4$ large enough that
+$m-1-\lceil\log_2m\rceil\geq B+3$. The initial-prefix event and $M\leq B$
+are independent and their intersection $E$ has positive probability.
+
+For step $s$ after the prefix, ceiling subadditivity and $m+s\leq m(s+1)$ give
+\[\lceil\log_2(m+s)\rceil\leq
+  \lceil\log_2m\rceil+\lceil\log_2(s+1)\rceil.\]
+Inductively on $E$, before that step the depth is $m-1+Z_{s-1}$, so its
+excess over the current $k$ is at least $3$. Hence the stated attack and probe
+transitions apply at every step, and on $E$,
+$d_{m+s}(x)=m-1+Z_s$ and $d_{m+s}(x)/(m+s)\to1/8$ almost surely.
+Fatou's lemma yields
+\[ \liminf_{n\to\infty}\frac{\mathbb E[d_n(x)]}{n}
+   \geq \frac{\Prb(E)}8>0.\]
+On the probe subsequence $n=m+10j$, the bound $V\geq d-k$, applied to the
+depth just before the probe, and the same argument give
+\[ \liminf_{j\to\infty}\frac{\mathbb E[V_{m+10j}]}{m+10j}
+   \geq \frac{\Prb(E)}8>0.\]
+Thus both stated lower bounds are unconditional.
+\end{proof}
+
+\begin{corollary}[Tight adaptive worst case]\label{cor:adaptive-tight}
+Under the model of Theorem~\ref{thm:adaptive-lower}, the largest expected
+node depth attainable by an adaptive adversary is $\Theta(n)$. The expected
+repair visits in that theorem are $\Theta(n)$ along its probe subsequence.
+\end{corollary}
+\begin{proof}
+Every node of every $n$-node binary tree has depth at most $n-1$, and the
+counted visits for an insertion are at most its insertion depth. These
+deterministic upper bounds, together with Theorem~\ref{thm:adaptive-lower},
+give the claimed matching bounds.
+\end{proof}
+
+The proof uses an infinite dense key order. The Python implementation compares
+keys at runtime, although its annotations say \texttt{int}; the rational model
+must therefore be distinguished from the annotated interface. For any fixed
+finite horizon, its finitely many possible adaptive histories use finitely many
+rational keys; an order-preserving rescaling embeds those keys in the integers.
+This yields the same finite-horizon worst-case bounds over integer inputs, with
+the spacing allowed to depend on the horizon. Comparisons here have unit cost;
+the integer spacing may require more than $O(\log n)$ bits per key, so the
+embedding does not establish the result for a fixed-width integer universe or
+account for arbitrary-precision arithmetic costs. The counterexample does not
+prove a linear lower bound for a fixed, nonadaptive insertion sequence.

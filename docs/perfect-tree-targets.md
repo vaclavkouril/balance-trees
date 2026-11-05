@@ -42,6 +42,15 @@ including a bit for the root insertion, as prescribed by the pseudocode.
 Its depth distribution differs from uniform perfect-tree vertex sampling:
 the last two possible `move` values both map to root depth zero.
 
+The [mathematical analysis](proofs/geometric-repair.tex) proves that each node
+has expected logarithmic depth on strictly increasing or decreasing insertions,
+with fewer than one expected ancestor visit per insertion. It also proves that
+an adaptive insertion rule can force linear expected node depth and linear
+expected repair work on a subsequence. For fixed nonadaptive insertion sequences,
+the corresponding general bounds remain unresolved. See the proof for the
+key-domain assumptions and the distinction between conditional and unconditional
+guarantees.
+
 ## Descriptive name for the earlier v2 policy
 
 `IntervalTargetLocalRepair` replaces the class name `RandomLevelV2`, with the

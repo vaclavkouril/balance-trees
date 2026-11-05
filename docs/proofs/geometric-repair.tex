@@ -1,0 +1,305 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,hyperref}
+\hypersetup{hidelinks}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prb}{\mathbb{P}}
+\newcommand{\pos}[1]{\left(#1\right)_{+}}
+\title{Geometric Target Repair: Proven Bounds and the Remaining Depth Problem}
+\author{Balance Trees project}
+\date{November 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We analyze the geometric-target local-repair implementation in this repository.
+Each successful insertion preserves binary-search-tree order and takes at most two
+rotations. The implementation draws fewer than two fair bits in expectation and
+stores no per-node balance metadata. Its expected ancestor-walk cost is controlled
+precisely by the insertion depth's excess over $\lceil\log_2 n\rceil$. Neither a
+constant bound on that excess nor logarithmic expected depth holds against
+adaptive insertion sequences, although both hold for monotone sequences.
+We give a distribution-preserving sampler that is optimal in expected fair bits,
+and a general logarithmic lower bound for some node's expected depth.
+\end{abstract}
+
+\section{Model and algorithm}
+Keys are distinct and totally ordered; a duplicate is rejected before policy
+state or random bits change. Start with an empty binary search tree (BST).
+Depth counts edges from the root. A successful insertion first attaches the new
+key as a leaf $v$, at depth $d$, and sets $n$ to the number of keys including
+$v$. Write
+\[ k=\lceil\log_2 n\rceil,\qquad L=k+1. \]
+The strategy has a global successful-insertion counter; each node contains only
+its key and structural child and parent links. The count needs $\Theta(\log n)$
+bits (one word in the usual word-RAM model). We count comparisons for the BST
+search separately. A rotation and a parent-pointer step have constant cost; a
+fair-bit request costs one. Exact $k$ is obtained in constant word operations,
+as with the implementation's integer bit length. Random-generator state is
+external to tree nodes and is not free storage in an implementation.
+
+Draw independent fair bits until the first zero or $L$ bits have been read. If
+$m$ ones were read before stopping, set the target $T=\max(0,k-m)$. If $d\leq T$,
+do nothing; if $d=T+1$, rotate $v$ up once. Otherwise walk from $v$ to its
+ancestor $x$ at depth $T+2$. Let $p$ and $g$ be the parent and grandparent of
+$x$. If $g,p,x$ form a straight path, rotate $p$ up once. If the path bends,
+rotate $x$ up twice. All rotations are ordinary BST rotations. This is the
+repository's \texttt{geometric\_target\_local\_repair} and
+\texttt{target\_repair} code; it is distinct from the geometric stopping rules
+studied by Brodal~\cite{brodal}.
+
+Each bit in the mathematical model is independent of the preceding history and
+of the current key, conditional on that history. We permit the next key to be
+chosen adaptively from the observed past, before the new bits are drawn. This
+covers fixed sequences. Python's seeded pseudorandom generator is deterministic;
+the probability statements below describe the ideal fair-bit model, not a
+cryptographic or information-theoretic guarantee about its finite seed.
+
+\section{Deterministic properties}
+\begin{theorem}\label{thm:structural}
+After every successful insertion the result is a BST containing exactly the
+previous keys and the new key, and at most two rotations have occurred. No
+per-node balancing information is written. The claim holds for every bit stream
+and for both fixed and adaptive insertion sequences.
+\end{theorem}
+\begin{proof}
+Ordinary leaf insertion adds the new key in its unique search position. A single
+rotation preserves the inorder sequence: for example, rotating a left child $p$
+above its parent $g$ replaces the local order $A,p,B,g,C$ by the same order;
+the other orientation is symmetric. Rotations neither add nor remove keys and
+preserve parent/child connectivity. The depth cases use zero, one, one, or two
+rotations respectively. In the last case $x$ has a parent and grandparent because
+$T\geq0$ and $x$ is at depth $T+2$; in the bent case the first promotion leaves
+$x$ directly below $g$, so the second is defined. The only persistent policy
+state is the global count, and rotations update structural links only.
+\end{proof}
+
+\begin{lemma}[Exact visit count]\label{lem:visits}
+Let $V$ be the number of \emph{counted ancestor visits} in the implementation's
+repair routine, including the final inspected ancestor. Then, pointwise,
+\[V=\pos{d-T-1}.\]
+\end{lemma}
+\begin{proof}
+If $d\leq T+1$ the routine records no visits, and the right-hand side is zero.
+Otherwise it traverses $d-T-2$ parent links and counts each departure, then
+counts the selected ancestor once. Thus it records $d-T-1$ visits. Other constant
+work, including the single-rotation case, is not counted as an ancestor visit.
+\end{proof}
+
+\section{Exact random-bit and repair costs}
+\begin{theorem}[Target distribution and bits]\label{thm:bits}
+For $k\geq0$, the target and number $B$ of requested bits satisfy
+\begin{align*}
+\Prb(T=0)&=2^{-k}, & \Prb(T=t)&=2^{-(k-t+1)}\quad(1\leq t\leq k),\\
+\E B&=2-2^{-k}<2, & \E(k-T)&=1-2^{-k}.
+\end{align*}
+The statements hold conditional on any prior history and current key.
+\end{theorem}
+\begin{proof}
+For $1\leq t\leq k$, the first $k-t$ bits must be one and the next zero.
+Target zero occurs precisely when the first $k$ bits are all one, irrespective
+of the following bit; for $k=0$ this event is certain. The $i$th bit is requested
+exactly when the preceding $i-1$ bits are all one, for $1\leq i\leq k+1$.
+Summing these probabilities gives $\E B=\sum_{j=0}^{k}2^{-j}=2-2^{-k}$.
+Finally $k-T=\min(G,k)$, where $G$ is the number of leading ones in an
+unbounded stream, so the tail-sum formula gives
+$\E(k-T)=\sum_{j=1}^{k}2^{-j}=1-2^{-k}$. Conditional independence makes the
+same calculation valid after every history.
+\end{proof}
+
+\begin{theorem}[Exact and bounded expected walking]\label{thm:walk}
+Let $D$ be the new leaf's depth before repair. Conditional on a history and
+current key, $D=d$ is fixed and the newly sampled $T$ is independent of it. If
+$d\geq k+1$, then
+\[\E[V\mid D=d]=d-k-2^{-k}.\]
+For random $D$, including an adaptively chosen next key,
+\[\E\pos{D-k-1}\ \leq\ \E V\ \leq\
+\E\pos{D-k-1}+1-2^{-k}.\]
+Consequently a uniform $O(1)$ expected repair-time bound is equivalent to a
+uniform $O(1)$ bound on $\E\pos{D-k-1}$, under the stated cost model.
+\end{theorem}
+\begin{proof}
+For $d\geq k+1$, $d-T-1\geq0$ for every target, so Lemma~\ref{lem:visits}
+and Theorem~\ref{thm:bits} give
+$\E V=d-k-1+\E(k-T)=d-k-2^{-k}$. For any $d$ and $T\leq k$,
+\[\pos{d-k-1}\leq\pos{d-T-1}
+\leq\pos{d-k-1}+(k-T).\]
+Take conditional expectations and then average over the prior history. Sampling
+and constant rotation work have expected $O(1)$ cost, while the parent loop
+costs $\Theta(V)$ up to additive constants. The two inequalities therefore
+prove the equivalence. An $O(\log n)$ bound on $\E D$ alone does not imply the
+required additive-excess bound.
+\end{proof}
+
+\begin{theorem}[A reachable conditional-time counterexample]\label{thm:chain}
+There is no uniform constant bound on expected repair time conditional on every
+reachable history, even for a fixed insertion sequence.
+\end{theorem}
+\begin{proof}
+Insert $1,2,\ldots,m$ and choose target zero at each insertion. Each such
+choice has positive probability by Theorem~\ref{thm:bits}, so this finite
+history has positive probability. Inductively the current maximum is the root:
+the next key attaches as its right child and rotates above it. The resulting
+tree is the descending left chain $m,m-1,\ldots,1$. Now insert zero. Its depth
+is $m$, and every target is at most $k=\lceil\log_2(m+1)\rceil$. Therefore
+Lemma~\ref{lem:visits} gives
+$V\geq\pos{m-k-1}$ for every fresh target, proving the claim. The fixed
+sequence is $(1,2,\ldots,m,0)$. This rare conditional history does not prove
+that the \emph{unconditional} expected cost of that sequence, or any other
+fixed sequence, is superconstant.
+\end{proof}
+
+\begin{theorem}[Monotone insertion sequences]\label{thm:monotone}
+For strictly increasing insertions, the maximum key has depth at most
+$\lceil\log_2 n\rceil$ after every repair, for every sequence of bits. Each
+insertion uses at most one rotation, and its expected number of counted repair
+visits, conditional on the past, is at most $1-2^{-k}<1$. The symmetric claims
+hold for strictly decreasing insertions and the minimum key. Duplicate attempts
+do not affect these bounds.
+\end{theorem}
+\begin{proof}
+The root insertion has depth zero and needs no rotation. For $n\geq2$, assume
+the previous maximum has depth at most $\lceil\log_2(n-1)\rceil\leq k$.
+The new maximum attaches as its right child, so its insertion depth $d$ is at
+most $k+1$. Its entire search path takes right edges. If $d\leq T$, there is no
+rotation and $d\leq k$. Otherwise the single-leaf case rotates once, and the
+two-edge case is straight, so it also rotates once. In either case, the rotated
+child lies on the new maximum's path, so that maximum moves up exactly one
+level; its final depth is at most $k$. This proves the induction and rotation
+bound for every choice of target. Moreover $d\leq k+1$ implies
+$V=\pos{d-T-1}\leq k-T$, whose conditional expectation is $1-2^{-k}$ by
+Theorem~\ref{thm:bits}. Mirror left and right for decreasing insertions. This
+result bounds the current extremal node.
+\end{proof}
+
+\begin{theorem}[Every node under monotone insertions]\label{thm:monotone-all}
+For strictly increasing insertions, fix a key $x$ inserted at time $m$. After
+$n\geq m$ insertions its expected depth satisfies
+\[
+\E[\operatorname{depth}_n(x)]\leq
+2\lceil\log_2 m\rceil+\sum_{j=m+1}^{n}\frac1j=O(\log(n+1)).
+\]
+The same result holds for strictly decreasing insertions by symmetry.
+\end{theorem}
+\begin{proof}
+The \emph{right spine} is the path obtained by following right children from
+the root. Before each insertion let $a$ be the depth of $x$. If $x$ is on the
+right spine, set $b=a$; otherwise let $b$ be the depth of its deepest right-spine
+ancestor, whose left subtree contains $x$. By Theorem~\ref{thm:monotone}, the
+old maximum is at depth at most $k$ for the next insertion's $k$, hence
+$0\leq b\leq k$.
+
+The new maximum is attached at depth $d$ on the right spine, with $d>b$.
+Whenever the sampled target $t<d$, repair rotates the right-spine child at
+depth $t+1$ above its parent at depth $t$. For the potential $a+b$ there are
+three cases. If $t=b$, $x$ moves down one level and $b$ is unchanged. If
+$t<b$, the branch point moves up one level, so $b$ decreases by one, and the
+depth $a$ does not increase. In the boundary case where the branch point is
+the rotated child, its left subtree may move across the rotation and retain
+its depth; this still gives the stated inequality. If $t>b$, the rotation is
+strictly below the relevant branch point and neither $a$ nor $b$ changes.
+If no rotation occurs then $t\geq d>b$, so this last case still applies.
+
+For $1\leq b\leq k$, Theorem~\ref{thm:bits} and a geometric sum yield
+\[\Prb(T=b)=\Prb(T<b)=2^{-(k-b+1)}.\]
+Consequently the conditional expected change of $a+b$ is at most zero.
+For $b=0$ it is at most $\Prb(T=0)=2^{-k}\leq1/j$ at insertion $j$.
+Immediately after $x$ is inserted, it is the maximum and lies on the spine;
+Theorem~\ref{thm:monotone} gives $a=b\leq\lceil\log_2 m\rceil$. Summing the
+conditional drift bounds over $j=m+1,\ldots,n$, and using $a\leq a+b$,
+proves the result. The harmonic sum is at most $1+\ln n$, establishing the
+asymptotic bound. Mirror left and right for decreasing insertions.
+\end{proof}
+
+The following adaptive construction uses the strong law of large numbers and
+Fatou's lemma; see Williams~\cite{williams} for both results.
+\input{docs/proofs/adaptive-counterexample.tex}
+
+\section{An entropy-optimal alternative sampler}
+The following alternative changes only bit consumption, not the target law:
+read bits until the first zero or until $k$ bits have been read, then return
+$T=k-m$ where $m$ is the number of leading ones read. When $k=0$, return zero
+without reading a bit. The original sampler requests one more bit whenever its
+first $k$ bits are ones, although the target is already known.
+
+\begin{theorem}[Optimal expected bits for this target law]\label{thm:entropy}
+The alternative has exactly the target distribution in Theorem~\ref{thm:bits}
+and uses $2-2^{1-k}$ expected bits. It attains the entropy $H(T)$, hence no
+exact fair-bit prefix sampler for one independent target can use fewer bits in
+expectation without recycling randomness from previous or future samples.
+\end{theorem}
+\begin{proof}
+The alternative stops at the prefix $1^{k-t}0$ for $1\leq t\leq k$ and at
+$1^k$ for $t=0$. These prefixes have the probabilities stated in
+Theorem~\ref{thm:bits}, and their lengths are $-\log_2\Prb(T=t)$. The expected
+length is $\sum_{j=0}^{k-1}2^{-j}=2-2^{1-k}$, also valid as an empty sum for
+$k=0$; it equals $H(T)$.
+
+For the lower bound, let $S$ be the random stopping prefix of any exact
+almost-surely terminating fair-bit sampler. Its possible prefixes are
+prefix-free, and a prefix $s$ of length $|s|$ occurs with probability
+$2^{-|s|}$. Hence $H(S)=\E|S|$ (also in the extended sense). Since the output
+is a deterministic function of $S$, $H(T)\leq H(S)$ by entropy's chain rule;
+see Shannon~\cite{shannon}. Thus the alternative meets the bound. This is
+optimal for the \emph{given output distribution}, not a lower bound on all
+possible balancing algorithms. Bit recycling across outputs changes the model.
+\end{proof}
+The alternative is a mathematical variant, not the implemented sampler. Even
+with the same pseudorandom seed it generally changes subsequent draws and tree
+shapes. The repository's stored-priority treap reference counts 32 logical bits
+per successful insertion and stores a priority per key; it is not the same model
+as ideal continuous-priority treaps~\cite{aragon}.
+
+\section{Depth lower bound and research status}
+\begin{theorem}[Universal logarithmic lower bound]\label{thm:lower}
+For any distribution on binary trees containing the same $n\geq4$ distinct keys,
+there exists a key whose expected depth is at least
+$\frac12(\lfloor\log_2 n\rfloor-1)$. Thus a uniform bound on all nodes' expected
+depth cannot be $o(\log n)$, even with arbitrary balancing metadata and rotations.
+\end{theorem}
+\begin{proof}
+Put $h=\lfloor\log_2 n\rfloor-1$. Every binary tree has at most $2^h-1<n/2$
+vertices at depths below $h$. Hence at least $n/2$ vertices have depth at least
+$h$, so the average of all $n$ depths is at least $h/2$ in every realization.
+Take expectations and interchange the finite sum with expectation. At least one
+of the $n$ fixed keys has expected depth at least the average.
+\end{proof}
+
+\begin{center}
+\begin{tabular}{@{}lp{0.55\linewidth}@{}}
+\toprule
+Property & Status for the implemented strategy \\
+\midrule
+BST and key preservation & Proved, Theorem~\ref{thm:structural}. \\
+Node balance metadata & None; a global count and external random state are used. \\
+Rotations & At most two per successful insertion, deterministically. \\
+Random bits & Fewer than two in expectation, Theorem~\ref{thm:bits}. \\
+Locality & Uses $n$ and may traverse far above the inserted node. \\
+Expected repair time & Adaptive sequences can require $\Omega(n)$ expected visits by Theorem~\ref{thm:adaptive-lower}; the fixed-sequence bound is open. \\
+Expected depth of every node & $O(\log n)$ for monotone sequences by Theorem~\ref{thm:monotone-all}, but $\Omega(n)$ is possible under adaptive keys by Theorem~\ref{thm:adaptive-lower}. The general fixed-sequence case is open. \\
+Optimality & The logarithmic lower bound is achieved for monotone sequences but not against adaptive insertions. \\
+\bottomrule
+\end{tabular}
+\end{center}
+The guarantees in the first four rows hold for fixed and adaptive histories under
+the stated fresh-bit assumption. The counterexample directly analyzes the
+target-depth rule; Brodal~\cite{brodal} exhibits related linear-depth behavior
+for different bottom-up random repair rules. Constant expected repair needs
+the excess-depth estimate in Theorem~\ref{thm:walk}. Finite benchmarks and
+bounded enumeration can suggest conjectures or refute finite universal claims,
+but do not establish asymptotic bounds.
+
+\begin{thebibliography}{9}
+\bibitem{brodal} Gerth St\o lting Brodal, ``Bottom-up Rebalancing Binary Search
+Trees by Flipping a Coin,'' 2024. \url{https://arxiv.org/abs/2404.08287}.
+\bibitem{aragon} Cecilia R. Aragon and Raimund G. Seidel, ``Randomized Search
+Trees,'' \emph{FOCS}, 1989. \url{https://faculty.washington.edu/aragon/pubs/rst89.pdf}.
+\bibitem{shannon} Claude E. Shannon, ``A Mathematical Theory of Communication,''
+\emph{Bell System Technical Journal} 27, 1948.
+\url{https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf}.
+\bibitem{williams} David Williams, \emph{Probability with Martingales},
+Cambridge University Press, 1991. \url{https://doi.org/10.1017/CBO9780511813658.028}.
+\end{thebibliography}
+\end{document}

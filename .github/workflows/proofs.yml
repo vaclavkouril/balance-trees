@@ -1,0 +1,34 @@
+name: Verify geometric repair proofs
+
+on:
+  push:
+    paths:
+      - 'formal/**'
+      - '.github/workflows/proofs.yml'
+  pull_request:
+    paths:
+      - 'formal/**'
+      - '.github/workflows/proofs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MATHLIB_NO_CACHE_ON_UPDATE: '1'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          use-mathlib-cache: 'false'
+          build: 'true'
+      - name: Reject sorry and custom axioms in proved results
+        working-directory: formal
+        run: python3 audit_axioms.py

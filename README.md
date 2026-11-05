@@ -23,6 +23,13 @@ See [perfect-tree target algorithms](docs/perfect-tree-targets.md),
 [priority-free strategies](docs/priority-free-strategies.md). The stopping-rule
 references are inspired by [Brodal's paper](https://arxiv.org/abs/2404.08287).
 
+For the geometric repair rule, the [mathematical proof](docs/proofs/geometric-repair.tex)
+establishes constant rotations and expected random bits, and logarithmic expected
+node depth for monotone insertion sequences. It also gives an adaptive sequence
+with linear expected depth and repair work, while general bounds for fixed
+sequences remain unresolved. [Proof instructions and status](docs/proofs/README.md)
+describe the key-domain assumptions, formal model, and checks.
+
 ## Run and test
 
 Run from the repository root. Python execution and tests use the standard

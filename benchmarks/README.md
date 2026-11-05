@@ -28,6 +28,16 @@ and records peak child memory. Use the general benchmark CLI to select the new
 The stored-priority treap reference is retained in
 `src/balance_trees/strategies/stored_priority_treap.py`.
 
+The geometric repair proof has an exact, small-state adversarial exploration:
+
+```sh
+PYTHONPATH=src python3 benchmarks/proof_triage.py --size 8
+```
+
+It enumerates target outcomes with rational probabilities and maximizes expected
+final height over adaptive insertion gaps. The result is finite evidence, not an
+asymptotic bound or a substitute for a proof.
+
 ## Parallel target-strategy comparison
 
 The adaptive Linux runner compares both geometric implementations, interval
