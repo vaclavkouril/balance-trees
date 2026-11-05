@@ -55,3 +55,17 @@ charts, and `all-sequences.svg`. Maximum final height is the greatest final dept
 observed across a group's completed seeds. Means have one-standard-error whiskers
 when repeated trials exist; a single large trial has no uncertainty estimate.
 Parallel runs compare shape and operation counts, without timing comparisons.
+
+The current report is published with the visualizer. Refresh it from the saved
+measurements, without rerunning benchmarks:
+
+```sh
+PYTHONPATH=src python3 -m balance_trees.benchmark_comparison_report \
+  --input benchmarks/results/target-strategies-20261105 \
+  --output src/balance_trees/showcase/site/dist/benchmarks \
+  --visualizer-href ../index.html
+```
+
+Only this requested web report and its supporting downloads are bundled. Raw
+working directories remain ignored; the source ZIP contains the implementations
+measured in that run, independently of later visualizer changes.

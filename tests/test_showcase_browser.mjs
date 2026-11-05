@@ -3,6 +3,48 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { FLAVORS, ORDERS, makeSequence, parseSequence, simulate, validateTrace } from '../src/balance_trees/showcase/site/dist/model.mjs';
 import { TracePlayer } from '../src/balance_trees/showcase/site/dist/player.mjs';
+import { nodeRoles } from '../src/balance_trees/showcase/site/dist/effects.mjs';
+
+test('role traces persist, combine, reset on duplicates, and validate imports', () => {
+  for (const strategy of Object.keys(FLAVORS)) {
+    const trace = simulate([8, 4, 12, 2, 6, 10, 14, 3, 5, 11, 0, -2, 4], strategy, 17);
+    const compared = new Set(), rose = new Set(), fell = new Set();
+    const depths = frame => {
+      const nodes = new Map(frame.nodes.map(node => [node.key, node]));
+      const result = new Map(), pending = frame.root === null ? [] : [[frame.root, 0]];
+      while (pending.length) {
+        const [key, depth] = pending.pop(); result.set(key, depth);
+        for (const child of [nodes.get(key).left, nodes.get(key).right]) if (child !== null) pending.push([child, depth + 1]);
+      }
+      return result;
+    };
+    for (let index = 0; index < trace.frames.length; index++) {
+      const frame = trace.frames[index];
+      if (frame.kind === 'begin') { compared.clear(); rose.clear(); fell.clear(); assert.equal(frame.effects.inserted, null); }
+      if (frame.kind === 'compare') compared.add(frame.focus);
+      if (frame.kind === 'priority') {
+        compared.add(frame.focus);
+        for (const node of frame.nodes) if ([node.left, node.right].includes(frame.focus)) compared.add(node.key);
+      }
+      if (frame.kind === 'prepare') {
+        const after = depths(trace.frames[index + 1]);
+        for (const [key, depth] of depths(frame)) {
+          if (after.get(key) < depth) rose.add(key);
+          if (after.get(key) > depth) fell.add(key);
+        }
+      }
+      for (const [role, expected] of [['compared', compared], ['rose', rose], ['fell', fell]]) assert.deepEqual(new Set(frame.effects[role]), expected, `${strategy}: ${frame.title}, ${role}`);
+      if (frame.effects.inserted !== null) assert.ok(nodeRoles(frame).get(frame.key).includes('inserted'));
+    }
+    assert.equal(trace.frames.at(-1).effects.inserted, null);
+    assert.deepEqual(trace.frames.at(-1).effects.rose, []);
+    assert.equal(validateTrace(JSON.parse(JSON.stringify(trace))).schema_version, 1);
+    const legacy = structuredClone(trace); for (const frame of legacy.frames) delete frame.effects;
+    assert.equal(validateTrace(legacy), legacy);
+    const bad = structuredClone(trace); bad.frames.at(-1).effects.rose.push(123456);
+    assert.throws(() => validateTrace(bad), /effects/);
+  }
+});
 
 test('CSV input is strict and supports signed keys and duplicates', () => {
   assert.deepEqual(parseSequence(' 8, -4,\n0, +12, 8 '), [8, -4, 0, 12, 8]);
@@ -358,11 +400,12 @@ test('timeline presses jump directly, dragging scrubs, and release resumes playb
 
 test('timeline keeps paused state, handles keyboard input, and cancels a stale drag', async () => {
   const { TimelineScrubber } = await import('../src/balance_trees/showcase/site/dist/timeline.mjs');
-  const original = new TracePlayer(), replacement = new TracePlayer();
+  const slider = new TestSlider();
+  const original = new TracePlayer((frame, index) => { slider.value = String(index); }), replacement = new TracePlayer();
   original.load({ frames: Array.from({ length: 101 }, () => ({})) });
   replacement.load({ frames: [{}] });
   let active = original;
-  const slider = new TestSlider(); new TimelineScrubber(slider, () => active);
+  new TimelineScrubber(slider, () => active);
   try {
     slider.pointer('pointerdown', -100); slider.pointer('pointerup', -100);
     assert.equal(original.index, 0); assert.equal(original.playing, false);

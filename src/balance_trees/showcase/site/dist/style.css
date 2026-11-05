@@ -24,6 +24,10 @@
   --demoted-border: #881044;
   --error-bg: #fce8e8;
   --error: #9d2935;
+  --compared: #2563eb;
+  --rose: #15803d;
+  --fell: #c2410c;
+  --inserted: #9333ea;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 14px;
   line-height: 1.5;
@@ -56,6 +60,10 @@
   --demoted-border: #ffc2dc;
   --error-bg: #502b34;
   --error: #ffbbc6;
+  --compared: #93c5fd;
+  --rose: #86efac;
+  --fell: #fdba74;
+  --inserted: #d8b4fe;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
@@ -126,6 +134,7 @@ textarea { resize: vertical; line-height: 1.5; }
 .utility-buttons, .input-row, .button-row { display: flex; gap: 8px; }
 .utility-buttons { padding-bottom: 14px; border-bottom: 1px solid var(--border); }
 .utility-buttons button { flex: 1; }
+.benchmark-link { display: block; margin-top: 12px; color: var(--accent); font-weight: 600; }
 .controls label { display: block; margin: 14px 0 6px; }
 .controls select, .controls input, .controls textarea { width: 100%; }
 .input-row > div { flex: 1; min-width: 0; }
@@ -158,6 +167,11 @@ textarea { resize: vertical; line-height: 1.5; }
 .legend-dot.promoted { background: var(--promoted); border-color: var(--promoted-border); }
 .legend-dot.demoted { background: var(--demoted); border-color: var(--demoted-border); }
 .legend-dot.middle { background: var(--middle); border-color: var(--middle-border); }
+.legend-dot.inserted { background: transparent; border: 3px solid var(--inserted); }
+.legend-dot.compared { background: var(--compared); border-color: var(--compared); }
+.legend-dot.rose { background: var(--rose); border-color: var(--rose); }
+.legend-dot.fell { background: var(--fell); border-color: var(--fell); }
+.effect-help { padding: 0 14px 10px; font-size: 12px; }
 #priority-legend { margin-left: auto; }
 .metrics { display: flex; gap: 20px; flex-wrap: wrap; border-top: 1px solid var(--border); padding: 10px 14px; background: var(--subtle); border-radius: 0 0 8px 8px; }
 .metrics > div { display: flex; gap: 8px; }
@@ -194,19 +208,28 @@ textarea { resize: vertical; line-height: 1.5; }
 .key-chip { padding: 5px 8px; min-width: 34px; }
 .key-chip.done { background: var(--focus); border-color: var(--focus-border); color: var(--active-text); }
 .key-chip.current { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-/* Saturated fills identify roles; thick rings and a dashed middle add cues. */
+/* Fills show movement; comparison outlines, insertion rings and glyphs combine. */
 .tree-node circle { fill: var(--node); stroke: var(--node-border); stroke-width: 2; }
-.tree-node.focus circle { fill: var(--focus); stroke: var(--focus-border); stroke-width: 3; filter: drop-shadow(0 0 5px var(--focus)); }
-.tree-node.promoted circle { fill: var(--promoted); stroke: var(--promoted-border); stroke-width: 3; filter: drop-shadow(0 0 5px var(--promoted)); }
-.tree-node.demoted circle { fill: var(--demoted); stroke: var(--demoted-border); stroke-width: 3; filter: drop-shadow(0 0 5px var(--demoted)); }
-.tree-node.middle circle { fill: var(--middle); stroke: var(--middle-border); stroke-width: 3; stroke-dasharray: 4 3; }
+.tree-node.compared circle { stroke: var(--compared); stroke-width: 3; }
+.tree-node.rose circle { fill: var(--rose); }
+.tree-node.fell circle { fill: var(--fell); }
+.tree-node.rose.fell circle { fill: var(--node); }
+.tree-node.focus circle { stroke-width: 4; }
+.tree-node.middle circle { stroke: var(--middle); stroke-width: 3; stroke-dasharray: 4 3; }
+.tree-node circle.inserted-ring { display: none; fill: none; stroke: var(--inserted); stroke-width: 3; stroke-dasharray: none; filter: none; pointer-events: none; }
+.tree-node.inserted circle.inserted-ring { display: block; }
+.role-label { font: 700 11px system-ui,sans-serif; text-anchor: middle; paint-order: stroke; stroke: var(--canvas); stroke-width: 3px; }
+.role-inserted { fill: var(--inserted); }
+.role-compared { fill: var(--compared); }
+.role-rose { fill: var(--rose); }
+.role-fell { fill: var(--fell); }
 .node-label, .priority-label, .tree-edge text { font-family: inherit; font-size: 14px; fill: var(--text); text-anchor: middle; }
 .node-label { dominant-baseline: central; fill: var(--node-text); font-weight: 600; }
-.tree-node.focus .node-label, .tree-node.promoted .node-label { fill: var(--active-text); }
-.tree-node.demoted .node-label { fill: var(--demoted-text); }
-.tree-node.middle .node-label { fill: #ffffff; }
+.tree-node.rose:not(.fell) .node-label, .tree-node.fell:not(.rose) .node-label { fill: white; }
+:root[data-theme="dark"] .tree-node.rose:not(.fell) .node-label, :root[data-theme="dark"] .tree-node.fell:not(.rose) .node-label { fill: #102139; }
 .priority-label, .tree-edge text { fill: var(--muted); }
 .tree-edge path { fill: none; stroke: var(--node-border); stroke-width: 1.5; }
+.tree-edge.compared path { stroke: var(--compared); stroke-width: 3; }
 dialog { width: min(480px, calc(100% - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 20px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 10px; font: inherit; }
 dialog::backdrop { background: rgb(0 0 0 / .55); }
 .dialog-toolbar, .dialog-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }

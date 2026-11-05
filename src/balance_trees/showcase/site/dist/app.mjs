@@ -6,6 +6,7 @@ import { initialTheme, readPreference, savePreference, THEME_KEY, TUTORIAL_KEY, 
 import { DETAIL_LIMIT } from './large-model.mjs';
 import { StreamPlayer } from './stream-player.mjs';
 import { EventTimeline, TimelineScrubber } from './timeline.mjs';
+import { nodeRoles, ROLE_LABELS, ROLE_SYMBOLS } from './effects.mjs';
 
 const $ = id => document.getElementById(id);
 const svgNS = 'http://www.w3.org/2000/svg';
@@ -79,6 +80,7 @@ function fittedCamera(target) {
   return { scale, x: width / 2 - (minX + maxX) / 2 * scale, y: (height - 15) / 2 - (minY + maxY) / 2 * scale };
 }
 function syncElements(frame) {
+  const roles = nodeRoles(frame);
   const keys = new Set(frame.nodes.map(node => node.key));
   for (const [key, element] of nodeElements) if (!keys.has(key)) { element.remove(); nodeElements.delete(key); }
   const edgeKeys = new Set();
@@ -87,18 +89,28 @@ function syncElements(frame) {
     if (!group) {
       group = svgElement('g', { class: 'tree-node', 'data-key': node.key });
       group.append(svgElement('circle', { r: 23 }), svgElement('text', { class: 'node-label' }), svgElement('text', { class: 'priority-label', y: 37 }), svgElement('title'), svgElement('text', { class: 'hidden-label', y: 39 }));
+      group.append(svgElement('circle', { class: 'inserted-ring', r: 29 }), svgElement('text', { class: 'role-label', y: -33 }));
       group.children[1].textContent = node.key;
       $('nodes').append(group); nodeElements.set(node.key, group);
     }
-    group.setAttribute('class', ['tree-node', frame.focus === node.key ? 'focus' : '', frame.promoted === node.key ? 'promoted' : '', frame.demoted === node.key ? 'demoted' : '', frame.middle === node.key ? 'middle' : ''].filter(Boolean).join(' '));
+    const nodeEffects = roles.get(node.key);
+    group.setAttribute('class', ['tree-node', ...nodeEffects, frame.focus === node.key ? 'focus' : '', frame.middle === node.key ? 'middle' : ''].filter(Boolean).join(' '));
     group.children[0].setAttribute('r', isCompact() ? 19 : 23);
+    group.children[5].setAttribute('r', isCompact() ? 24 : 28);
+    group.children[6].setAttribute('y', isCompact() ? -29 : -33);
+    group.children[6].replaceChildren(...nodeEffects.map(role => {
+      const symbol = svgElement('tspan', { class: `role-${role}`, dx: 2 });
+      symbol.textContent = ROLE_SYMBOLS[role]; return symbol;
+    }));
     const omitted = (node.hidden_left ?? 0) + (node.hidden_right ?? 0);
     const unknown = node.hidden_left === null || node.hidden_right === null;
     group.children[4].textContent = unknown ? '…' : omitted ? `+${omitted.toLocaleString()}` : '';
     group.children[4].setAttribute('y', node.priority !== null && !isCompact() ? 52 : 39);
     group.children[1].style.fontSize = String(node.key).length > 6 ? '9px' : '';
     group.children[2].textContent = node.priority === null ? '' : `p ${(node.priority / 4294967296).toFixed(3)}`;
-    group.children[3].textContent = `Key ${node.key}; ${unknown ? 'more' : omitted.toLocaleString()} descendants outside this view${node.priority === null ? '' : `; full priority ${node.priority}`}`;
+    const roleDescription = nodeEffects.map(role => ROLE_LABELS[role]).join('; ');
+    group.children[3].textContent = `Key ${node.key}${roleDescription ? `; ${roleDescription}` : ''}; ${unknown ? 'more' : omitted.toLocaleString()} descendants outside this view${node.priority === null ? '' : `; full priority ${node.priority}`}`;
+    group.setAttribute('aria-label', group.children[3].textContent);
     for (const [side, child] of [['L', node.left], ['R', node.right]]) if (child !== null) {
       const id = `${node.key}:${child}`; edgeKeys.add(id);
       if (!edgeElements.has(id)) {
@@ -106,6 +118,7 @@ function syncElements(frame) {
         edge.append(svgElement('path'), svgElement('text'));
         edge.children[1].textContent = side; $('edges').append(edge); edgeElements.set(id, edge);
       }
+      edgeElements.get(id).setAttribute('class', `tree-edge${nodeEffects.includes('compared') && roles.get(child).includes('compared') ? ' compared' : ''}`);
     }
   }
   for (const [key, element] of edgeElements) if (!edgeKeys.has(key)) { element.remove(); edgeElements.delete(key); }
@@ -194,7 +207,8 @@ function render(frame, index, playing, options = {}) {
   }
   $('empty-tree').hidden = frame.nodes.length > 0;
   $('priority-legend').hidden = !frame.nodes.some(node => node.priority !== null);
-  $('svg-description').textContent = `${frame.title}. ${frame.description} ${stats.nodes} nodes, height ${stats.height}.`;
+  const roleSummary = [...nodeRoles(frame)].filter(([, roles]) => roles.length).map(([key, roles]) => `${key}: ${roles.map(role => ROLE_LABELS[role]).join(', ')}`).join('; ');
+  $('svg-description').textContent = `${frame.title}. ${frame.description} ${stats.nodes} nodes, height ${stats.height}. ${roleSummary}`;
   draw(frame, options.animate !== false);
 }
 function setInputChips(trace) {

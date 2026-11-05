@@ -120,6 +120,54 @@ class ShowcaseTraceTests(unittest.TestCase):
             self.assertEqual(settled[2]["stats"]["nodes"], 2)
             self.assertEqual(settled[2]["stats"]["insertion_rotations"], 0)
 
+    def test_effects_cover_actual_depth_changes_comparisons_and_insertion_resets(self):
+        def depths(frame):
+            nodes = {node["key"]: node for node in frame["nodes"]}
+            pending = [] if frame["root"] is None else [(frame["root"], 0)]
+            result = {}
+            while pending:
+                key, depth = pending.pop()
+                result[key] = depth
+                pending.extend(
+                    (child, depth + 1)
+                    for child in (nodes[key]["left"], nodes[key]["right"])
+                    if child is not None
+                )
+            return result
+
+        values = [8, 4, 12, 2, 6, 10, 14, 3, 5, 11, 0, -2, 4]
+        for strategy in ["treap", *STRATEGIES]:
+            frames = build_trace(values, strategy, 17)["frames"]
+            compared, rose, fell, inserted = set(), set(), set(), None
+            for index, frame in enumerate(frames):
+                if frame["kind"] == "begin":
+                    compared, rose, fell, inserted = set(), set(), set(), None
+                elif frame["kind"] == "insert":
+                    inserted = frame["key"]
+                elif frame["kind"] == "compare":
+                    compared.add(frame["focus"])
+                elif frame["kind"] == "priority":
+                    compared.add(frame["focus"])
+                    compared.update(
+                        node["key"]
+                        for node in frame["nodes"]
+                        if frame["focus"] in (node["left"], node["right"])
+                    )
+                elif frame["kind"] == "prepare":
+                    before, after = depths(frame), depths(frames[index + 1])
+                    rose.update(key for key in before if after[key] < before[key])
+                    fell.update(key for key in before if after[key] > before[key])
+                self.assertEqual(
+                    frame["effects"],
+                    dict(
+                        inserted=inserted,
+                        compared=sorted(compared),
+                        rose=sorted(rose),
+                        fell=sorted(fell),
+                    ),
+                    (strategy, frame["title"]),
+                )
+
     def test_trace_is_deterministic_and_json_serializable(self):
         left = build_trace([4, 2, 6, 1, 3], "treap", 42)
         right = build_trace([4, 2, 6, 1, 3], "treap", 42)

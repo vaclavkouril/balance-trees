@@ -57,8 +57,22 @@ class TraceRecorder:
         self.committed_visits = 0
         self.committed_scans = 0
         self.seed = 0
+        self.inserted_key: int | None = None
+        self.compared_keys: set[int] = set()
+        self.rose_intervals: list[tuple[int, int]] = []
+        self.fell_intervals: list[tuple[int, int]] = []
 
     def capture(self, kind: str, title: str, description: str, **details) -> None:
+        if kind == "begin":
+            self.inserted_key = None
+            self.compared_keys.clear()
+            self.rose_intervals.clear()
+            self.fell_intervals.clear()
+        if kind == "insert":
+            self.inserted_key = self.key
+        if kind == "compare":
+            self.compared_keys.add(details["focus"])
+        self.compared_keys.update(details.pop("compared", ()))
         depths = self.tree.depths()
         nodes = []
         stack = [self.tree.root] if self.tree.root else []
@@ -93,6 +107,21 @@ class TraceRecorder:
                 "key": self.key,
                 "root": self.tree.root.key if self.tree.root else None,
                 "nodes": sorted(nodes, key=lambda node: node["key"]),
+                "effects": {
+                    "inserted": self.inserted_key,
+                    "compared": sorted(self.compared_keys),
+                    **{
+                        role: sorted(
+                            key
+                            for key in depths
+                            if any(low <= key <= high for low, high in intervals)
+                        )
+                        for role, intervals in (
+                            ("rose", self.rose_intervals),
+                            ("fell", self.fell_intervals),
+                        )
+                    },
+                },
                 "heap_valid": heap_valid if self.priorities is not None else None,
                 "stats": {
                     "nodes": len(nodes),
@@ -114,6 +143,20 @@ class TraceRecorder:
             raise ValueError("cannot visualize promotion of a root")
         direction = "right" if parent.left is node else "left"
         middle = node.right if direction == "right" else node.left
+
+        def extreme(node, side):
+            while (child := getattr(node, side)) is not None:
+                node = child
+            return node.key
+
+        # Every key in the outer subtrees changes depth too. Intervals exclude
+        # the transferred middle subtree, whose depth remains unchanged.
+        if direction == "right":
+            self.rose_intervals.append((extreme(node, "left"), node.key))
+            self.fell_intervals.append((parent.key, extreme(parent, "right")))
+        else:
+            self.rose_intervals.append((node.key, extreme(node, "right")))
+            self.fell_intervals.append((extreme(parent, "left"), parent.key))
         details = {
             "focus": node.key,
             "promoted": node.key,
@@ -172,6 +215,7 @@ class TraceContext(RebalanceContext):
             + ("Promote the child." if outcome else "Heap order holds; stop.")
             + " These values are discarded, not stored in the tree.",
             focus=node.key,
+            compared=(node.key, node.parent.key),
         )
         return outcome
 
@@ -300,7 +344,7 @@ def build_trace(values: list[int], strategy: str = "treap", seed: int = 2026) ->
                             else "The heap order holds; stop."
                         ),
                         focus=node.key,
-                        demoted=parent.key,
+                        compared=(node.key, parent.key),
                     )
                     if not violation:
                         break

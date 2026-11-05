@@ -102,8 +102,9 @@ export class TimelineScrubber {
     });
     slider.addEventListener('input', () => {
       if (this.drag) return;
-      const player = getPlayer(), playing = player.playing;
-      player.pause(); player.seek(Number(slider.value), { animate: false });
+      const player = getPlayer(), playing = player.playing, index = Number(slider.value);
+      // Pausing renders the current frame and can overwrite the slider value.
+      player.pause(); player.seek(index, { animate: false });
       this.resume(player, playing);
     });
   }

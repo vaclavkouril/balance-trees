@@ -1,4 +1,5 @@
 import { createStrategy } from './strategies.mjs';
+import { InsertionEffects } from './effects.mjs';
 // Browser reference adapter. Python implementations emit this same trace schema.
 export const MAX_KEYS = 128; // Full-history traces only; larger runs use the worker.
 export { FLAVORS } from './catalog.mjs';
@@ -57,7 +58,7 @@ export function simulate(sequence, strategy = 'treap', seed = 2026) {
   if (!Object.hasOwn(FLAVORS, strategy)) throw new Error('Unknown strategy.');
   if (!Number.isInteger(seed) || seed < 0 || seed > 4294967295) throw new Error('Seed must be an integer from 0 to 4294967295.');
   let root = null, insertion = 0, key = null, rotations = 0, visits = 0, bits = 0, insertionRotations = 0, scans = 0;
-  const frames = [], priorities = new Map(), random = randomGenerator(seed);
+  const frames = [], priorities = new Map(), random = randomGenerator(seed), effects = new InsertionEffects();
   const bit = () => { bits++; return random() & 1; };
   function coin(numerator, denominator) {
     let remainder = BigInt(numerator), divisor = BigInt(denominator);
@@ -83,7 +84,7 @@ export function simulate(sequence, strategy = 'treap', seed = 2026) {
         if (strategy === 'treap' && higher(child, node)) heapValid = false;
       }
     }
-    frames.push({ kind, title, description, insertion, key, root: root?.key ?? null,
+    frames.push({ kind, title, description, insertion, key, root: root?.key ?? null, effects: effects.snapshot(nodes),
       nodes: nodes.sort((a, b) => a.key - b.key), heap_valid: strategy === 'treap' ? heapValid : null,
       stats: { nodes: nodes.length, height, mean_depth: nodes.length ? totalDepth / nodes.length : 0,
         rotations, visits, random_bits: bits, insertion_rotations: insertionRotations, scanned_nodes: scans }, ...details });
@@ -93,6 +94,7 @@ export function simulate(sequence, strategy = 'treap', seed = 2026) {
     const parent = node.parent, grandparent = parent.parent;
     const direction = parent.left === node ? 'right' : 'left';
     const middle = direction === 'right' ? node.right : node.left;
+    effects.rotation(node, parent, { left: node => node.left, right: node => node.right, key: node => node.key });
     const details = { focus: node.key, promoted: node.key, demoted: parent.key, middle: middle?.key ?? null, direction };
     capture('prepare', `Prepare a ${direction} rotation`, `Promote ${node.key} over ${parent.key}; the middle subtree keeps its key order.`, details);
     if (direction === 'right') { parent.left = node.right; if (node.right) node.right.parent = parent; node.right = parent; }
@@ -116,7 +118,10 @@ export function simulate(sequence, strategy = 'treap', seed = 2026) {
     seed, bit, key: node => node.key,
     parent: node => node.parent, left: node => node.left, right: node => node.right,
     higher, visit: () => visits++,
-    event: function* (kind, title, description, node) { capture(kind, title, description, { focus: node.key }); },
+    event: function* (kind, title, description, node) {
+      if (kind === 'priority') effects.compare(node.key, node.parent?.key ?? null);
+      capture(kind, title, description, { focus: node.key });
+    },
     scan: function* (node) { scans++; capture('scan', `Count node ${node.key}`, 'Temporary structural count; no stored subtree sizes.', { focus: node.key }); },
     choose: function* (...args) { return choose(...args); },
     promote: function* (node) { promote(node); },
@@ -124,10 +129,12 @@ export function simulate(sequence, strategy = 'treap', seed = 2026) {
   capture('ready', 'A tree starts with one decision', 'Follow the search path, insert a leaf, then watch each rotation.');
   for (let index = 0; index < sequence.length; index++) {
     insertion = index + 1; key = sequence[index]; insertionRotations = 0;
+    effects.begin();
     capture('begin', `Insert ${key}`, 'Start at the root and follow the binary search rule.', { focus: key });
     let current = root, parent = null, depth = 0;
     while (current) {
       const relation = key === current.key ? 'equal to' : key < current.key ? 'smaller than' : 'larger than';
+      effects.compare(current.key);
       capture('compare', `Compare ${key} with ${current.key}`, `${key} is ${relation} ${current.key}. ${key === current.key ? 'Skip this duplicate.' : key < current.key ? 'Continue left.' : 'Continue right.'}`, { focus: current.key });
       if (key === current.key) break;
       parent = current; current = key < current.key ? current.left : current.right; depth++;
@@ -140,6 +147,7 @@ export function simulate(sequence, strategy = 'treap', seed = 2026) {
       else if (key < parent.key) parent.left = leaf;
       else parent.right = leaf;
       if (strategy === 'treap') { priorities.set(key, random()); bits += 32; }
+      effects.inserted = key;
       capture('insert', `Place ${key} as a leaf`, `The search ends at depth ${depth}. Now apply the selected balancing rule.`, { focus: key });
       const events = rebalance(leaf, depth);
       while (!events.next().done) { /* Adapter captures detailed snapshots. */ }
@@ -158,6 +166,12 @@ export function validateTrace(trace) {
     for (const node of frame.nodes) {
       if (!Number.isSafeInteger(node.key) || nodes.has(node.key) || (node.priority !== null && (!Number.isInteger(node.priority) || node.priority < 0 || node.priority > 4294967295))) throw new Error('Trace contains an invalid node.');
       nodes.set(node.key, node);
+    }
+    if (frame.effects !== undefined) {
+      const effects = frame.effects;
+      if (!effects || (effects.inserted !== null && effects.inserted !== frame.key) ||
+          (effects.inserted !== null && !nodes.has(effects.inserted)) ||
+          ['compared', 'rose', 'fell'].some(role => !Array.isArray(effects[role]) || new Set(effects[role]).size !== effects[role].length || effects[role].some(key => !nodes.has(key)))) throw new Error('Trace contains invalid node effects.');
     }
     for (const name of ['nodes', 'height', 'mean_depth', 'rotations', 'visits', 'random_bits', 'insertion_rotations']) {
       if (!Number.isFinite(frame.stats[name]) || frame.stats[name] < 0) throw new Error('Trace contains invalid statistics.');

@@ -1,4 +1,5 @@
 import { createStrategy } from './strategies.mjs';
+import { InsertionEffects } from './effects.mjs';
 // Bounded-memory reference engine for large visual runs. No history is retained.
 // Typed-array metadata accelerates display statistics; this is not benchmark code.
 import { randomGenerator } from './model.mjs';
@@ -78,6 +79,7 @@ export class LargeTree {
     this.root = -1; this.length = 0; this.insertion = 0; this.key = null;
     this.rotations = 0; this.visits = 0; this.bits = 0; this.insertionRotations = 0;
     this.scans = 0;
+    this.effects = new InsertionEffects();
     this.completeSizes = false;
     this.totalDepth = 0; this.height = 0; this.focusId = -1;
     this.heapValid = true;
@@ -92,7 +94,11 @@ export class LargeTree {
       left: id => this.left[id] < 0 ? null : this.left[id],
       right: id => this.right[id] < 0 ? null : this.right[id],
       higher: (a, b) => this.higher(a, b), visit: () => this.visits++,
-      event: function* (kind, title, description, id) { tree.focusId = id; yield tree.event(kind, title, description, { focus: tree.keys[id] }); },
+      event: function* (kind, title, description, id) {
+        tree.focusId = id;
+        if (kind === 'priority') tree.effects.compare(tree.keys[id], tree.parent[id] < 0 ? null : tree.keys[tree.parent[id]]);
+        yield tree.event(kind, title, description, { focus: tree.keys[id] });
+      },
       scan: function* (id) { tree.scans++; tree.focusId = id; yield tree.event('scan', `Count node ${tree.keys[id]}`, 'Temporary structural count; no stored subtree size is read.', { focus: tree.keys[id] }); },
       choose: (...args) => this.choose(...args), promote: id => this.promote(id),
     });
@@ -132,6 +138,10 @@ export class LargeTree {
     const parent = this.parent[id], grandparent = this.parent[parent];
     const rightRotation = this.left[parent] === id;
     const middle = rightRotation ? this.right[id] : this.left[id];
+    this.effects.rotation(id, parent, {
+      left: id => this.left[id] < 0 ? null : this.left[id],
+      right: id => this.right[id] < 0 ? null : this.right[id], key: id => this.keys[id],
+    });
     const details = { focus: this.keys[id], promoted: this.keys[id], demoted: this.keys[parent], middle: middle < 0 ? null : this.keys[middle], direction: rightRotation ? 'right' : 'left' };
     this.focusId = id;
     yield this.event('prepare', `Prepare a ${details.direction} rotation`, `${this.keys[id]} moves above ${this.keys[parent]}.`, details);
@@ -172,15 +182,18 @@ export class LargeTree {
   *events() {
     for (let index = 0; index < this.input.count; index++) {
       this.insertion = index + 1; this.key = this.input.at(index); this.insertionRotations = 0;
+      this.effects.begin(); this.focusId = this.root;
       if (!Number.isSafeInteger(this.key)) throw new Error(`Item ${index + 1} must be a safe integer.`);
       yield this.event('begin', `Insert ${this.key}`, 'Follow the BST key order.');
       let current = this.root, parent = -1, depth = 0, lower = -Infinity, upper = Infinity;
       const fast = this.fastPlainParent(this.key);
       if (fast) {
         ({ parent, lower, upper } = fast); depth = this.depths[parent] + 1; current = -1;
+        this.effects.compare(this.keys[parent]);
       } else {
         while (current >= 0) {
           this.focusId = current;
+          this.effects.compare(this.keys[current]);
           yield this.event('compare', `Compare ${this.key} with ${this.keys[current]}`, this.key < this.keys[current] ? 'Continue left.' : this.key > this.keys[current] ? 'Continue right.' : 'Skip this duplicate.', { focus: this.keys[current] });
           if (this.key === this.keys[current]) break;
           parent = current;
@@ -206,6 +219,7 @@ export class LargeTree {
           this.last = id; this.lastLower = lower; this.lastUpper = upper;
         } else { this.refreshAncestors(parent); this.height = this.heights[this.root]; }
         if (this.priorities) { this.priorities[id] = this.random(); this.bits += 32; this.heapValid = parent < 0 || !this.higher(id, parent); }
+        this.effects.inserted = this.key;
         yield this.event('insert', `Insert ${this.key} at depth ${depth}`, fast ? 'A known search boundary locates this leaf directly.' : 'The key is now a leaf.', { focus: this.key });
         yield* this.rebalance(id, depth);
       }
@@ -254,7 +268,7 @@ export class LargeTree {
       hidden_left: this.left[id] < 0 || selected.has(this.left[id]) ? 0 : this.strategy === 'none' && !this.completeSizes ? null : this.size(this.left[id]),
       hidden_right: this.right[id] < 0 || selected.has(this.right[id]) ? 0 : this.strategy === 'none' && !this.completeSizes ? null : this.size(this.right[id]),
     }));
-    return { ...this.current, root: anchor < 0 ? null : this.keys[anchor], nodes,
+    return { ...this.current, root: anchor < 0 ? null : this.keys[anchor], nodes, effects: this.effects.snapshot(nodes),
       windowed: this.length > nodes.length,
       heap_valid: this.priorities ? this.heapValid : null,
       stats: { nodes: this.length, height: this.height, mean_depth: this.length ? this.totalDepth / this.length : 0,

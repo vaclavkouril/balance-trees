@@ -22,6 +22,7 @@ test('large engine matches detailed engine for every strategy and sequence famil
     const actual = finish(new LargeTree(config));
     const expected = simulate(makeSequence(order, 30, seed), strategy, seed).frames.at(-1);
     assert.deepEqual(topology(actual.nodes), topology(expected.nodes), `${strategy} / ${order} / ${seed}`);
+    if (strategy !== 'none') assert.deepEqual(actual.effects, expected.effects, `${strategy} / ${order} effect history`);
     for (const field of ['nodes', 'height', 'mean_depth', 'rotations', 'visits', 'random_bits', 'scanned_nodes']) assert.equal(actual.stats[field], expected.stats[field], `${strategy} / ${order}: ${field}`);
   }
 });
@@ -35,6 +36,24 @@ test('incremental mean depth and height match independent traversal after each r
       assert.equal(frame.stats.nodes, measured.count);
     }
   }
+});
+test('windowed snapshots retain the full trace roles for every visible node', () => {
+  const sequence = makeSequence('random', 128, 9);
+  const expected = simulate(sequence, 'treap', 17).frames;
+  const tree = new LargeTree({ strategy: 'treap', sequence, seed: 17, visibleLimit: 12, visibleDepth: 4 });
+  let index = 1, windows = 0;
+  while (tree.advance()) {
+    const frame = tree.snapshot(), full = expected[index++], visible = new Set(frame.nodes.map(node => node.key));
+    assert.equal(frame.kind, full.kind);
+    assert.deepEqual(frame.effects, {
+      inserted: full.effects.inserted,
+      ...Object.fromEntries(['compared', 'rose', 'fell'].map(role => [role, full.effects[role].filter(key => visible.has(key))])),
+    });
+    assert.ok(frame.nodes.length <= 12);
+    if (frame.windowed) windows++;
+  }
+  assert.ok(windows > 0);
+  assert.equal(index, expected.length);
 });
 test('large engine preserves duplicates, signed keys and CSV validation', () => {
   const tree = new LargeTree({ strategy: 'treap', text: '8, -4, 0, +12, 8', seed: 42 });

@@ -1,8 +1,9 @@
 # Static visualizer build
 
-The old report pages, graph collections and benchmark downloads have been
-removed. Only the interactive visualizer and its runtime assets are currently
-built. A replacement website will be added separately.
+The static build includes the interactive visualizer, its runtime assets, and
+the current benchmark report under `benchmarks/`. The **Benchmark results** link
+opens the five-strategy comparison; its return link leads back to the visualizer.
+Obsolete report pages and their result bundles remain excluded.
 
 From the repository root, with Python 3.11+:
 
@@ -18,7 +19,9 @@ support hosting under a repository subpath. `_site/` is ignored by Git.
 The existing `.github/workflows/pages.yml` runs Python and browser model tests,
 builds these assets and publishes them from the default branch when GitHub Pages
 is configured to use GitHub Actions. It does not run benchmarks or bundle their
-output. Source changes must be committed and pushed before deployment can occur.
+raw working directories. The requested benchmark report and its supporting
+downloads are already bundled. Source changes must be committed and pushed
+before deployment can occur.
 
 For local Python-backed traces, run
 `PYTHONPATH=src python3 -m balance_trees.showcase --port 8000` instead.

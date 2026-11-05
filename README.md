@@ -37,9 +37,10 @@ node tests/test_showcase_browser.mjs
 node tests/test_large_showcase.mjs
 ```
 
-The local visualizer remains at `http://127.0.0.1:8000`. Old report pages and
-saved benchmark results have been removed ahead of a new website. No replacement
-report site is included yet. See [the visualizer guide](docs/showcase.md).
+The local visualizer remains at `http://127.0.0.1:8000`. Its **Benchmark results**
+link opens the [current five-strategy comparison](src/balance_trees/showcase/site/dist/benchmarks/index.html),
+also included in the static web build. Insertion traces mark comparisons,
+up/down movement and the original inserted node. See [the visualizer guide](docs/showcase.md).
 
 Optional editable installation and formatting:
 

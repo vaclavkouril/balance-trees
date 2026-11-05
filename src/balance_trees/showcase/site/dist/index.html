@@ -19,6 +19,7 @@
         <button id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
         <button id="tutorial-open" type="button">Tutorial</button>
       </div>
+      <a id="benchmark-link" class="benchmark-link" href="./benchmarks/index.html" target="_blank" rel="noopener" aria-label="Benchmark results (opens a new tab)">Benchmark results ↗</a>
       <label for="strategy">Strategy</label>
       <select id="strategy"></select>
       <label for="order">Sequence</label>
@@ -69,12 +70,14 @@
         </div>
         <div class="legend" aria-label="Node colors">
           <span><i class="legend-dot standard"></i>Key</span>
-          <span><i class="legend-dot active"></i>Focus</span>
-          <span><i class="legend-dot promoted"></i>Promoted</span>
-          <span><i class="legend-dot demoted"></i>Demoted</span>
+          <span><i class="legend-dot inserted"></i>★ Inserted node</span>
+          <span><i class="legend-dot compared"></i>C Compared</span>
+          <span><i class="legend-dot rose"></i>↑ Moved up</span>
+          <span><i class="legend-dot fell"></i>↓ Moved down</span>
           <span><i class="legend-dot middle"></i>Middle subtree</span>
           <span id="priority-legend" class="muted">p = priority</span>
         </div>
+        <p class="effect-help muted">Colors accumulate during one insertion, then reset. Symbols show overlapping roles; the purple ring always marks the new node. Before a rotation, arrows preview its movement.</p>
         <div class="metrics">
           <div><span>Nodes</span><strong id="metric-nodes">0</strong></div>
           <div><span>Height</span><strong id="metric-height">0</strong></div>

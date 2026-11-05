@@ -60,6 +60,7 @@ jobs:
           node --check src/balance_trees/showcase/site/dist/strategies.mjs
           node --check src/balance_trees/showcase/site/dist/catalog.mjs
           node --check src/balance_trees/showcase/site/dist/layout.mjs
+          node --check src/balance_trees/showcase/site/dist/effects.mjs
       - name: Test browser models and playback
         run: |
           node tests/test_showcase_browser.mjs

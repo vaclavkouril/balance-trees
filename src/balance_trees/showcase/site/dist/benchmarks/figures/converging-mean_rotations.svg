@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="converging-mean_rotations-title converging-mean_rotations-desc">
+<title id="converging-mean_rotations-title">Converging · Mean rotations / key</title>
+<desc id="converging-mean_rotations-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
+<rect width="720" height="425" rx="12" fill="white"/>
+<text x="22" y="28" style="font-size:17px;font-weight:650">Converging · Mean rotations / key</text>
+<text x="22" y="48" style="font-size:11px;fill:#64748b">Five implementations · source and seeds recorded · no timing comparison</text>
+<path class="grid" d="M70,292.00h620"/><text x="61" y="296.00" text-anchor="end">0</text>
+<path class="grid" d="M70,246.80h620"/><text x="61" y="250.80" text-anchor="end">0.449</text>
+<path class="grid" d="M70,201.60h620"/><text x="61" y="205.60" text-anchor="end">0.898</text>
+<path class="grid" d="M70,156.40h620"/><text x="61" y="160.40" text-anchor="end">1.35</text>
+<path class="grid" d="M70,111.20h620"/><text x="61" y="115.20" text-anchor="end">1.8</text>
+<path class="grid" d="M70,66.00h620"/><text x="61" y="70.00" text-anchor="end">2.25</text>
+<path class="grid" d="M70.00,66v226"/><text x="70.00" y="313" text-anchor="middle">1k</text>
+<path class="grid" d="M173.33,66v226"/><text x="173.33" y="313" text-anchor="middle">4k</text>
+<path class="grid" d="M380.00,66v226"/><text x="380.00" y="313" text-anchor="middle">64k</text>
+<path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
+<path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
+<path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path d="M70.00,120.48V119.53" stroke="#2563eb"/>
+<circle cx="70.00" cy="120.01" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean rotations / key=1.70866; 3 trials</title></circle>
+<path d="M70.00,120.01L173.33,118.55" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M173.33,119.24V117.85" stroke="#2563eb"/>
+<circle cx="173.33" cy="118.55" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Mean rotations / key=1.72314; 3 trials</title></circle>
+<path d="M173.33,118.55L276.67,118.88" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M276.67,118.96V118.80" stroke="#2563eb"/>
+<circle cx="276.67" cy="118.88" r="3" fill="#2563eb"><title>Geometric repair: n=16,384; Mean rotations / key=1.71985; 3 trials</title></circle>
+<path d="M276.67,118.88L380.00,118.56" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M380.00,118.63V118.50" stroke="#2563eb"/>
+<circle cx="380.00" cy="118.56" r="3" fill="#2563eb"><title>Geometric repair: n=65,536; Mean rotations / key=1.72298; 3 trials</title></circle>
+<path d="M380.00,118.56L483.33,118.41" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="483.33" cy="118.41" r="3" fill="#2563eb"><title>Geometric repair: n=262,144; Mean rotations / key=1.72453; 1 trials</title></circle>
+<path d="M483.33,118.41L586.67,118.51" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="586.67" cy="118.51" r="3" fill="#2563eb"><title>Geometric repair: n=1,048,576; Mean rotations / key=1.7235; 1 trials</title></circle>
+<path d="M586.67,118.51L638.33,118.43" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="638.33" cy="118.43" r="3" fill="#2563eb"><title>Geometric repair: n=2,097,152; Mean rotations / key=1.72429; 1 trials</title></circle>
+<path d="M22,351h20" stroke="#2563eb" stroke-width="3"/><text x="49" y="355">Geometric repair</text>
+<path d="M70.00,120.48V119.53" stroke="#9333ea"/>
+<circle cx="70.00" cy="120.01" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,024; Mean rotations / key=1.70866; 3 trials</title></circle>
+<path d="M70.00,120.01L173.33,118.55" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<path d="M173.33,119.24V117.85" stroke="#9333ea"/>
+<circle cx="173.33" cy="118.55" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=4,096; Mean rotations / key=1.72314; 3 trials</title></circle>
+<path d="M173.33,118.55L276.67,118.88" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<path d="M276.67,118.96V118.80" stroke="#9333ea"/>
+<circle cx="276.67" cy="118.88" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=16,384; Mean rotations / key=1.71985; 3 trials</title></circle>
+<path d="M276.67,118.88L380.00,118.56" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<path d="M380.00,118.63V118.50" stroke="#9333ea"/>
+<circle cx="380.00" cy="118.56" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=65,536; Mean rotations / key=1.72298; 3 trials</title></circle>
+<path d="M380.00,118.56L483.33,118.41" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="483.33" cy="118.41" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=262,144; Mean rotations / key=1.72453; 1 trials</title></circle>
+<path d="M483.33,118.41L586.67,118.51" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="586.67" cy="118.51" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,048,576; Mean rotations / key=1.7235; 1 trials</title></circle>
+<path d="M586.67,118.51L638.33,118.43" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="638.33" cy="118.43" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=2,097,152; Mean rotations / key=1.72429; 1 trials</title></circle>
+<path d="M372,351h20" stroke="#9333ea" stroke-width="3" stroke-dasharray="6 4"/><text x="399" y="355">Geometric repair · alternate</text>
+<path d="M70.00,119.54V118.96" stroke="#059669"/>
+<circle cx="70.00" cy="119.25" r="3" fill="#059669"><title>Interval repair: n=1,024; Mean rotations / key=1.71615; 3 trials</title></circle>
+<path d="M70.00,119.25L173.33,118.73" stroke="#059669" stroke-width="2" fill="none"/>
+<path d="M173.33,118.87V118.58" stroke="#059669"/>
+<circle cx="173.33" cy="118.73" r="3" fill="#059669"><title>Interval repair: n=4,096; Mean rotations / key=1.72135; 3 trials</title></circle>
+<path d="M173.33,118.73L276.67,118.28" stroke="#059669" stroke-width="2" fill="none"/>
+<path d="M276.67,118.36V118.21" stroke="#059669"/>
+<circle cx="276.67" cy="118.28" r="3" fill="#059669"><title>Interval repair: n=16,384; Mean rotations / key=1.72577; 3 trials</title></circle>
+<path d="M276.67,118.28L380.00,118.39" stroke="#059669" stroke-width="2" fill="none"/>
+<path d="M380.00,118.47V118.31" stroke="#059669"/>
+<circle cx="380.00" cy="118.39" r="3" fill="#059669"><title>Interval repair: n=65,536; Mean rotations / key=1.72472; 3 trials</title></circle>
+<path d="M380.00,118.39L483.33,118.49" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="483.33" cy="118.49" r="3" fill="#059669"><title>Interval repair: n=262,144; Mean rotations / key=1.72375; 1 trials</title></circle>
+<path d="M483.33,118.49L586.67,118.48" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="586.67" cy="118.48" r="3" fill="#059669"><title>Interval repair: n=1,048,576; Mean rotations / key=1.72384; 1 trials</title></circle>
+<path d="M586.67,118.48L638.33,118.49" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="638.33" cy="118.49" r="3" fill="#059669"><title>Interval repair: n=2,097,152; Mean rotations / key=1.72369; 1 trials</title></circle>
+<path d="M22,373h20" stroke="#059669" stroke-width="3"/><text x="49" y="377">Interval repair</text>
+<path d="M70.00,97.76V96.18" stroke="#d97706"/>
+<circle cx="70.00" cy="96.97" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,024; Mean rotations / key=1.9375; 3 trials</title></circle>
+<path d="M70.00,96.97L173.33,98.08" stroke="#d97706" stroke-width="2" fill="none"/>
+<path d="M173.33,98.43V97.72" stroke="#d97706"/>
+<circle cx="173.33" cy="98.08" r="3" fill="#d97706"><title>Random level · leaf promotion: n=4,096; Mean rotations / key=1.92651; 3 trials</title></circle>
+<path d="M173.33,98.08L276.67,97.28" stroke="#d97706" stroke-width="2" fill="none"/>
+<path d="M276.67,97.66V96.90" stroke="#d97706"/>
+<circle cx="276.67" cy="97.28" r="3" fill="#d97706"><title>Random level · leaf promotion: n=16,384; Mean rotations / key=1.93445; 3 trials</title></circle>
+<path d="M276.67,97.28L380.00,97.22" stroke="#d97706" stroke-width="2" fill="none"/>
+<path d="M380.00,97.29V97.14" stroke="#d97706"/>
+<circle cx="380.00" cy="97.22" r="3" fill="#d97706"><title>Random level · leaf promotion: n=65,536; Mean rotations / key=1.93504; 3 trials</title></circle>
+<path d="M380.00,97.22L483.33,96.93" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="483.33" cy="96.93" r="3" fill="#d97706"><title>Random level · leaf promotion: n=262,144; Mean rotations / key=1.93792; 1 trials</title></circle>
+<path d="M483.33,96.93L586.67,97.05" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="586.67" cy="97.05" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,048,576; Mean rotations / key=1.93667; 1 trials</title></circle>
+<path d="M586.67,97.05L638.33,97.11" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="638.33" cy="97.11" r="3" fill="#d97706"><title>Random level · leaf promotion: n=2,097,152; Mean rotations / key=1.93613; 1 trials</title></circle>
+<path d="M372,373h20" stroke="#d97706" stroke-width="3"/><text x="399" y="377">Random level · leaf promotion</text>
+<path d="M70.00,97.40V94.45" stroke="#dc2626"/>
+<circle cx="70.00" cy="95.92" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,024; Mean rotations / key=1.94792; 3 trials</title></circle>
+<path d="M70.00,95.92L173.33,92.14" stroke="#dc2626" stroke-width="2" fill="none"/>
+<path d="M173.33,92.30V91.98" stroke="#dc2626"/>
+<circle cx="173.33" cy="92.14" r="3" fill="#dc2626"><title>Stored-priority treap: n=4,096; Mean rotations / key=1.98551; 3 trials</title></circle>
+<path d="M173.33,92.14L276.67,90.62" stroke="#dc2626" stroke-width="2" fill="none"/>
+<path d="M276.67,91.03V90.21" stroke="#dc2626"/>
+<circle cx="276.67" cy="90.62" r="3" fill="#dc2626"><title>Stored-priority treap: n=16,384; Mean rotations / key=2.00057; 3 trials</title></circle>
+<path d="M276.67,90.62L380.00,90.61" stroke="#dc2626" stroke-width="2" fill="none"/>
+<path d="M380.00,90.73V90.50" stroke="#dc2626"/>
+<circle cx="380.00" cy="90.61" r="3" fill="#dc2626"><title>Stored-priority treap: n=65,536; Mean rotations / key=2.00067; 3 trials</title></circle>
+<path d="M380.00,90.61L483.33,90.69" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="483.33" cy="90.69" r="3" fill="#dc2626"><title>Stored-priority treap: n=262,144; Mean rotations / key=1.99985; 1 trials</title></circle>
+<path d="M483.33,90.69L586.67,90.83" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="586.67" cy="90.83" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,048,576; Mean rotations / key=1.99851; 1 trials</title></circle>
+<path d="M586.67,90.83L638.33,90.58" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="638.33" cy="90.58" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean rotations / key=2.00098; 1 trials</title></circle>
+<path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>

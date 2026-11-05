@@ -37,11 +37,14 @@ class PagesBuildTests(unittest.TestCase):
     def test_result_pages_and_graphs_are_self_contained(self):
         with tempfile.TemporaryDirectory() as temporary:
             output = build_site(Path(temporary) / "website")
-            for filename in PUBLIC_PAGES:
+            for filename in (*PUBLIC_PAGES, "benchmarks/index.html"):
                 page = AssetReferences()
                 page.feed((output / filename).read_text())
                 for reference in page.links:
-                    self.assertTrue((output / reference).is_file(), reference)
+                    self.assertTrue(
+                        (output / filename).parent.joinpath(reference).is_file(),
+                        reference,
+                    )
 
     def test_public_build_excludes_historical_reports_and_their_downloads(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -49,8 +52,16 @@ class PagesBuildTests(unittest.TestCase):
             self.assertEqual(
                 {path.name for path in output.glob("*.html")}, set(PUBLIC_PAGES)
             )
-            self.assertFalse(any(path.is_dir() for path in output.iterdir()))
+            self.assertEqual(
+                {path.name for path in output.iterdir() if path.is_dir()},
+                {"benchmarks"},
+            )
             self.assertFalse(any(STATIC.glob("*results*")))
+            self.assertIn(
+                "Target strategy benchmark report",
+                (output / "benchmarks/index.html").read_text(),
+            )
+            self.assertTrue((output / "benchmarks/source.zip").is_file())
 
     def test_staged_assets_resolve_under_a_github_project_path(self):
         with tempfile.TemporaryDirectory() as temporary:

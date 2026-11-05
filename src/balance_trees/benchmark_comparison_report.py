@@ -129,7 +129,9 @@ def metric_cells(row):
     return "".join(cells)
 
 
-def generate_report(source: Path, output: Path | None = None) -> Path:
+def generate_report(
+    source: Path, output: Path | None = None, *, visualizer_href: str | None = None
+) -> Path:
     results = json.loads((source / "results.json").read_text())
     metadata, records, summaries = (
         results["metadata"],
@@ -289,9 +291,14 @@ def generate_report(source: Path, output: Path | None = None) -> Path:
         if findings
         else ""
     )
+    navigation = (
+        f'<nav aria-label="Lab pages"><a href="{escaped(visualizer_href)}">← Tree visualizer</a></nav>'
+        if visualizer_href
+        else ""
+    )
     html_text = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Target strategy benchmark report</title>
 <style>:root{{color-scheme:light}}*{{box-sizing:border-box}}body{{margin:0;background:#f3f5f8;color:#17283c;font:15px/1.6 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:28px}}h1{{font-size:clamp(30px,4vw,48px);line-height:1.15;letter-spacing:-1px}}h2{{font-size:22px}}a{{color:#245fd0}}section,details{{background:white;border:1px solid #dce3eb;border-radius:14px;padding:22px;margin:22px 0}}.stats,.charts{{display:grid;gap:16px}}.stats{{grid-template-columns:repeat(4,1fr)}}.stat{{background:white;padding:18px;border:1px solid #dce3eb;border-radius:12px}}.stat strong{{display:block;font-size:27px}}.stat span,.note{{color:#526275;font-size:13px}}.charts{{grid-template-columns:repeat(2,minmax(0,1fr))}}figure{{margin:0;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}}figure svg{{width:100%;display:block}}figcaption{{padding:0 14px 10px;text-align:right;font-size:12px}}.table-wrap{{overflow:auto;max-height:75vh}}table{{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}}th,td{{padding:8px;border-bottom:1px solid #dce3eb;text-align:right}}th{{background:#eef2f7;position:sticky;top:0}}th:nth-child(-n+2),td:nth-child(-n+2){{text-align:left}}.downloads{{display:flex;gap:18px;flex-wrap:wrap}}select{{font:inherit;padding:8px;border:1px solid #ccd5e0;border-radius:8px;background:white}}[hidden]{{display:none!important}}summary{{cursor:pointer;font-weight:bold}}@media(max-width:800px){{main{{padding:14px}}.charts{{grid-template-columns:1fr}}.stats{{grid-template-columns:repeat(2,1fr)}}section,details{{padding:14px}}}}</style></head><body><main>
-<header><p class="note">Rotation Lab · parallel measurements on this computer</p><h1>Geometric, interval, random level and treap</h1><p>All seven sequence families. Five implementations. Compare rotations, final tree depths and logical random-bit use as key counts increase.</p></header>
+{navigation}<header><p class="note">Rotation Lab · parallel measurements on this computer</p><h1>Geometric, interval, random level and treap</h1><p>All seven sequence families. Five implementations. Compare rotations, final tree depths and logical random-bit use as key counts increase.</p></header>
 <div class="stats"><div class="stat"><strong>{statuses["complete"]:,}</strong><span>completed trials</span></div><div class="stat"><strong>{common_label}</strong><span>largest size completed by every pair</span></div><div class="stat"><strong>{max((r["n"] for r in records if r["status"] == "complete"), default=0):,}</strong><span>largest completed tree</span></div><div class="stat"><strong>{metadata["workers"]}</strong><span>parallel workers · {metadata["memory_mib"]} MiB cap each</span></div></div>
 <p class="note">{escaped(metadata["cpu"])} · Python {escaped(metadata["python"].split()[0])} · seed {metadata["seed"]} · per-trial deadline {metadata["timeout_seconds"]:g} s. Outcomes: {escaped(dict(statuses))}.</p>
 <p><label for="workload">Sequence type </label><select id="workload">{options}</select></p>
@@ -319,8 +326,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--visualizer-href", help="optional return link for a published report"
+    )
     args = parser.parse_args()
-    print(generate_report(args.input, args.output))
+    print(
+        generate_report(args.input, args.output, visualizer_href=args.visualizer_href)
+    )
 
 
 if __name__ == "__main__":

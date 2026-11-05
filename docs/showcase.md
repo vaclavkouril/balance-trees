@@ -40,13 +40,17 @@ substituting a different simulation.
    and click any row to pause and inspect that snapshot; arrow keys, Home/End,
    and Page Up/Down also navigate the focused list. **Next rotation** stops
    after one primitive rotation; **Next insertion** stops when a key is settled.
-3. Watch left/right edges and the explanation. Cyan marks focus, orange marks
-   promotion, pink marks demotion, and dashed violet marks the middle subtree.
-   The frame before a rotation identifies the involved nodes and middle subtree.
+3. Watch left/right edges and the explanation. A purple ring and ★ keep the
+   original inserted node visible. Blue C marks comparisons, green ↑ marks nodes
+   that moved up, and orange ↓ marks nodes that moved down, including descendants
+   whose depths changed. Colors accumulate for one insertion; symbols combine
+   when a node has several roles. Before rotation they preview the next movement.
+   The dashed violet middle subtree keeps its depth in that rotation.
 4. Click an input key to jump to that insertion. Drag the canvas to pan, use
    the zoom controls, and click **Fit** to restore automatic fitting.
 5. Choose dark/light mode from the sidebar. **Tutorial** opens the short guide;
-   it appears once on a new browser profile. The page contains only the visualizer.
+   it appears once on a new browser profile. **Benchmark results** opens the
+   saved comparison in a new tab, keeping the current run open.
 
 Space toggles playback; left/right arrows step when a form control is not focused.
 The player respects reduced-motion preferences when moving nodes.
@@ -104,6 +108,9 @@ refer to the **entire tree**, not just this window. Cached subtree sizes/heights
 are visualization metadata, separate from the metadata-free benchmark trees.
 
 The full tree needs O(n) memory; replay history is bounded to 128 recent views.
+Effect history stores comparison keys and key ranges for moving subtrees,
+resetting at each insertion. Only visible nodes are annotated in worker snapshots;
+hidden descendants retain their roles if they enter the current window.
 The timeline and Back button inspect those recent views. Resuming a large run
 continues the live simulation, rather than rebuilding it at an older snapshot.
 Restart rebuilds the run from its original seed. Full-history JSON export and arbitrary insertion
@@ -169,6 +176,7 @@ for older external traces.
   "root": 8,
   "nodes": [{"key": 8, "left": null, "right": null, "priority": null}],
   "heap_valid": null,
+  "effects": {"inserted": 8, "compared": [], "rose": [], "fell": []},
   "stats": {
     "nodes": 1, "height": 0, "mean_depth": 0,
     "rotations": 0, "visits": 0, "random_bits": 0,
@@ -180,6 +188,14 @@ for older external traces.
 Keys identify nodes across snapshots. Child links and `root` are keys or `null`.
 Every frame must describe a complete, acyclic BST. Depth counts edges. Global
 counters are cumulative; `insertion_rotations` resets for the next insertion.
+The optional `effects` object records insertion-local roles: `inserted` is the
+new key or `null` (including duplicates), and `compared`, `rose`, `fell` are lists
+of keys in the snapshot. A key can appear in several lists. Movement includes
+all nodes whose depth changed in any rotation this insertion; both movement
+lists may contain a key that rose and later fell. `prepare` previews that
+rotation's movement. Lists are independent snapshots, so backward playback and
+JSON replay retain the original colors. Older traces without effects still
+show their current rotation participants.
 
 Recommended event kinds are `ready`, `begin`, `compare`, `insert`, `coin`,
 `prepare`, `rotate`, `priority`, `scan`, `duplicate`, and `settled`. Emit `settled` at the
@@ -210,6 +226,9 @@ requires an environment where browser processes and networking are permitted.
 
 ## Website scope
 
-Only the interactive visualizer is currently retained. Old benchmark report
-pages and saved results have been removed ahead of the next website. Generate
-fresh measurements separately using [the benchmark guide](benchmarks.md).
+The visualizer links to the requested five-strategy benchmark report under
+`benchmarks/index.html`, with all seven sequence families, four metrics, graphs,
+data downloads and the measured source snapshot. Both are included in the web
+build. Old report pages remain removed; working benchmark directories remain
+ignored. See [benchmark tools](../benchmarks/README.md) to refresh the published
+report from saved data or generate new measurements.

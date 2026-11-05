@@ -75,6 +75,37 @@ try {
   await waitFor('document.querySelector("#source-badge")?.textContent === "Python implementation"');
   const registeredCount = await evaluate('fetch("./api/config").then(r => r.json()).then(data => Object.keys(data.strategies).length)');
   assert.equal(await evaluate('document.querySelector("#strategy").options.length'), registeredCount + 1);
+  assert.equal(await evaluate('document.querySelector("#benchmark-link").getAttribute("href")'), './benchmarks/index.html');
+  await evaluate(`document.querySelector('#tutorial').close(); document.querySelector('#strategy').value='treap'; document.querySelector('#seed').value='17'; document.querySelector('#sequence').value='8,4,12,2,6,10,14,3,5,11,0,-2'; document.querySelector('#use-sequence').click();`);
+  await waitFor('document.querySelector("#count").value === "12" && document.querySelector("#phase").textContent === "Ready"');
+  const coloredFrame = await evaluate(`(async () => {
+    const trace = await fetch('./api/trace', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sequence:[8,4,12,2,6,10,14,3,5,11,0,-2],strategy:'treap',seed:17})}).then(r=>r.json());
+    const index = trace.frames.findLastIndex(frame => frame.kind === 'rotate' && frame.effects.rose.length && frame.effects.fell.length && frame.effects.compared.length > 2);
+    const timeline = document.querySelector('#timeline'); timeline.value=index; timeline.dispatchEvent(new Event('input'));
+    return index;
+  })()`);
+  assert.ok(coloredFrame > 0);
+  assert.equal(await evaluate('document.querySelectorAll(".tree-node.inserted").length'), 1);
+  assert.equal(await evaluate('getComputedStyle(document.querySelector(".inserted-ring")).fill'), 'none');
+  assert.equal(await evaluate('getComputedStyle(document.querySelector(".inserted .inserted-ring")).display'), 'block');
+  const fills = await evaluate('[".rose:not(.fell)",".fell:not(.rose)"].map(role => getComputedStyle(document.querySelector(".tree-node"+role+" > circle")).fill)');
+  assert.notEqual(fills[0], fills[1]);
+  assert.equal(await evaluate('document.querySelector(".tree-node.inserted .role-label").textContent.includes("★")'), true);
+  const rolesBefore = await evaluate('[...document.querySelectorAll(".tree-node")].map(node=>[node.dataset.key,node.getAttribute("class")])');
+  await screenshot('colored-trace-light.png');
+  await evaluate('document.querySelector("#theme-toggle").click()');
+  await screenshot('colored-trace-dark.png');
+  await evaluate(`document.querySelector('#timeline').value=${coloredFrame + 1}; document.querySelector('#timeline').dispatchEvent(new Event('input')); document.querySelector('#timeline').value=${coloredFrame}; document.querySelector('#timeline').dispatchEvent(new Event('input'));`);
+  assert.deepEqual(await evaluate('[...document.querySelectorAll(".tree-node")].map(node=>[node.dataset.key,node.getAttribute("class")])'), rolesBefore);
+  await navigate('benchmarks/index.html');
+  assert.equal(await evaluate('document.querySelectorAll("#workload option").length'), 8);
+  assert.equal(await evaluate('document.querySelector("nav a").getAttribute("href")'), '../index.html');
+  assert.equal(await evaluate('fetch("./summary.csv").then(r=>r.status)'), 200);
+  await evaluate('document.querySelector("#workload").value="converging"; document.querySelector("#workload").dispatchEvent(new Event("change"))');
+  assert.equal(await evaluate('[...document.querySelectorAll("[data-order]:not([hidden])")].every(element=>element.dataset.order==="converging")'), true);
+  await screenshot('benchmark-report.png');
+  await navigate('index.html');
+  await waitFor('document.querySelector("#source-badge")?.textContent === "Python implementation"');
   await evaluate(`document.querySelector('#tutorial').close(); document.querySelector('#strategy').value='random-level'; document.querySelector('#count').value='10000'; document.querySelector('#order').value='random'; document.querySelector('#generate').click();`);
   await waitFor('document.querySelector("#source-badge").textContent === "Browser simulation"');
   await evaluate('document.querySelector("#play").click()');
@@ -104,7 +135,7 @@ try {
   const overflow = await evaluate('[...document.querySelectorAll("body *")].filter(element => element.getBoundingClientRect().right > 391).slice(0,12).map(element => ({tag:element.tagName,id:element.id,className:String(element.className),right:element.getBoundingClientRect().right}))');
   assert.equal(await evaluate('document.documentElement.scrollWidth <= 390'), true, JSON.stringify(overflow));
   assert.deepEqual(exceptions, []);
-  console.log(`Browser checks passed: 10,000-key random-level preview, 48-node window and mobile layout. Screenshots: ${artifacts}`);
+  console.log(`Browser checks passed: colored trace replay, benchmark navigation/downloads, 10,000-key previews and mobile layout. Screenshots: ${artifacts}`);
 } finally {
   socket?.close();
   browser.kill('SIGTERM');

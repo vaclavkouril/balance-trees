@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="decreasing-mean_depth-title decreasing-mean_depth-desc">
+<title id="decreasing-mean_depth-title">Decreasing · Mean final node depth · edges</title>
+<desc id="decreasing-mean_depth-desc">Paired measurements for all five implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
+<rect width="720" height="425" rx="12" fill="white"/>
+<text x="22" y="28" style="font-size:17px;font-weight:650">Decreasing · Mean final node depth · edges</text>
+<text x="22" y="48" style="font-size:11px;fill:#64748b">Five implementations · source and seeds recorded · no timing comparison</text>
+<path class="grid" d="M70,292.00h620"/><text x="61" y="296.00" text-anchor="end">0</text>
+<path class="grid" d="M70,246.80h620"/><text x="61" y="250.80" text-anchor="end">7.73</text>
+<path class="grid" d="M70,201.60h620"/><text x="61" y="205.60" text-anchor="end">15.5</text>
+<path class="grid" d="M70,156.40h620"/><text x="61" y="160.40" text-anchor="end">23.2</text>
+<path class="grid" d="M70,111.20h620"/><text x="61" y="115.20" text-anchor="end">30.9</text>
+<path class="grid" d="M70,66.00h620"/><text x="61" y="70.00" text-anchor="end">38.6</text>
+<path class="grid" d="M70.00,66v226"/><text x="70.00" y="313" text-anchor="middle">1k</text>
+<path class="grid" d="M173.33,66v226"/><text x="173.33" y="313" text-anchor="middle">4k</text>
+<path class="grid" d="M380.00,66v226"/><text x="380.00" y="313" text-anchor="middle">64k</text>
+<path class="grid" d="M483.33,66v226"/><text x="483.33" y="313" text-anchor="middle">256k</text>
+<path class="grid" d="M638.33,66v226"/><text x="638.33" y="313" text-anchor="middle">2M</text>
+<path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">4M</text>
+<path d="M70.00,226.23V220.40" stroke="#2563eb"/>
+<circle cx="70.00" cy="223.32" r="3" fill="#2563eb"><title>Geometric repair: n=1,024; Mean final node depth · edges=11.7432; 3 trials</title></circle>
+<path d="M70.00,223.32L173.33,201.28" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M173.33,204.44V198.12" stroke="#2563eb"/>
+<circle cx="173.33" cy="201.28" r="3" fill="#2563eb"><title>Geometric repair: n=4,096; Mean final node depth · edges=15.5111; 3 trials</title></circle>
+<path d="M173.33,201.28L276.67,183.61" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M276.67,184.72V182.49" stroke="#2563eb"/>
+<circle cx="276.67" cy="183.61" r="3" fill="#2563eb"><title>Geometric repair: n=16,384; Mean final node depth · edges=18.5323; 3 trials</title></circle>
+<path d="M276.67,183.61L380.00,169.59" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M380.00,175.36V163.82" stroke="#2563eb"/>
+<circle cx="380.00" cy="169.59" r="3" fill="#2563eb"><title>Geometric repair: n=65,536; Mean final node depth · edges=20.9289; 3 trials</title></circle>
+<path d="M380.00,169.59L483.33,153.22" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="483.33" cy="153.22" r="3" fill="#2563eb"><title>Geometric repair: n=262,144; Mean final node depth · edges=23.7274; 1 trials</title></circle>
+<path d="M483.33,153.22L586.67,138.22" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="586.67" cy="138.22" r="3" fill="#2563eb"><title>Geometric repair: n=1,048,576; Mean final node depth · edges=26.2924; 1 trials</title></circle>
+<path d="M586.67,138.22L638.33,118.73" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="638.33" cy="118.73" r="3" fill="#2563eb"><title>Geometric repair: n=2,097,152; Mean final node depth · edges=29.624; 1 trials</title></circle>
+<path d="M22,351h20" stroke="#2563eb" stroke-width="3"/><text x="49" y="355">Geometric repair</text>
+<path d="M70.00,226.23V220.40" stroke="#9333ea"/>
+<circle cx="70.00" cy="223.32" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,024; Mean final node depth · edges=11.7432; 3 trials</title></circle>
+<path d="M70.00,223.32L173.33,201.28" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<path d="M173.33,204.44V198.12" stroke="#9333ea"/>
+<circle cx="173.33" cy="201.28" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=4,096; Mean final node depth · edges=15.5111; 3 trials</title></circle>
+<path d="M173.33,201.28L276.67,183.61" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<path d="M276.67,184.72V182.49" stroke="#9333ea"/>
+<circle cx="276.67" cy="183.61" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=16,384; Mean final node depth · edges=18.5323; 3 trials</title></circle>
+<path d="M276.67,183.61L380.00,169.59" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<path d="M380.00,175.36V163.82" stroke="#9333ea"/>
+<circle cx="380.00" cy="169.59" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=65,536; Mean final node depth · edges=20.9289; 3 trials</title></circle>
+<path d="M380.00,169.59L483.33,153.22" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="483.33" cy="153.22" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=262,144; Mean final node depth · edges=23.7274; 1 trials</title></circle>
+<path d="M483.33,153.22L586.67,138.22" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="586.67" cy="138.22" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=1,048,576; Mean final node depth · edges=26.2924; 1 trials</title></circle>
+<path d="M586.67,138.22L638.33,118.73" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+<circle cx="638.33" cy="118.73" r="3" fill="#9333ea"><title>Geometric repair · alternate: n=2,097,152; Mean final node depth · edges=29.624; 1 trials</title></circle>
+<path d="M372,351h20" stroke="#9333ea" stroke-width="3" stroke-dasharray="6 4"/><text x="399" y="355">Geometric repair · alternate</text>
+<path d="M70.00,222.14V220.52" stroke="#059669"/>
+<circle cx="70.00" cy="221.33" r="3" fill="#059669"><title>Interval repair: n=1,024; Mean final node depth · edges=12.0833; 3 trials</title></circle>
+<path d="M70.00,221.33L173.33,205.88" stroke="#059669" stroke-width="2" fill="none"/>
+<path d="M173.33,207.63V204.13" stroke="#059669"/>
+<circle cx="173.33" cy="205.88" r="3" fill="#059669"><title>Interval repair: n=4,096; Mean final node depth · edges=14.7237; 3 trials</title></circle>
+<path d="M173.33,205.88L276.67,186.18" stroke="#059669" stroke-width="2" fill="none"/>
+<path d="M276.67,189.90V182.47" stroke="#059669"/>
+<circle cx="276.67" cy="186.18" r="3" fill="#059669"><title>Interval repair: n=16,384; Mean final node depth · edges=18.0922; 3 trials</title></circle>
+<path d="M276.67,186.18L380.00,167.27" stroke="#059669" stroke-width="2" fill="none"/>
+<path d="M380.00,170.69V163.85" stroke="#059669"/>
+<circle cx="380.00" cy="167.27" r="3" fill="#059669"><title>Interval repair: n=65,536; Mean final node depth · edges=21.3251; 3 trials</title></circle>
+<path d="M380.00,167.27L483.33,153.35" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="483.33" cy="153.35" r="3" fill="#059669"><title>Interval repair: n=262,144; Mean final node depth · edges=23.7051; 1 trials</title></circle>
+<path d="M483.33,153.35L586.67,138.22" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="586.67" cy="138.22" r="3" fill="#059669"><title>Interval repair: n=1,048,576; Mean final node depth · edges=26.2927; 1 trials</title></circle>
+<path d="M586.67,138.22L638.33,125.09" stroke="#059669" stroke-width="2" fill="none"/>
+<circle cx="638.33" cy="125.09" r="3" fill="#059669"><title>Interval repair: n=2,097,152; Mean final node depth · edges=28.537; 1 trials</title></circle>
+<path d="M22,373h20" stroke="#059669" stroke-width="3"/><text x="49" y="377">Interval repair</text>
+<path d="M70.00,214.98V213.17" stroke="#d97706"/>
+<circle cx="70.00" cy="214.07" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,024; Mean final node depth · edges=13.3232; 3 trials</title></circle>
+<path d="M70.00,214.07L173.33,191.14" stroke="#d97706" stroke-width="2" fill="none"/>
+<path d="M173.33,192.38V189.91" stroke="#d97706"/>
+<circle cx="173.33" cy="191.14" r="3" fill="#d97706"><title>Random level · leaf promotion: n=4,096; Mean final node depth · edges=17.2438; 3 trials</title></circle>
+<path d="M173.33,191.14L276.67,166.21" stroke="#d97706" stroke-width="2" fill="none"/>
+<path d="M276.67,168.73V163.69" stroke="#d97706"/>
+<circle cx="276.67" cy="166.21" r="3" fill="#d97706"><title>Random level · leaf promotion: n=16,384; Mean final node depth · edges=21.5072; 3 trials</title></circle>
+<path d="M276.67,166.21L380.00,145.34" stroke="#d97706" stroke-width="2" fill="none"/>
+<path d="M380.00,147.71V142.97" stroke="#d97706"/>
+<circle cx="380.00" cy="145.34" r="3" fill="#d97706"><title>Random level · leaf promotion: n=65,536; Mean final node depth · edges=25.0751; 3 trials</title></circle>
+<path d="M380.00,145.34L483.33,116.02" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="483.33" cy="116.02" r="3" fill="#d97706"><title>Random level · leaf promotion: n=262,144; Mean final node depth · edges=30.0873; 1 trials</title></circle>
+<path d="M483.33,116.02L586.67,92.92" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="586.67" cy="92.92" r="3" fill="#d97706"><title>Random level · leaf promotion: n=1,048,576; Mean final node depth · edges=34.0371; 1 trials</title></circle>
+<path d="M586.67,92.92L638.33,90.21" stroke="#d97706" stroke-width="2" fill="none"/>
+<circle cx="638.33" cy="90.21" r="3" fill="#d97706"><title>Random level · leaf promotion: n=2,097,152; Mean final node depth · edges=34.5002; 1 trials</title></circle>
+<path d="M372,373h20" stroke="#d97706" stroke-width="3"/><text x="399" y="377">Random level · leaf promotion</text>
+<path d="M70.00,229.80V224.67" stroke="#dc2626"/>
+<circle cx="70.00" cy="227.23" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,024; Mean final node depth · edges=11.0732; 3 trials</title></circle>
+<path d="M70.00,227.23L173.33,212.23" stroke="#dc2626" stroke-width="2" fill="none"/>
+<path d="M173.33,214.76V209.69" stroke="#dc2626"/>
+<circle cx="173.33" cy="212.23" r="3" fill="#dc2626"><title>Stored-priority treap: n=4,096; Mean final node depth · edges=13.6392; 3 trials</title></circle>
+<path d="M173.33,212.23L276.67,195.28" stroke="#dc2626" stroke-width="2" fill="none"/>
+<path d="M276.67,196.29V194.27" stroke="#dc2626"/>
+<circle cx="276.67" cy="195.28" r="3" fill="#dc2626"><title>Stored-priority treap: n=16,384; Mean final node depth · edges=16.5369; 3 trials</title></circle>
+<path d="M276.67,195.28L380.00,182.32" stroke="#dc2626" stroke-width="2" fill="none"/>
+<path d="M380.00,183.91V180.74" stroke="#dc2626"/>
+<circle cx="380.00" cy="182.32" r="3" fill="#dc2626"><title>Stored-priority treap: n=65,536; Mean final node depth · edges=18.7517; 3 trials</title></circle>
+<path d="M380.00,182.32L483.33,155.92" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="483.33" cy="155.92" r="3" fill="#dc2626"><title>Stored-priority treap: n=262,144; Mean final node depth · edges=23.2661; 1 trials</title></circle>
+<path d="M483.33,155.92L586.67,138.68" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="586.67" cy="138.68" r="3" fill="#dc2626"><title>Stored-priority treap: n=1,048,576; Mean final node depth · edges=26.2129; 1 trials</title></circle>
+<path d="M586.67,138.68L638.33,138.68" stroke="#dc2626" stroke-width="2" fill="none"/>
+<circle cx="638.33" cy="138.68" r="3" fill="#dc2626"><title>Stored-priority treap: n=2,097,152; Mean final node depth · edges=26.2143; 1 trials</title></circle>
+<path d="M22,395h20" stroke="#dc2626" stroke-width="3"/><text x="49" y="399">Stored-priority treap</text>
+<text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>
