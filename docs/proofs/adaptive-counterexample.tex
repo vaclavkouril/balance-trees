@@ -20,9 +20,9 @@ $k=\lceil\log_2 n\rceil$. Assume for the moment that $k\geq2$ and that the
 present depth $d$ of $x$ satisfies $d>k+2$. We specify two types of insertion.
 All required gaps exist because the rational order is dense.
 For definiteness, choose the midpoint of each bounded gap and one less than
-the upper endpoint for an unbounded-below gap; after failure, repeatedly
-insert one less than the current minimum. Thus every choice is a deterministic
-function of the observed tree and the prescribed schedule.
+the upper endpoint for an unbounded-below gap. The attack depends only on the
+current tree, including its keys; the fixed schedule below is determined by
+the number of nodes, which can be counted from that tree.
 
 For an \emph{attack}, let $g$ be the node at depth $k$ on the path to $x$,
 and insert a fresh key in $g$'s left subtree, smaller than every key already
@@ -45,10 +45,15 @@ moving $x$ up one level. By the exact visit formula, the probe has
 \[ V=(d_{\mathrm{ins}}-T-1)_+\geq d-k. \]
 Neither kind of key exceeds $x$, which remains the maximum.
 
-We use nine attacks followed by one probe, repeatedly, as long as the
-condition $d>k+2$ holds. If it fails, the adversary switches to any rule for
-choosing further fresh keys below $x$. To initialize, insert $m$ distinct keys
-in decreasing order and let $x$ be the first, largest key. On the event that
+Fix $m$ in advance. To initialize, insert $m$ distinct keys in decreasing
+order, starting with $0$ and then choosing one less than the current minimum.
+Afterward, the current maximum is $x$. At each subsequent step, count the
+nodes to determine the next size and its position in a fixed schedule of nine
+attacks followed by one probe. If the current depth of $x$ is at most $k+2$,
+insert one less than the current minimum; otherwise use the scheduled attack
+or probe. This is a deterministic function of the current tree and fixed $m$:
+it does not remember whether the condition failed previously, inspect priorities
+or random bits, or know future outcomes. On the event that
 each sampled target in this prefix is zero, every new minimum rotates to the
 root, leaving a right chain with $d_m(x)=m-1$. This event has strictly positive
 probability for every fixed $m$.
@@ -56,7 +61,8 @@ probability for every fixed $m$.
 It remains to choose a fixed $m$ so that the subsequent condition holds forever
 with positive probability. Couple each future attack to an independent random
 variable taking values $+1,0,-1$ with probabilities $1/2,1/4,1/4$; assign
-$-1$ to each future probe. The coupling can read the first two latent fair bits
+$-1$ to each future probe. The coupling, used only in the analysis and not
+available to the adversary, can read the first two latent fair bits
 for an attack: zero gives $+1$, one then zero gives $0$, and two ones give
 $-1$. Latent bits are independent even when a sampler stops before reading
 them. Let $Z_s$ be the sum of the first $s$ such scheduled increments, with

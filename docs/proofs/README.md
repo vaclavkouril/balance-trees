@@ -28,6 +28,21 @@ bound. The separate adaptive construction does establish unconditional linear
 lower bounds over dense rational keys; see the paper for finite-horizon integer
 embedding and the distinction from a fixed nonadaptive sequence.
 
+## Comparing an adaptive treap input
+
+The usual [treap analysis](https://faculty.washington.edu/aragon/pubs/rst89.pdf)
+does not automatically extend to keys chosen from the observed tree. For a
+simple insertion-only example with independent continuous priorities, insert
+`0` and then `1`. If `0` is the root, insert `2`; otherwise insert `-1`.
+The resulting three-node treap is always a chain: the current root has better
+priority than the other old node, and the new key is an extreme. A treap on
+three fixed keys instead has a chain with probability 2/3. The attacker uses
+only the current tree shape to select the last key.
+
+This proves that adaptive observation can change the treap distribution. It
+does not prove a superlogarithmic expected-depth lower bound for insertion-only
+treaps, nor does the geometric-repair counterexample establish such a bound.
+
 ## Reproduce the checks
 
 From the repository root, compile the paper without placing build artifacts in
