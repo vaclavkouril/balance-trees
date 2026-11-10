@@ -9,13 +9,14 @@ import subprocess
 import sys
 from dataclasses import asdict
 from datetime import datetime, timezone
+from math import isqrt
 from pathlib import Path
 from statistics import fmean
 from time import perf_counter
 
 from .experiment import derived_seed
 from .measurement import run_trial
-from .sequences import ORDERS, insertion_order
+from .sequences import ORDERS, SUPPORTED_ORDERS, insertion_order
 from .statistics import standard_error
 from .strategies import STRATEGIES, create_strategy, strategy_factory
 
@@ -85,12 +86,14 @@ def run_benchmarks(
         or not strategies
         or any(s not in STRATEGIES for s in strategies)
         or not orders
-        or any(o not in ORDERS for o in orders)
+        or any(o not in SUPPORTED_ORDERS for o in orders)
         or any(len(set(v)) != len(v) for v in (sizes, strategies, orders))
     ):
         raise ValueError(
             "Use unique sizes >=2, known strategies/orders, positive trials and a finite timeout."
         )
+    if "grid" in orders and any(isqrt(n) ** 2 != n for n in sizes):
+        raise ValueError("grid insertion order requires perfect-square sizes")
     output.mkdir(parents=True, exist_ok=False)
     cpu = platform.processor() or platform.machine()
     cpuinfo = Path("/proc/cpuinfo")
@@ -210,7 +213,9 @@ def main() -> None:
     parser.add_argument(
         "--strategies", nargs="+", choices=STRATEGIES, default=list(STRATEGIES)
     )
-    parser.add_argument("--orders", nargs="+", choices=ORDERS, default=list(ORDERS))
+    parser.add_argument(
+        "--orders", nargs="+", choices=SUPPORTED_ORDERS, default=list(ORDERS)
+    )
     args = parser.parse_args()
     try:
         run_benchmarks(

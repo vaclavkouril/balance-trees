@@ -1,5 +1,6 @@
-"""The seven insertion-order families in Table 2 of the reference paper."""
+"""Paper insertion orders and the opt-in square grid insertion order."""
 
+from math import isqrt
 from random import Random
 
 ORDERS = (
@@ -11,13 +12,20 @@ ORDERS = (
     "bitonic",
     "runs",
 )
+SUPPORTED_ORDERS = (*ORDERS, "grid")
 
 
 def insertion_order(name: str, n: int, seed: int) -> list[int]:
     if n < 1:
         raise ValueError("size must be positive")
-    if name not in ORDERS:
+    if name not in SUPPORTED_ORDERS:
         raise ValueError(f"unknown insertion order: {name}")
+    if name == "grid":
+        # Read the b-by-b row-major grid by columns, exactly as specified.
+        b = isqrt(n)
+        if b * b != n:
+            raise ValueError("grid insertion order requires a perfect-square size")
+        return [i * b + j for j in range(b) for i in range(b)]
     if name == "random":
         values = list(range(1, n + 1))
         Random(seed).shuffle(values)
