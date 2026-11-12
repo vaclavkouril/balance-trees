@@ -9,6 +9,12 @@ measurement counters live outside the tree. Deletion is not implemented.
 - `random-level`: sample a vertex uniformly from the smallest perfect tree
   containing the current node count. Promote the inserted leaf to that depth
   only if it is deeper.
+- `geometric-three-quarters`: geometric target sampling with exact probability
+  3/4 and at most two local rotations. For insertion orders fixed independently
+  of the random choices, the supplied proof establishes expected logarithmic
+  height and logarithmic height with high probability. Both the Python and C++
+  strategy factories accept this identifier. The maximum target is
+  `ceil(log_{4/3}(n))`, computed exactly; each trial consumes two fair bits.
 - `geometric-target-local-repair`: capped geometric target sampling followed
   by the supplied straight/bent ancestor repair, with at most two rotations.
 - `interval-target-local-repair`: **Interval-target local repair**, implemented by
@@ -23,12 +29,18 @@ See [perfect-tree target algorithms](docs/perfect-tree-targets.md),
 [priority-free strategies](docs/priority-free-strategies.md). The stopping-rule
 references are inspired by [Brodal's paper](https://arxiv.org/abs/2404.08287).
 
-For the geometric repair rule, the [mathematical proof](docs/proofs/geometric-repair.tex)
-establishes constant rotations and expected random bits, and logarithmic expected
-node depth for monotone insertion sequences. It also gives an adaptive sequence
-with linear expected depth and repair work, while general bounds for fixed
-sequences remain unresolved. [Proof instructions and status](docs/proofs/README.md)
-describe the key-domain assumptions, formal model, and checks.
+For `geometric-three-quarters`, the [probability paper (PDF)](docs/proofs/geometric-biased-repair.pdf)
+and [LaTeX source](docs/proofs/geometric-biased-repair.tex) prove logarithmic height
+for every fixed insertion order, and constant expected structural repair for
+increasing inputs and uniform random permutations. The paper compares all seven
+of Brodal's criteria, explicitly qualifying global size information and the cost
+of computing the maximum target.
+
+The separate [fair-coin paper](docs/proofs/geometric-repair.pdf) analyzes
+`geometric-target-local-repair`: it proves monotone expected-depth bounds and
+an adaptive counterexample; its arbitrary fixed-order depth question remains open.
+[Proof instructions and status](docs/proofs/README.md) distinguish the two
+strategies and explain the GitHub PDF builds and formal coverage.
 
 ## Run and test
 
@@ -44,10 +56,13 @@ node tests/test_showcase_browser.mjs
 node tests/test_large_showcase.mjs
 ```
 
-The local visualizer remains at `http://127.0.0.1:8000`. Its **Benchmark results**
-link opens the [current five-strategy comparison](src/balance_trees/showcase/site/dist/benchmarks/index.html),
-also included in the static web build. Insertion traces mark comparisons,
-up/down movement and the original inserted node. See [the visualizer guide](docs/showcase.md).
+The local visualizer remains at `http://127.0.0.1:8000`. Its **C++ probability
+benchmarks** link opens the [252-trial geometric comparison](src/balance_trees/showcase/site/dist/benchmarks/geometric-native/index.html),
+with both strategies measured through 16,777,216 keys across seven input
+families. The [earlier comparison](src/balance_trees/showcase/site/dist/benchmarks/index.html)
+remains available through **Earlier benchmark results**. Both reports are
+included in the static web build. Insertion traces mark comparisons, up/down
+movement and the original inserted node. See [the visualizer guide](docs/showcase.md).
 
 Optional editable installation and formatting:
 

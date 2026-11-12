@@ -1,11 +1,12 @@
 # Native C++ implementation
 
 `src/native/` is an alternate, standalone C++20 source folder. It implements the
-Python insertion pipeline, BST rotations, and `geometric-target-local-repair`.
-The `none` baseline is also available. C++ provides fixed-width storage and a
+Python insertion pipeline, BST rotations, `geometric-target-local-repair`, and
+`geometric-three-quarters`. The `none` baseline is also available. C++ provides fixed-width storage and a
 strategy factory without adding dependencies. It is not yet wired into the
-browser visualizer. A separate native benchmark runner extends the saved Python
-comparison; see [benchmark commands](../benchmarks/README.md#native-extension-of-the-comparison).
+browser visualizer. A native benchmark runner compares both geometric strategies
+across all seven input families, or extends a saved Python comparison; see
+[benchmark commands](../benchmarks/README.md#complete-c-geometric-comparison).
 
 ## Build and run
 
@@ -36,9 +37,12 @@ bit stream, overriding the seed, for deterministic comparisons.
 
 ## Behavior and storage
 
-The repair samples `L = bit_width(n - 1) + 1`, counts leading ones through the
-first zero or L bits, and chooses `max(0, L - move - 1)`. Sampling happens even
-when the leaf needs no repair. Duplicate insertions consume no bits and do not
+The original `geometric-target-local-repair` samples `L = bit_width(n - 1) + 1`,
+counts leading ones through the first zero or L bits, and chooses
+`max(0, L - move - 1)`. The new `geometric-three-quarters` starts at the exact
+integer depth `ceil(log_(4/3)(n))`, then decreases it with probability 3/4 until
+a trial fails or the target reaches zero. Sampling happens even when the leaf
+needs no repair. Duplicate insertions consume no bits and do not
 advance the strategy's count. Straight paths promote the parent once; bent paths
 promote the selected cursor twice. These are the same rules, visits, and rotation
 distances as Python, including the one-edge repair case.
@@ -55,9 +59,10 @@ node addresses are exposed. There is no per-node balancing metadata.
 
 The default bit source is SplitMix64, with a 64-bit state and a 64-bit buffer.
 It consumes each generated word least significant bit first and reuses every
-remaining bit. A capped geometric sample consumes fewer than two logical fair
-bits in expectation under the algorithm's ideal independent-bit model; the PRNG
-is a reproducible simulation source, not a cryptographic generator. Scripted
+remaining bit. The original fair-coin target consumes fewer than two logical
+bits in expectation; the 3/4 target consumes fewer than eight. These expectations
+assume the algorithm's ideal independent-bit model; the PRNG is a reproducible
+simulation source, not a cryptographic generator. Scripted
 test bits are also packed into 64-bit words. The seed does **not** reproduce
 Python's Mersenne Twister stream: compare implementations with identical explicit
 bits. `tests/test_native.py` checks complete topology and statistics after each
@@ -91,3 +96,10 @@ explicit seeds, and `--reserve`; keep inputs and outputs in fresh ignored
 `benchmarks/results/` directories. Record compiler, flags, hardware, sequence
 generation, and seed. Compare equal workloads and report parsing separately
 when making algorithm performance claims.
+
+The `geometric-three-quarters` strategy implements the same local repair with
+independent probability 3/4 target decreases. It computes the maximum target
+exactly from integer thresholds and consumes two fair bits per trial; no bits
+are consumed for the first insertion. Python and native implementations accept
+the same strategy identifier and scripted-bit semantics. The logarithmic height
+guarantee assumes a fixed insertion sequence independent of the random choices.

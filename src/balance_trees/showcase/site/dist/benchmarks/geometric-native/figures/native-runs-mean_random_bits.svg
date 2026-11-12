@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="native-runs-mean_random_bits-title native-runs-mean_random_bits-desc">
+<title id="native-runs-mean_random_bits-title">Runs · Mean random bits / key</title>
+<desc id="native-runs-mean_random_bits-desc">Measurements for 2 implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: 1·log₂(n) · endpoint guide. c=max(1, largest endpoint value/log₂(n) across implementations). Descriptive scaling, not a proven bound.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
+<rect width="720" height="425" rx="12" fill="white"/>
+<text x="22" y="28" style="font-size:17px;font-weight:650">Runs · Mean random bits / key</text>
+<text x="22" y="48" style="font-size:11px;fill:#64748b">2 implementations · source and seeds recorded · no timing comparison</text>
+<path class="grid" d="M70,292.00h620"/><text x="61" y="296.00" text-anchor="end">0</text>
+<path class="grid" d="M70,246.80h620"/><text x="61" y="250.80" text-anchor="end">5.38</text>
+<path class="grid" d="M70,201.60h620"/><text x="61" y="205.60" text-anchor="end">10.8</text>
+<path class="grid" d="M70,156.40h620"/><text x="61" y="160.40" text-anchor="end">16.1</text>
+<path class="grid" d="M70,111.20h620"/><text x="61" y="115.20" text-anchor="end">21.5</text>
+<path class="grid" d="M70,66.00h620"/><text x="61" y="70.00" text-anchor="end">26.9</text>
+<path class="grid" d="M70.00,66v226"/><text x="70.00" y="313" text-anchor="middle">1k</text>
+<path class="grid" d="M247.14,66v226"/><text x="247.14" y="313" text-anchor="middle">16k</text>
+<path class="grid" d="M424.29,66v226"/><text x="424.29" y="313" text-anchor="middle">256k</text>
+<path class="grid" d="M512.86,66v226"/><text x="512.86" y="313" text-anchor="middle">1M</text>
+<path class="grid" d="M601.43,66v226"/><text x="601.43" y="313" text-anchor="middle">4M</text>
+<path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">16M</text>
+<path class="log-reference" data-constant="1" d="M70.00,207.92L690.00,90.21" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>1·log₂(n) · endpoint guide: descriptive scaling, not a proven bound</title></path>
+<path d="M70.00,275.28V275.16" stroke="#2563eb"/>
+<circle cx="70.00" cy="275.22" r="3" fill="#2563eb"><title>C++ geometric repair: n=1,024; Mean random bits / key=1.99577; 3 trials</title></circle>
+<path d="M70.00,275.22L158.57,275.31" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M158.57,275.43V275.18" stroke="#2563eb"/>
+<circle cx="158.57" cy="275.31" r="3" fill="#2563eb"><title>C++ geometric repair: n=4,096; Mean random bits / key=1.98543; 3 trials</title></circle>
+<path d="M158.57,275.31L247.14,275.17" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M247.14,275.20V275.14" stroke="#2563eb"/>
+<circle cx="247.14" cy="275.17" r="3" fill="#2563eb"><title>C++ geometric repair: n=16,384; Mean random bits / key=2.00163; 3 trials</title></circle>
+<path d="M247.14,275.17L335.71,275.22" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M335.71,275.24V275.20" stroke="#2563eb"/>
+<circle cx="335.71" cy="275.22" r="3" fill="#2563eb"><title>C++ geometric repair: n=65,536; Mean random bits / key=1.99631; 3 trials</title></circle>
+<path d="M335.71,275.22L424.29,275.21" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="275.21" r="3" fill="#2563eb"><title>C++ geometric repair: n=262,144; Mean random bits / key=1.99659; 1 trials</title></circle>
+<path d="M424.29,275.21L512.86,275.19" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="275.19" r="3" fill="#2563eb"><title>C++ geometric repair: n=1,048,576; Mean random bits / key=1.99936; 1 trials</title></circle>
+<path d="M512.86,275.19L557.14,275.17" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="275.17" r="3" fill="#2563eb"><title>C++ geometric repair: n=2,097,152; Mean random bits / key=2.00157; 1 trials</title></circle>
+<path d="M557.14,275.17L601.43,275.18" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="601.43" cy="275.18" r="3" fill="#2563eb"><title>C++ geometric repair: n=4,194,304; Mean random bits / key=2.0002; 1 trials</title></circle>
+<path d="M601.43,275.18L645.71,275.19" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="645.71" cy="275.19" r="3" fill="#2563eb"><title>C++ geometric repair: n=8,388,608; Mean random bits / key=1.99971; 1 trials</title></circle>
+<path d="M645.71,275.19L690.00,275.18" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="690.00" cy="275.18" r="3" fill="#2563eb"><title>C++ geometric repair: n=16,777,216; Mean random bits / key=2.00012; 1 trials</title></circle>
+<path d="M22,351h20" stroke="#2563eb" stroke-width="3"/><text x="49" y="355">C++ geometric repair</text>
+<path d="M70.00,224.76V223.29" stroke="#9333ea"/>
+<circle cx="70.00" cy="224.02" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=1,024; Mean random bits / key=8.08529; 3 trials</title></circle>
+<path d="M70.00,224.02L158.57,224.57" stroke="#9333ea" stroke-width="2" fill="none"/>
+<path d="M158.57,224.90V224.24" stroke="#9333ea"/>
+<circle cx="158.57" cy="224.57" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=4,096; Mean random bits / key=8.01969; 3 trials</title></circle>
+<path d="M158.57,224.57L247.14,225.24" stroke="#9333ea" stroke-width="2" fill="none"/>
+<path d="M247.14,225.55V224.93" stroke="#9333ea"/>
+<circle cx="247.14" cy="225.24" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=16,384; Mean random bits / key=7.94023; 3 trials</title></circle>
+<path d="M247.14,225.24L335.71,224.63" stroke="#9333ea" stroke-width="2" fill="none"/>
+<path d="M335.71,224.73V224.54" stroke="#9333ea"/>
+<circle cx="335.71" cy="224.63" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=65,536; Mean random bits / key=8.01262; 3 trials</title></circle>
+<path d="M335.71,224.63L424.29,224.82" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="224.82" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=262,144; Mean random bits / key=7.98993; 1 trials</title></circle>
+<path d="M424.29,224.82L512.86,224.69" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="224.69" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=1,048,576; Mean random bits / key=8.00582; 1 trials</title></circle>
+<path d="M512.86,224.69L557.14,224.70" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="224.70" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=2,097,152; Mean random bits / key=8.00503; 1 trials</title></circle>
+<path d="M557.14,224.70L601.43,224.71" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="601.43" cy="224.71" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=4,194,304; Mean random bits / key=8.00352; 1 trials</title></circle>
+<path d="M601.43,224.71L645.71,224.73" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="645.71" cy="224.73" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=8,388,608; Mean random bits / key=8.00134; 1 trials</title></circle>
+<path d="M645.71,224.73L690.00,224.73" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="690.00" cy="224.73" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=16,777,216; Mean random bits / key=8.00091; 1 trials</title></circle>
+<path d="M372,351h20" stroke="#9333ea" stroke-width="3"/><text x="399" y="355">C++ geometric repair · p = 3/4</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">1·log₂(n) · endpoint guide</text>
+<text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>

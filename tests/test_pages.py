@@ -7,11 +7,14 @@ from urllib.parse import urljoin, urlparse
 
 from balance_trees.showcase.build import (
     ENGINE_META,
+    PUBLIC_DOCUMENTS,
     PUBLIC_PAGES,
     build_site,
     catalog_source,
 )
 from balance_trees.showcase.server import STATIC
+
+REPORT_PAGES = ("benchmarks/index.html", "benchmarks/geometric-native/index.html")
 
 
 class AssetReferences(HTMLParser):
@@ -37,7 +40,7 @@ class PagesBuildTests(unittest.TestCase):
     def test_result_pages_and_graphs_are_self_contained(self):
         with tempfile.TemporaryDirectory() as temporary:
             output = build_site(Path(temporary) / "website")
-            for filename in (*PUBLIC_PAGES, "benchmarks/index.html"):
+            for filename in (*PUBLIC_PAGES, *REPORT_PAGES):
                 page = AssetReferences()
                 page.feed((output / filename).read_text())
                 for reference in page.links:
@@ -62,6 +65,13 @@ class PagesBuildTests(unittest.TestCase):
                 (output / "benchmarks/index.html").read_text(),
             )
             self.assertTrue((output / "benchmarks/source.zip").is_file())
+            self.assertIn(
+                "C++ geometric probability comparison",
+                (output / "benchmarks/geometric-native/index.html").read_text(),
+            )
+            self.assertTrue(
+                (output / "benchmarks/geometric-native/source.zip").is_file()
+            )
 
     def test_staged_assets_resolve_under_a_github_project_path(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -71,11 +81,14 @@ class PagesBuildTests(unittest.TestCase):
             self.assertEqual(page.engine, "browser")
             self.assertTrue((output / ".nojekyll").is_file())
             base = "https://example.github.io/experimental-balance-trees/"
-            for reference in page.links:
-                url = urlparse(urljoin(base, reference))
-                self.assertTrue(url.path.startswith("/experimental-balance-trees/"))
-                relative = url.path.removeprefix("/experimental-balance-trees/")
-                self.assertTrue((output / relative).exists(), reference)
+            for filename in (*PUBLIC_PAGES, *REPORT_PAGES):
+                page = AssetReferences()
+                page.feed((output / filename).read_text())
+                for reference in page.links:
+                    url = urlparse(urljoin(base + filename, reference))
+                    self.assertTrue(url.path.startswith("/experimental-balance-trees/"))
+                    relative = url.path.removeprefix("/experimental-balance-trees/")
+                    self.assertTrue((output / relative).exists(), reference)
             for module in output.glob("*.mjs"):
                 for reference in re.findall(
                     r"from\s+['\"]([^'\"]+)['\"]", module.read_text()
@@ -87,12 +100,14 @@ class PagesBuildTests(unittest.TestCase):
     def test_published_proof_matches_the_source_pdf(self):
         with tempfile.TemporaryDirectory() as temporary:
             output = build_site(Path(temporary) / "website")
-            source = (
-                Path(__file__).resolve().parents[1] / "docs/proofs/geometric-repair.pdf"
-            )
-            self.assertEqual(
-                (output / "geometric-repair.pdf").read_bytes(), source.read_bytes()
-            )
+            for filename in PUBLIC_DOCUMENTS:
+                with self.subTest(filename=filename):
+                    source = (
+                        Path(__file__).resolve().parents[1] / "docs/proofs" / filename
+                    )
+                    self.assertEqual(
+                        (output / filename).read_bytes(), source.read_bytes()
+                    )
 
     def test_public_build_does_not_change_local_mode_or_copy_site_metadata(self):
         original = (STATIC / "index.html").read_bytes()

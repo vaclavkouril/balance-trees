@@ -16,8 +16,18 @@ LABELS = {
     "random-level": "Random level · leaf promotion",
     "treap": "Stored-priority treap",
     "geometric-target-local-repair-native": "C++ geometric repair",
+    "geometric-three-quarters-native": "C++ geometric repair · p = 3/4",
 }
-COLORS = ("#2563eb", "#9333ea", "#059669", "#d97706", "#dc2626", "#0891b2")
+COLORS = (
+    "#2563eb",
+    "#9333ea",
+    "#059669",
+    "#d97706",
+    "#dc2626",
+    "#0891b2",
+    "#be185d",
+    "#475569",
+)
 METRICS = {
     "mean_rotations": "Mean rotations / key",
     "maximum_height": "Maximum final height · edges",
@@ -32,6 +42,16 @@ def escaped(value):
 
 def formatted(value, metric):
     return f"{value:,.0f}" if metric == "maximum_height" else f"{value:.3f}"
+
+
+def strategy_label(metadata: dict, strategy: str) -> str:
+    return LABELS.get(
+        strategy, metadata.get("catalog", {}).get(strategy, {}).get("name", strategy)
+    )
+
+
+def chart_height(strategies: list[str]) -> int:
+    return max(425, 359 + math.ceil(len(strategies) / 2) * 22 + 22)
 
 
 def log_reference_constant(results: dict, order: str, metric: str) -> float:
@@ -89,7 +109,7 @@ def chart_svg(results: dict, order: str, metric: str) -> str:
     def y(value):
         return top + height * (1 - value / ymax)
 
-    canvas_height = 447 if len(metadata["strategies"]) > 5 else 425
+    canvas_height = chart_height(metadata["strategies"])
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 {canvas_height}" role="img" aria-labelledby="{identity}-title {identity}-desc">',
         f'<title id="{identity}-title">{escaped(title)}</title>',
@@ -138,15 +158,15 @@ def chart_svg(results: dict, order: str, metric: str) -> str:
                     f'<path d="M{xx:.2f},{y(row[metric] - error):.2f}V{y(row[metric] + error):.2f}" stroke="{color}"/>'
                 )
             parts.append(
-                f'<circle cx="{xx:.2f}" cy="{yy:.2f}" r="3" fill="{color}"><title>{escaped(LABELS[strategy])}: n={size:,}; {METRICS[metric]}={row[metric]:.6g}; {row["completed_trials"]} trials</title></circle>'
+                f'<circle cx="{xx:.2f}" cy="{yy:.2f}" r="3" fill="{color}"><title>{escaped(strategy_label(metadata, strategy))}: n={size:,}; {METRICS[metric]}={row[metric]:.6g}; {row["completed_trials"]} trials</title></circle>'
             )
             previous = xx, yy
         legend_x, legend_y = 22 + position % 2 * 350, 351 + position // 2 * 22
         parts.append(
-            f'<path d="M{legend_x},{legend_y}h20" stroke="{color}" stroke-width="3"{dashed}/><text x="{legend_x + 27}" y="{legend_y + 4}">{escaped(LABELS[strategy])}</text>'
+            f'<path d="M{legend_x},{legend_y}h20" stroke="{color}" stroke-width="3"{dashed}/><text x="{legend_x + 27}" y="{legend_y + 4}">{escaped(strategy_label(metadata, strategy))}</text>'
         )
     if show_log_reference:
-        legend_y = 417 if canvas_height > 425 else 395
+        legend_y = canvas_height - 30
         parts.append(
             f'<path d="M372,{legend_y}h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="{legend_y + 4}">{guide_label}</text>'
         )
@@ -168,30 +188,39 @@ def metric_cells(row):
 
 
 def render_native_appendix(results: dict, output: Path) -> str:
-    native = "geometric-target-local-repair-native"
-    records = [row for row in results["trials"] if row["strategy"] == native]
+    metadata = results["metadata"]
+    native_strategies = [
+        strategy for strategy in metadata["strategies"] if strategy.endswith("-native")
+    ]
+    records = [row for row in results["trials"] if row["strategy"] in native_strategies]
     if not records:
         return ""
-    metadata = results["metadata"]
+    native_only = len(native_strategies) == len(metadata["strategies"])
     native_results = {
-        "metadata": {**metadata, "strategies": [native]},
+        "metadata": {**metadata, "strategies": native_strategies},
         "trials": records,
-        "summaries": [row for row in results["summaries"] if row["strategy"] == native],
+        "summaries": [
+            row for row in results["summaries"] if row["strategy"] in native_strategies
+        ],
     }
     table_rows, figures, overview = [], [], []
+    canvas_height = chart_height(native_strategies)
     for order_index, order in enumerate(metadata["orders"]):
-        completed = [
-            row
-            for row in native_results["summaries"]
-            if row["order"] == order and row["status"] == "complete"
-        ]
-        if completed:
-            last = max(completed, key=lambda row: row["n"])
-            table_rows.append(
-                f'<tr data-order="{order}"><td>{order}</td><td>{last["n"]:,}</td>{metric_cells(last)}'
-                f"<td>{last['elapsed_seconds']:.4f}</td><td>{last['peak_rss_mib']:.1f}</td>"
-                f"<td>{last['node_storage_bytes'] / last['n']:.1f}</td></tr>"
-            )
+        for strategy in native_strategies:
+            completed = [
+                row
+                for row in native_results["summaries"]
+                if row["order"] == order
+                and row["strategy"] == strategy
+                and row["status"] == "complete"
+            ]
+            if completed:
+                last = max(completed, key=lambda row: row["n"])
+                table_rows.append(
+                    f'<tr data-order="{order}"><td>{order}</td><td>{escaped(strategy_label(metadata, strategy))}</td><td>{last["n"]:,}</td>{metric_cells(last)}'
+                    f"<td>{last['elapsed_seconds']:.4f}</td><td>{last['peak_rss_mib']:.1f}</td>"
+                    f"<td>{last['node_storage_bytes'] / last['n']:.1f}</td></tr>"
+                )
         order_figures = []
         for metric_index, metric in enumerate(METRICS):
             svg = chart_svg(native_results, order, metric).replace(
@@ -204,29 +233,59 @@ def render_native_appendix(results: dict, output: Path) -> str:
             )
             inner = svg[svg.index(">") + 1 : svg.rindex("</svg>")]
             overview.append(
-                f'<g transform="translate({metric_index * 720},{order_index * 425})">{inner}</g>'
+                f'<g transform="translate({metric_index * 720},{order_index * canvas_height})">{inner}</g>'
             )
         figures.append(
             f'<div data-order="{order}"><h3>{order.capitalize()}</h3><div class="charts">{"".join(order_figures)}</div></div>'
         )
-    height = len(metadata["orders"]) * 425
+    height = len(metadata["orders"]) * canvas_height
     (output / "native-all-sequences.svg").write_text(
         f'<svg xmlns="http://www.w3.org/2000/svg" width="2880" height="{height}" viewBox="0 0 2880 {height}"><rect width="100%" height="100%" fill="white"/>{"".join(overview)}</svg>'
     )
     complete_count = sum(row["status"] == "complete" for row in records)
-    return f"""<section id="native-implementation"><h2>C++ geometric repair · native benchmark extension</h2>
-<p>The five Python implementations above retain their original measurements. C++ adds {complete_count} completed trials using the same seven input generators, input seeds, size schedule and rotation seed values. The combined charts include C++ as the sixth curve; the native-only SVGs below make its scale easier to inspect.</p>
-<p><strong>Implementation:</strong> signed 64-bit keys and three 32-bit indices in separate contiguous arrays: 20 bytes of reserved array payload per key. No priorities, heights or balance fields persist in nodes. Nodes are reserved before timing. SplitMix64 supplies buffered words, consumed one bit at a time without discarding unused bits. Rotation traces are disabled; counters stay enabled. The factory creates a fresh geometric strategy for each trial.</p>
-<p><strong>Comparability:</strong> capped geometric sampling and the straight/bent repair match Python under identical explicit bits, including duplicate behavior and rotation distances. Seed values drive different PRNGs (SplitMix64 vs Mersenne Twister), so these benchmark histories and shape metrics need not match exactly and are not paired random streams. Means have ±1 SE only for repeated seeds; largest final height is the maximum across seeds.</p>
-<p><strong>Timing and memory:</strong> native trials run sequentially in isolated Linux processes with a {metadata["native_settings"]["memory_mib"]} MiB address-space cap and {metadata["native_settings"]["timeout_seconds"]:g}-second wall deadline. Insertion timing excludes input generation/parsing, startup, capacity reservation and validation. RSS includes input storage, tree arrays, validation and process overhead. The original parallel Python run did not record comparable times, so no speedup is inferred. Compiler: {escaped(metadata["compiler"])}; CMake Release (-O3 -DNDEBUG with this GNU compiler), C++20. Full build settings are in config.json and the source archive.</p>
-<p><strong>Validation:</strong> every completed native tree passes iterative BST ordering, parent-link, acyclicity and reachability checks; all stored keys match their input slots. Original Python resource boundaries remain recorded; C++ size ceilings are reported independently. These finite runs establish neither logarithmic height nor constant traversal work.</p>
-<h3>Largest completed native group per input family</h3><div class="table-wrap"><table><thead><tr><th>Input</th><th>Keys</th>{"".join(f"<th>{escaped(title)}</th>" for title in METRICS.values())}<th>Insert seconds</th><th>Peak RSS MiB</th><th>Node bytes/key</th></tr></thead><tbody>{"".join(table_rows)}</tbody></table></div>
-<p><a href="./native-all-sequences.svg" download>Download all native charts as one SVG</a> · <a href="./source.zip" download>Download measured Python and C++ sources</a> · <a href="./trials.csv" download>All native timings and memory measurements</a></p>
+    introduction = (
+        f"This standalone C++ run has {complete_count} completed trials across {len(native_strategies)} implementations and {len(metadata['orders'])} input families. Each implementation receives identical input keys and rotation seed values."
+        if native_only
+        else f"The original Python measurements are retained. C++ adds {complete_count} completed trials across {len(native_strategies)} native implementations using the recorded input generators, input seeds, size schedule and rotation seed values. The combined charts include every implementation; the native-only SVGs below compare the C++ curves."
+    )
+    stream_note = (
+        "Native implementations start from the same SplitMix64 seed, but different samplers consume different numbers of bits, so their later Bernoulli trials are not paired."
+        if native_only
+        else "Seed values drive different PRNGs (SplitMix64 vs Mersenne Twister), so these benchmark histories and shape metrics need not match exactly and are not paired random streams."
+    )
+    title = (
+        "C++ geometric repair · native benchmark extension"
+        if not native_only and len(native_strategies) == 1
+        else "C++ geometric repair · native measurements"
+    )
+    settings = metadata["native_settings"]
+    sampling = escaped(
+        metadata.get("native_sampling", "Buffered SplitMix64 fair bits.")
+    )
+    timing = escaped(
+        metadata.get(
+            "native_timing",
+            "Insertion and counters only; input preparation, capacity reservation and validation excluded.",
+        )
+    )
+    build = escaped(metadata.get("native_build", "CMake Release; C++20."))
+    return f"""<section id="native-implementation"><h2>{title}</h2>
+<p>{introduction}</p>
+<p><strong>Implementation:</strong> signed 64-bit keys and three 32-bit indices in separate contiguous arrays: 20 bytes of reserved array payload per key. No priorities, heights or balance fields persist in nodes. Nodes are reserved before timing. SplitMix64 supplies buffered words without discarding unused bits. Rotation traces are disabled; counters stay enabled. Each trial uses a fresh strategy.</p>
+<p><strong>Sampling:</strong> {sampling} {stream_note} Means have ±1 SE only for repeated seeds; largest final height is the maximum across seeds.</p>
+<p><strong>Timing and memory:</strong> native trials run sequentially in isolated Linux processes with a {settings["memory_mib"]} MiB address-space cap and {settings["timeout_seconds"]:g}-second wall deadline. {timing} RSS includes input storage, tree arrays, validation and process overhead. Compiler: {escaped(metadata["compiler"])}. Build: {build} The recorded configuration and CMake sources are available in config.json and the source archive.</p>
+<p><strong>Validation:</strong> every completed native tree passes iterative BST ordering, parent-link, acyclicity and reachability checks; all stored keys match their input slots. Resource boundaries and size ceilings are recorded per implementation and input family. These finite runs establish neither logarithmic height nor constant traversal work.</p>
+<h3>Largest completed native group per implementation and input family</h3><div class="table-wrap"><table><thead><tr><th>Input</th><th>Implementation</th><th>Keys</th>{"".join(f"<th>{escaped(title)}</th>" for title in METRICS.values())}<th>Insert seconds</th><th>Peak RSS MiB</th><th>Node bytes/key</th></tr></thead><tbody>{"".join(table_rows)}</tbody></table></div>
+<p><a href="./native-all-sequences.svg" download>Download all native charts as one SVG</a> · <a href="./source.zip" download>Download measured sources</a> · <a href="./trials.csv" download>All native timings and memory measurements</a></p>
 <details><summary>Native geometric repair · {len(metadata["orders"]) * len(METRICS)} standalone SVGs</summary>{"".join(figures)}</details></section>"""
 
 
 def generate_report(
-    source: Path, output: Path | None = None, *, visualizer_href: str | None = None
+    source: Path,
+    output: Path | None = None,
+    *,
+    visualizer_href: str | None = None,
+    proof_href: str | None = None,
 ) -> Path:
     results = json.loads((source / "results.json").read_text())
     metadata, records, summaries = (
@@ -234,6 +293,10 @@ def generate_report(
         results["trials"],
         results["summaries"],
     )
+    native_strategies = [
+        strategy for strategy in metadata["strategies"] if strategy.endswith("-native")
+    ]
+    native_only = len(native_strategies) == len(metadata["strategies"])
     output = output or source / "report"
     figures = output / "figures"
     figures.mkdir(parents=True, exist_ok=True)
@@ -261,7 +324,7 @@ def generate_report(
             if common_size is not None:
                 row = lookup[strategy, order, common_size]
                 common_rows.append(
-                    f'<tr data-order="{order}"><td>{order}</td><td>{escaped(LABELS[strategy])}</td><td>{common_size:,}</td><td>{row["completed_trials"]}</td>{metric_cells(row)}</tr>'
+                    f'<tr data-order="{order}"><td>{order}</td><td>{escaped(strategy_label(metadata, strategy))}</td><td>{common_size:,}</td><td>{row["completed_trials"]}</td>{metric_cells(row)}</tr>'
                 )
             available = [
                 row
@@ -286,15 +349,15 @@ def generate_report(
             else:
                 limit = "Reached configured size ceiling"
             reach_rows.append(
-                f'<tr data-order="{order}"><td>{order}</td><td>{escaped(LABELS[strategy])}</td><td>{reached["n"]:,}</td><td>{escaped(limit)}</td></tr>'
+                f'<tr data-order="{order}"><td>{order}</td><td>{escaped(strategy_label(metadata, strategy))}</td><td>{reached["n"]:,}</td><td>{escaped(limit)}</td></tr>'
                 if reached
-                else f"<tr><td>{order}</td><td>{escaped(LABELS[strategy])}</td><td>—</td><td>{escaped(limit)}</td></tr>"
+                else f"<tr><td>{order}</td><td>{escaped(strategy_label(metadata, strategy))}</td><td>—</td><td>{escaped(limit)}</td></tr>"
             )
             for row in sorted(available, key=lambda row: row["n"]):
                 all_rows.append(
-                    f'<tr data-order="{order}"><td>{order}</td><td>{escaped(LABELS[strategy])}</td><td>{row["n"]:,}</td><td>{row["completed_trials"]}</td>{metric_cells(row)}</tr>'
+                    f'<tr data-order="{order}"><td>{order}</td><td>{escaped(strategy_label(metadata, strategy))}</td><td>{row["n"]:,}</td><td>{row["completed_trials"]}</td>{metric_cells(row)}</tr>'
                 )
-    canvas_height = 447 if len(metadata["strategies"]) > 5 else 425
+    canvas_height = chart_height(metadata["strategies"])
     charts = []
     overview_groups = []
     for order_index, order in enumerate(metadata["orders"]):
@@ -371,7 +434,7 @@ def generate_report(
         "python_stop_reason"
     )
     boundary_note = (
-        '<p class="note">Python boundary: ' + escaped(stop_reason) + "</p>"
+        '<p class="note">Recorded boundary: ' + escaped(stop_reason) + "</p>"
         if stop_reason
         else ""
     )
@@ -395,33 +458,78 @@ def generate_report(
         if findings
         else ""
     )
+    links = []
+    if visualizer_href:
+        links.append(f'<a href="{escaped(visualizer_href)}">← Tree visualizer</a>')
+    if proof_href:
+        links.append(
+            f'<a href="{escaped(proof_href)}">Read the geometric repair proof (PDF)</a>'
+        )
     navigation = (
-        f'<nav aria-label="Lab pages"><a href="{escaped(visualizer_href)}">← Tree visualizer</a></nav>'
-        if visualizer_href
-        else ""
+        f'<nav aria-label="Lab pages">{" · ".join(links)}</nav>' if links else ""
     )
     native_appendix = render_native_appendix(results, output)
     if native_appendix:
         navigation += '<p><a href="#native-implementation">Jump to C++ results and implementation notes ↓</a></p>'
-    html_text = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Target strategy benchmark report</title>
+    title = (
+        "C++ geometric probability comparison"
+        if native_only
+        else "Target strategy comparison"
+    )
+    settings = metadata["native_settings"] if native_only else metadata
+    workers = 1 if native_only else metadata["workers"]
+    worker_label = "C++ worker" if native_only else "Python workers"
+    environment = (
+        "C++ · " + escaped(metadata["compiler"])
+        if native_only
+        else "Python " + escaped(metadata["python"].split()[0])
+    )
+    stream_note = (
+        "Native strategies start from identical SplitMix64 seed values; different samplers consume different numbers of bits."
+        if native_only
+        else "Python random streams are paired across strategies; C++ uses a different PRNG."
+    )
+    validation_note = (
+        "Every completed tree passes BST order, parent-pointer, cycle and full-key-set checks."
+        + (
+            " Stored treap depths also match an independently reconstructed Cartesian tree."
+            if "treap" in metadata["strategies"]
+            else ""
+        )
+    )
+    execution_note = (
+        "Native trials run sequentially in isolated processes. Insertion timing excludes input preparation, capacity reservation and final validation."
+        if native_only
+        else "Python trials run concurrently in isolated processes; any native extension runs sequentially. Cross-language runtime comparisons are omitted."
+    )
+    implementation_names = ", ".join(
+        escaped(strategy_label(metadata, strategy))
+        for strategy in metadata["strategies"]
+    )
+    paired_note = (
+        f"<li>The two Python geometric implementations match on all operation/shape metrics in {compared} paired completed trials; mismatches: {mismatch}. Their curves can overlap. The alternate additionally records the sampled move count in an insertion annotation, which is not one of the reported metrics.</li>"
+        if compared
+        else ""
+    )
+    html_text = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{title}</title>
 <style>:root{{color-scheme:light}}*{{box-sizing:border-box}}body{{margin:0;background:#f3f5f8;color:#17283c;font:15px/1.6 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:28px}}h1{{font-size:clamp(30px,4vw,48px);line-height:1.15;letter-spacing:-1px}}h2{{font-size:22px}}a{{color:#245fd0}}section,details{{background:white;border:1px solid #dce3eb;border-radius:14px;padding:22px;margin:22px 0}}.stats,.charts{{display:grid;gap:16px}}.stats{{grid-template-columns:repeat(4,1fr)}}.stat{{background:white;padding:18px;border:1px solid #dce3eb;border-radius:12px}}.stat strong{{display:block;font-size:27px}}.stat span,.note{{color:#526275;font-size:13px}}.charts{{grid-template-columns:repeat(2,minmax(0,1fr))}}figure{{margin:0;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}}figure svg{{width:100%;display:block}}figcaption{{padding:0 14px 10px;text-align:right;font-size:12px}}.table-wrap{{overflow:auto;max-height:75vh}}table{{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}}th,td{{padding:8px;border-bottom:1px solid #dce3eb;text-align:right}}th{{background:#eef2f7;position:sticky;top:0}}th:nth-child(-n+2),td:nth-child(-n+2){{text-align:left}}.downloads{{display:flex;gap:18px;flex-wrap:wrap}}select{{font:inherit;padding:8px;border:1px solid #ccd5e0;border-radius:8px;background:white}}[hidden]{{display:none!important}}summary{{cursor:pointer;font-weight:bold}}@media(max-width:800px){{main{{padding:14px}}.charts{{grid-template-columns:1fr}}.stats{{grid-template-columns:repeat(2,1fr)}}section,details{{padding:14px}}}}</style></head><body><main>
-{navigation}<header><p class="note">Rotation Lab · measurements on this computer</p><h1>Geometric, interval, random level and treap</h1><p>{len(metadata["orders"])} sequence families. {len(metadata["strategies"])} implementations. Compare rotations, final tree depths and logical random-bit use as key counts increase.</p></header>
-<div class="stats"><div class="stat"><strong>{statuses["complete"]:,}</strong><span>completed trials</span></div><div class="stat"><strong>{common_label}</strong><span>largest size completed by every pair</span></div><div class="stat"><strong>{max((r["n"] for r in records if r["status"] == "complete"), default=0):,}</strong><span>largest completed tree</span></div><div class="stat"><strong>{metadata["workers"]}</strong><span>Python workers · {metadata["memory_mib"]} MiB cap each</span></div></div>
-<p class="note">{escaped(metadata["cpu"])} · Python {escaped(metadata["python"].split()[0])} · seed {metadata["seed"]} · per-trial deadline {metadata["timeout_seconds"]:g} s. Outcomes: {escaped(dict(statuses))}.</p>
+{navigation}<header><p class="note">Rotation Lab · measurements on this computer</p><h1>{title}</h1><p>{len(metadata["orders"])} sequence families. {len(metadata["strategies"])} implementations. Compare rotations, final tree depths and logical random-bit use as key counts increase.</p></header>
+<div class="stats"><div class="stat"><strong>{statuses["complete"]:,}</strong><span>completed trials</span></div><div class="stat"><strong>{common_label}</strong><span>largest size completed by every pair</span></div><div class="stat"><strong>{max((r["n"] for r in records if r["status"] == "complete"), default=0):,}</strong><span>largest completed tree</span></div><div class="stat"><strong>{workers}</strong><span>{worker_label} · {settings["memory_mib"]} MiB cap each</span></div></div>
+<p class="note">{escaped(metadata["cpu"])} · {environment} · seed {metadata["seed"]} · per-trial deadline {settings["timeout_seconds"]:g} s. Outcomes: {escaped(dict(statuses))}.</p>
 <p><label for="workload">Sequence type </label><select id="workload">{options}</select></p>
 {findings_section}
-<section><h2>Comparison at the largest common size: {common_label}</h2><p class="note">Averages are over completed trials; ± one standard error when repeats exist. Python random streams are paired across strategies; C++ uses a different PRNG. Maximum final height is the largest final node depth observed across those trials, not height averaged across seeds or time. Larger partially completed groups are excluded.</p><div class="table-wrap"><table>{table_header}<tbody>{"".join(common_rows)}</tbody></table></div></section>
+<section><h2>Comparison at the largest common size: {common_label}</h2><p class="note">Averages are over completed trials; ± one standard error when repeats exist. {stream_note} Maximum final height is the largest final node depth observed across those trials, not height averaged across seeds or time. Larger partially completed groups are excluded.</p><div class="table-wrap"><table>{table_header}<tbody>{"".join(common_rows)}</tbody></table></div></section>
 {"".join(charts)}
 <section><h2>How large did each implementation reach?</h2><p>Trials advance through increasing sizes. Direct resource failures and probes stopped at a shared pipeline boundary are distinguished below. These are resource-limited measurements of these implementations and validators, not algorithmic size limits.</p>{boundary_note}<div class="table-wrap"><table><thead><tr><th>Input</th><th>Implementation</th><th>Largest complete size</th><th>Next boundary</th></tr></thead><tbody>{"".join(reach_rows)}</tbody></table></div></section>
 <details><summary>All {len(complete)} fully completed measurement groups</summary><div class="table-wrap"><table>{table_header}<tbody>{"".join(all_rows)}</tbody></table></div></details>
 <section><h2>Method and interpretation</h2><ul>
-<li>Measured implementations are the current Python geometric repair, its alternate RandomLevelV213 implementation, interval-target local repair, exact perfect-tree target leaf promotion, and the existing stored-priority treap with 32-bit priorities and key tie breaking.</li>
-<li>The two geometric implementations match on all operation/shape metrics in {compared} paired completed trials; mismatches: {mismatch}. Their curves can overlap. The alternate additionally records the sampled move count in an insertion annotation, which is not one of the reported metrics.</li>
-<li>{metadata["small_trials"]} seeds per group through {metadata["repeat_through"]:,} keys; one seed above that size. Inputs are fixed per size and shared across strategies. Python balancing streams are paired; C++ uses an independent PRNG stream. Single large trials give no uncertainty estimate.</li>
+<li>Measured implementations: {implementation_names}. The source archive and config.json record their exact versions and settings.</li>
+{paired_note}
+<li>{metadata["small_trials"]} seeds per group through {metadata["repeat_through"]:,} keys; one seed above that size. Inputs are fixed per size and shared across strategies. {stream_note} Single large trials give no uncertainty estimate.</li>
 <li>Root depth is zero. Mean depth averages all nodes in the final tree. Rotations and random bits are totals divided by inserted keys. Maximum final height is the greatest final depth across all completed seeds in that group.</li>
 <li>Height, mean-depth and random-bit charts include a dashed gray c·log₂(n) guide. For each chart, c is the largest value/log₂(n) ratio at each implementation's last completed point, with a minimum of 1. The legend states c. This descriptive endpoint scaling is not a proven bound; random bits per key can remain constant even though the guide grows.</li>
-<li>Every completed tree passes BST order, parent-pointer, cycle and full-key-set checks. Stored treap depths also match an independently reconstructed Cartesian tree. Validation is included in the process memory cap and deadline.</li>
-<li>Python trials run concurrently in isolated processes; the native extension runs sequentially. Cross-language runtime comparisons are omitted. Memory limits and wall deadlines include instrumentation and validation overhead. Raw outcomes and missing measurements are retained, never treated as zeros.</li>
+<li>{validation_note} Validation is included in the process memory cap and deadline.</li>
+<li>{execution_note} Memory limits and wall deadlines include instrumentation and validation overhead. Raw outcomes and missing measurements are retained, never treated as zeros.</li>
 <li>The worker source was copied before running and its SHA-256 checksums recorded. Source snapshot: the parent run directory's source folder. No logarithmic-height guarantee or general performance claim follows from these finite samples.</li>
 </ul></section>{native_appendix}<section><h2>Downloads</h2><div class="downloads">{downloads}</div></section>
 </main><script>document.getElementById('workload').addEventListener('change',event=>{{for(const element of document.querySelectorAll('[data-order]'))element.hidden=event.target.value!=='all'&&element.dataset.order!==event.target.value;}});</script></body></html>"""
@@ -437,9 +545,15 @@ def main():
     parser.add_argument(
         "--visualizer-href", help="optional return link for a published report"
     )
+    parser.add_argument("--proof-href", help="optional link to the proof PDF")
     args = parser.parse_args()
     print(
-        generate_report(args.input, args.output, visualizer_href=args.visualizer_href)
+        generate_report(
+            args.input,
+            args.output,
+            visualizer_href=args.visualizer_href,
+            proof_href=args.proof_href,
+        )
     )
 
 

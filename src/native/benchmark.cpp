@@ -13,7 +13,7 @@ using namespace balance_trees;
 
 int main(int argc, char** argv) {
     try {
-        if (argc != 4) throw std::invalid_argument("usage: native-benchmark SEED N MEMORY_MIB");
+        if (argc != 4 && argc != 5) throw std::invalid_argument("usage: native-benchmark SEED N MEMORY_MIB [STRATEGY]");
         const auto seed = std::stoull(argv[1]);
         const auto n = std::stoull(argv[2]);
         const auto memory = std::stoull(argv[3]) * 1024 * 1024;
@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
             values.push_back(key);
         }
         if (!std::cin.eof() || values.size() != n) throw std::invalid_argument("invalid input keys");
-        TreeFlavor tree(StrategyFactory{}.create("geometric-target-local-repair"), RandomBits(seed));
+        TreeFlavor tree(StrategyFactory{}.create(argc == 5 ? argv[4] : "geometric-target-local-repair"), RandomBits(seed));
         tree.reserve(n);
         std::uint64_t rotations = 0, bits = 0, visits = 0, insertion_depth = 0;
         std::uint64_t max_rotations = 0, max_bits = 0, max_visits = 0;

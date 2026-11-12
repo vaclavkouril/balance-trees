@@ -43,7 +43,15 @@ class GridOrderTests(unittest.TestCase):
     def test_grid_is_opt_in_and_paper_defaults_are_unchanged(self):
         self.assertEqual(
             ORDERS,
-            ("random", "increasing", "decreasing", "converging", "pairs", "bitonic", "runs"),
+            (
+                "random",
+                "increasing",
+                "decreasing",
+                "converging",
+                "pairs",
+                "bitonic",
+                "runs",
+            ),
         )
         self.assertEqual(SUPPORTED_ORDERS, (*ORDERS, "grid"))
 
@@ -75,4 +83,6 @@ class GridOrderTests(unittest.TestCase):
             )
             self.assertEqual(results["metadata"]["orders"], ["grid"])
             self.assertEqual(len(results["trials"]), 4)
-            self.assertTrue(all(row["status"] == "complete" for row in results["trials"]))
+            self.assertTrue(
+                all(row["status"] == "complete" for row in results["trials"])
+            )

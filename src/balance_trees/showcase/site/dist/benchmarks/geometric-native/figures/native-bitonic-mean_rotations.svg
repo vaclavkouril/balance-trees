@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="native-bitonic-mean_rotations-title native-bitonic-mean_rotations-desc">
+<title id="native-bitonic-mean_rotations-title">Bitonic · Mean rotations / key</title>
+<desc id="native-bitonic-mean_rotations-desc">Measurements for 2 implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
+<rect width="720" height="425" rx="12" fill="white"/>
+<text x="22" y="28" style="font-size:17px;font-weight:650">Bitonic · Mean rotations / key</text>
+<text x="22" y="48" style="font-size:11px;fill:#64748b">2 implementations · source and seeds recorded · no timing comparison</text>
+<path class="grid" d="M70,292.00h620"/><text x="61" y="296.00" text-anchor="end">0</text>
+<path class="grid" d="M70,246.80h620"/><text x="61" y="250.80" text-anchor="end">0.267</text>
+<path class="grid" d="M70,201.60h620"/><text x="61" y="205.60" text-anchor="end">0.534</text>
+<path class="grid" d="M70,156.40h620"/><text x="61" y="160.40" text-anchor="end">0.801</text>
+<path class="grid" d="M70,111.20h620"/><text x="61" y="115.20" text-anchor="end">1.07</text>
+<path class="grid" d="M70,66.00h620"/><text x="61" y="70.00" text-anchor="end">1.34</text>
+<path class="grid" d="M70.00,66v226"/><text x="70.00" y="313" text-anchor="middle">1k</text>
+<path class="grid" d="M247.14,66v226"/><text x="247.14" y="313" text-anchor="middle">16k</text>
+<path class="grid" d="M424.29,66v226"/><text x="424.29" y="313" text-anchor="middle">256k</text>
+<path class="grid" d="M512.86,66v226"/><text x="512.86" y="313" text-anchor="middle">1M</text>
+<path class="grid" d="M601.43,66v226"/><text x="601.43" y="313" text-anchor="middle">4M</text>
+<path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">16M</text>
+<path d="M70.00,117.29V111.45" stroke="#2563eb"/>
+<circle cx="70.00" cy="114.37" r="3" fill="#2563eb"><title>C++ geometric repair: n=1,024; Mean rotations / key=1.0498; 3 trials</title></circle>
+<path d="M70.00,114.37L158.57,106.85" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M158.57,109.13V104.57" stroke="#2563eb"/>
+<circle cx="158.57" cy="106.85" r="3" fill="#2563eb"><title>C++ geometric repair: n=4,096; Mean rotations / key=1.09424; 3 trials</title></circle>
+<path d="M158.57,106.85L247.14,103.09" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M247.14,106.23V99.96" stroke="#2563eb"/>
+<circle cx="247.14" cy="103.09" r="3" fill="#2563eb"><title>C++ geometric repair: n=16,384; Mean rotations / key=1.11641; 3 trials</title></circle>
+<path d="M247.14,103.09L335.71,95.94" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M335.71,98.80V93.09" stroke="#2563eb"/>
+<circle cx="335.71" cy="95.94" r="3" fill="#2563eb"><title>C++ geometric repair: n=65,536; Mean rotations / key=1.15868; 3 trials</title></circle>
+<path d="M335.71,95.94L424.29,98.12" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="98.12" r="3" fill="#2563eb"><title>C++ geometric repair: n=262,144; Mean rotations / key=1.1458; 1 trials</title></circle>
+<path d="M424.29,98.12L512.86,93.30" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="93.30" r="3" fill="#2563eb"><title>C++ geometric repair: n=1,048,576; Mean rotations / key=1.17432; 1 trials</title></circle>
+<path d="M512.86,93.30L557.14,90.96" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="90.96" r="3" fill="#2563eb"><title>C++ geometric repair: n=2,097,152; Mean rotations / key=1.18811; 1 trials</title></circle>
+<path d="M557.14,90.96L601.43,91.34" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="601.43" cy="91.34" r="3" fill="#2563eb"><title>C++ geometric repair: n=4,194,304; Mean rotations / key=1.18587; 1 trials</title></circle>
+<path d="M601.43,91.34L645.71,90.21" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="645.71" cy="90.21" r="3" fill="#2563eb"><title>C++ geometric repair: n=8,388,608; Mean rotations / key=1.19254; 1 trials</title></circle>
+<path d="M645.71,90.21L690.00,90.77" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="690.00" cy="90.77" r="3" fill="#2563eb"><title>C++ geometric repair: n=16,777,216; Mean rotations / key=1.18927; 1 trials</title></circle>
+<path d="M22,351h20" stroke="#2563eb" stroke-width="3"/><text x="49" y="355">C++ geometric repair</text>
+<path d="M70.00,195.07V190.53" stroke="#9333ea"/>
+<circle cx="70.00" cy="192.80" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=1,024; Mean rotations / key=0.586263; 3 trials</title></circle>
+<path d="M70.00,192.80L158.57,198.51" stroke="#9333ea" stroke-width="2" fill="none"/>
+<path d="M158.57,200.97V196.06" stroke="#9333ea"/>
+<circle cx="158.57" cy="198.51" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=4,096; Mean rotations / key=0.55249; 3 trials</title></circle>
+<path d="M158.57,198.51L247.14,201.66" stroke="#9333ea" stroke-width="2" fill="none"/>
+<path d="M247.14,202.97V200.35" stroke="#9333ea"/>
+<circle cx="247.14" cy="201.66" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=16,384; Mean rotations / key=0.533915; 3 trials</title></circle>
+<path d="M247.14,201.66L335.71,204.61" stroke="#9333ea" stroke-width="2" fill="none"/>
+<path d="M335.71,204.76V204.46" stroke="#9333ea"/>
+<circle cx="335.71" cy="204.61" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=65,536; Mean rotations / key=0.516459; 3 trials</title></circle>
+<path d="M335.71,204.61L424.29,205.62" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="205.62" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=262,144; Mean rotations / key=0.510471; 1 trials</title></circle>
+<path d="M424.29,205.62L512.86,205.99" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="205.99" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=1,048,576; Mean rotations / key=0.508331; 1 trials</title></circle>
+<path d="M512.86,205.99L557.14,206.37" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="206.37" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=2,097,152; Mean rotations / key=0.506063; 1 trials</title></circle>
+<path d="M557.14,206.37L601.43,206.73" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="601.43" cy="206.73" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=4,194,304; Mean rotations / key=0.503916; 1 trials</title></circle>
+<path d="M601.43,206.73L645.71,206.79" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="645.71" cy="206.79" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=8,388,608; Mean rotations / key=0.503562; 1 trials</title></circle>
+<path d="M645.71,206.79L690.00,206.87" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="690.00" cy="206.87" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=16,777,216; Mean rotations / key=0.503083; 1 trials</title></circle>
+<path d="M372,351h20" stroke="#9333ea" stroke-width="3"/><text x="399" y="355">C++ geometric repair · p = 3/4</text>
+<text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>

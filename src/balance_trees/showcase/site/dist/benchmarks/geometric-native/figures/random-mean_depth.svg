@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 425" role="img" aria-labelledby="random-mean_depth-title random-mean_depth-desc">
+<title id="random-mean_depth-title">Random · Mean final node depth · edges</title>
+<desc id="random-mean_depth-desc">Measurements for 2 implementations. Logarithmic key counts and linear vertical scale. Only complete groups are plotted; missing or censored groups leave gaps. Whiskers show one standard error for averages when repeated trials exist. Maximum final height is the maximum observed across those trials. Dashed gray line: 1.27·log₂(n) · endpoint guide. c=max(1, largest endpoint value/log₂(n) across implementations). Descriptive scaling, not a proven bound.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#334155}.grid{stroke:#e2e8f0}</style>
+<rect width="720" height="425" rx="12" fill="white"/>
+<text x="22" y="28" style="font-size:17px;font-weight:650">Random · Mean final node depth · edges</text>
+<text x="22" y="48" style="font-size:11px;fill:#64748b">2 implementations · source and seeds recorded · no timing comparison</text>
+<path class="grid" d="M70,292.00h620"/><text x="61" y="296.00" text-anchor="end">0</text>
+<path class="grid" d="M70,246.80h620"/><text x="61" y="250.80" text-anchor="end">6.83</text>
+<path class="grid" d="M70,201.60h620"/><text x="61" y="205.60" text-anchor="end">13.7</text>
+<path class="grid" d="M70,156.40h620"/><text x="61" y="160.40" text-anchor="end">20.5</text>
+<path class="grid" d="M70,111.20h620"/><text x="61" y="115.20" text-anchor="end">27.3</text>
+<path class="grid" d="M70,66.00h620"/><text x="61" y="70.00" text-anchor="end">34.2</text>
+<path class="grid" d="M70.00,66v226"/><text x="70.00" y="313" text-anchor="middle">1k</text>
+<path class="grid" d="M247.14,66v226"/><text x="247.14" y="313" text-anchor="middle">16k</text>
+<path class="grid" d="M424.29,66v226"/><text x="424.29" y="313" text-anchor="middle">256k</text>
+<path class="grid" d="M512.86,66v226"/><text x="512.86" y="313" text-anchor="middle">1M</text>
+<path class="grid" d="M601.43,66v226"/><text x="601.43" y="313" text-anchor="middle">4M</text>
+<path class="grid" d="M690.00,66v226"/><text x="690.00" y="313" text-anchor="middle">16M</text>
+<path class="log-reference" data-constant="1.2713636135061581" d="M70.00,207.92L690.00,90.21" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5" fill="none"><title>1.27·log₂(n) · endpoint guide: descriptive scaling, not a proven bound</title></path>
+<path d="M70.00,226.65V221.56" stroke="#2563eb"/>
+<circle cx="70.00" cy="224.11" r="3" fill="#2563eb"><title>C++ geometric repair: n=1,024; Mean final node depth · edges=10.2666; 3 trials</title></circle>
+<path d="M70.00,224.11L158.57,211.72" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M158.57,212.83V210.61" stroke="#2563eb"/>
+<circle cx="158.57" cy="211.72" r="3" fill="#2563eb"><title>C++ geometric repair: n=4,096; Mean final node depth · edges=12.1397; 3 trials</title></circle>
+<path d="M158.57,211.72L247.14,194.96" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M247.14,196.63V193.30" stroke="#2563eb"/>
+<circle cx="247.14" cy="194.96" r="3" fill="#2563eb"><title>C++ geometric repair: n=16,384; Mean final node depth · edges=14.6734; 3 trials</title></circle>
+<path d="M247.14,194.96L335.71,176.11" stroke="#2563eb" stroke-width="2" fill="none"/>
+<path d="M335.71,177.94V174.29" stroke="#2563eb"/>
+<circle cx="335.71" cy="176.11" r="3" fill="#2563eb"><title>C++ geometric repair: n=65,536; Mean final node depth · edges=17.5234; 3 trials</title></circle>
+<path d="M335.71,176.11L424.29,164.75" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="164.75" r="3" fill="#2563eb"><title>C++ geometric repair: n=262,144; Mean final node depth · edges=19.242; 1 trials</title></circle>
+<path d="M424.29,164.75L512.86,145.22" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="145.22" r="3" fill="#2563eb"><title>C++ geometric repair: n=1,048,576; Mean final node depth · edges=22.1951; 1 trials</title></circle>
+<path d="M512.86,145.22L557.14,135.19" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="135.19" r="3" fill="#2563eb"><title>C++ geometric repair: n=2,097,152; Mean final node depth · edges=23.7114; 1 trials</title></circle>
+<path d="M557.14,135.19L601.43,129.79" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="601.43" cy="129.79" r="3" fill="#2563eb"><title>C++ geometric repair: n=4,194,304; Mean final node depth · edges=24.5287; 1 trials</title></circle>
+<path d="M601.43,129.79L645.71,120.19" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="645.71" cy="120.19" r="3" fill="#2563eb"><title>C++ geometric repair: n=8,388,608; Mean final node depth · edges=25.9798; 1 trials</title></circle>
+<path d="M645.71,120.19L690.00,113.77" stroke="#2563eb" stroke-width="2" fill="none"/>
+<circle cx="690.00" cy="113.77" r="3" fill="#2563eb"><title>C++ geometric repair: n=16,777,216; Mean final node depth · edges=26.9513; 1 trials</title></circle>
+<path d="M22,351h20" stroke="#2563eb" stroke-width="3"/><text x="49" y="355">C++ geometric repair</text>
+<path d="M70.00,223.42V221.05" stroke="#9333ea"/>
+<circle cx="70.00" cy="222.24" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=1,024; Mean final node depth · edges=10.5492; 3 trials</title></circle>
+<path d="M70.00,222.24L158.57,207.67" stroke="#9333ea" stroke-width="2" fill="none"/>
+<path d="M158.57,207.95V207.39" stroke="#9333ea"/>
+<circle cx="158.57" cy="207.67" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=4,096; Mean final node depth · edges=12.7515; 3 trials</title></circle>
+<path d="M158.57,207.67L247.14,185.32" stroke="#9333ea" stroke-width="2" fill="none"/>
+<path d="M247.14,186.23V184.41" stroke="#9333ea"/>
+<circle cx="247.14" cy="185.32" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=16,384; Mean final node depth · edges=16.1316; 3 trials</title></circle>
+<path d="M247.14,185.32L335.71,169.24" stroke="#9333ea" stroke-width="2" fill="none"/>
+<path d="M335.71,171.32V167.17" stroke="#9333ea"/>
+<circle cx="335.71" cy="169.24" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=65,536; Mean final node depth · edges=18.5624; 3 trials</title></circle>
+<path d="M335.71,169.24L424.29,147.11" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="424.29" cy="147.11" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=262,144; Mean final node depth · edges=21.9093; 1 trials</title></circle>
+<path d="M424.29,147.11L512.86,128.57" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="512.86" cy="128.57" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=1,048,576; Mean final node depth · edges=24.7125; 1 trials</title></circle>
+<path d="M512.86,128.57L557.14,124.11" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="557.14" cy="124.11" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=2,097,152; Mean final node depth · edges=25.3875; 1 trials</title></circle>
+<path d="M557.14,124.11L601.43,116.03" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="601.43" cy="116.03" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=4,194,304; Mean final node depth · edges=26.6092; 1 trials</title></circle>
+<path d="M601.43,116.03L645.71,105.31" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="645.71" cy="105.31" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=8,388,608; Mean final node depth · edges=28.2293; 1 trials</title></circle>
+<path d="M645.71,105.31L690.00,90.21" stroke="#9333ea" stroke-width="2" fill="none"/>
+<circle cx="690.00" cy="90.21" r="3" fill="#9333ea"><title>C++ geometric repair · p = 3/4: n=16,777,216; Mean final node depth · edges=30.5127; 1 trials</title></circle>
+<path d="M372,351h20" stroke="#9333ea" stroke-width="3"/><text x="399" y="355">C++ geometric repair · p = 3/4</text>
+<path d="M372,395h20" stroke="#64748b" stroke-width="2" stroke-dasharray="7 5"/><text x="399" y="399">1.27·log₂(n) · endpoint guide</text>
+<text x="70" y="332" style="font-size:11px;fill:#64748b">Keys (base-2 counts: k = 1,024; M = 1,048,576) · whiskers ±1 SE</text></svg>

@@ -84,6 +84,52 @@ Only this requested web report and its supporting downloads are bundled. Raw
 working directories remain ignored; the source ZIP contains the implementations
 measured in that run, independently of later visualizer changes.
 
+## Complete C++ geometric comparison
+
+Run both the original fair-coin strategy and the new exact `p=3/4` strategy
+without a Python benchmark baseline:
+
+```sh
+PYTHONPATH=src python3 -m balance_trees.benchmark_native \
+  --output benchmarks/results/geometric-native-20261112
+PYTHONPATH=src python3 -m balance_trees.benchmark_comparison_report \
+  --input benchmarks/results/geometric-native-20261112 \
+  --proof-href geometric-biased-repair.pdf
+cp docs/proofs/geometric-biased-repair.pdf \
+  benchmarks/results/geometric-native-20261112/report/geometric-biased-repair.pdf
+```
+
+The default suite schedules **252 trials**: two strategies, all seven paper
+input families, three seeds at 1,024 / 4,096 / 16,384 / 65,536 keys, and one
+seed at 262,144 / 1,048,576 / 2,097,152 / 4,194,304 / 8,388,608 /
+16,777,216 keys. Trials run sequentially with a 768 MiB address-space cap and
+360-second wall deadline. A resource failure stops only that strategy/input
+pair; later cases are recorded as `not_run`.
+
+Use `--strategies`, `--orders`, or `--sizes` to select a subset. The two strategy
+identifiers are `geometric-target-local-repair-native` and
+`geometric-three-quarters-native`. Matching seed values and byte-identical
+inputs are recorded with SHA-256 checksums, but the strategies consume different
+numbers of bits. Source snapshots, compiler version, machine information, and
+all trial statuses are saved in the output directory. Repeating the same command
+resumes without repeating completed trials. Generated results stay under the
+ignored `benchmarks/results/` directory. Open `report/index.html` for charts,
+timings, downloadable measurements and sources, and the linked probability PDF.
+
+The requested report is also bundled with GitHub Pages under
+`benchmarks/geometric-native/`. Refresh it from the saved measurements:
+
+```sh
+PYTHONPATH=src python3 -m balance_trees.benchmark_comparison_report \
+  --input benchmarks/results/geometric-native-20261112 \
+  --output src/balance_trees/showcase/site/dist/benchmarks/geometric-native \
+  --visualizer-href ../../index.html \
+  --proof-href ../../geometric-biased-repair.pdf
+```
+
+Only the requested report and its supporting downloads are tracked; the raw
+working directory and native build remain ignored.
+
 ## Native extension of the comparison
 
 Append C++ geometric repair to the saved five-strategy run without changing
