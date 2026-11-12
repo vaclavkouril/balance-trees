@@ -1,0 +1,615 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=26mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,listings}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\pos}[1]{\left(#1\right)_{+}}
+\newcommand{\elln}{\ell_n}
+\newcommand{\floor}[1]{\left\lfloor #1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1\right\rceil}
+\lstset{basicstyle=\small\ttfamily,columns=fullflexible,keepspaces=true,
+  frame=tb,mathescape=true,showstringspaces=false,xleftmargin=1em,
+  morekeywords={procedure,while,if,then,else,for,to,do,return,break,end}}
+\title{Geometric Target Repair with Biased Sampling\\
+\large Logarithmic Height, Increasing Inputs, and Random Permutations}
+\author{Vojtech Vincibr}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+We analyze insertion into a binary search tree using a geometrically sampled
+\emph{absolute target depth} and a local repair of at most two rotations.
+For every fixed $p\in((\sqrt5-1)/2,1)$, every insertion order fixed independently of
+the algorithm's randomness gives logarithmic height both in expectation and
+with high probability. No balance fields are stored in nodes. For increasing
+inputs we give an exact right-spine recurrence, a joint description of the
+hanging subtrees, and a deterministic bound on the maximum key's depth.
+For uniform random permutations, a separate external-gap potential proves
+constant expected ancestor-walk work and exponentially decreasing tails for
+rotation distance. These results support a qualified comparison with Brodal's
+seven design criteria: the method uses global size information, and constant
+structural repair does not by itself make the current Python target calculation
+constant time. The repository implements the exact rational choice $p=3/4$.
+\end{abstract}
+
+\section{Scope and the seven design criteria}
+Brodal~\cite[Introduction]{brodal} studies seven requirements, paraphrased in
+Table~\ref{tab:criteria}. His geometric stopping rule measures distance from the
+new leaf. Here a geometric draw selects an absolute depth using the current
+size. The rotation patterns can agree without the target distributions agreeing.
+This paper analyzes the latter algorithm; it does not transfer the former
+algorithm's theorems.
+
+\begin{table}[htbp]
+\centering\small
+\renewcommand{\arraystretch}{1.16}
+\begin{tabular}{@{}p{.04\linewidth}>{\raggedright\arraybackslash}p{.31\linewidth}>{\raggedright\arraybackslash}p{.58\linewidth}@{}}
+\toprule
+ & Criterion (paraphrased) & Result for geometric target repair \\
+\midrule
+1 & No extra balance information & No per-node fields; a global size counter is required. Thus the strict ``tree and keys only'' condition needs qualification. \\
+2 & Constant worst-case rotations & At most two on every input; at most one on monotone inputs. \\
+3 & Rotations close to the insertion & Exponential distance tails on monotone inputs and uniform random permutations; no uniform bound conditional on every reachable history. \\
+4 & Only local insertion information & Not met: the target uses $n$ and the insertion depth. \\
+5 & Constant expected repair time & Proved for structural repair on monotone and uniform random inputs. Full cost also needs the target arithmetic in Section~\ref{sec:arithmetic}. General fixed-order constant repair remains unproved here. \\
+6 & Constant expected random bits & At most eight fair bits for either $p=2/3$ or $p=3/4$. \\
+7 & Logarithmic expected node depth & A stronger logarithmic expected-height and high-probability height bound holds for every fixed insertion order. \\
+\bottomrule
+\end{tabular}
+\caption{The exact scope of the comparison. No unqualified seven-property claim is made.}
+\label{tab:criteria}
+\end{table}
+
+\begin{samepage}
+Under the relaxed interpretation of item~1 as \emph{no per-node balance fields},
+and the arithmetic model of Section~\ref{sec:arithmetic}, with $p=3/4$
+(or $p=2/3$), items 1, 2, 3, 5, 6,
+and 7 hold for increasing inputs and for uniform random permutations.
+This is a six-of-seven statement only with these explicit qualifications.
+The general fixed-order height result does not supply the missing general
+fixed-order constant-repair result.
+\end{samepage}
+
+\section{Model, algorithm, and target law}\label{sec:model}
+Start from an empty BST with distinct, totally ordered keys. We may embed their
+ranks in the reals so that every gap admits a query value. A successful
+insertion first performs ordinary BST leaf insertion, records the new leaf $v$
+and its depth $d$, and increments the size to $n$. The root has depth zero;
+the height is the largest stored-node depth. Duplicate attempts return before
+sampling or changing the size. Nodes contain a key and parent/child links.
+
+Fix $0<p<1$ independently of $n$, and put
+\[
+  \ell_n=\ceil{\log_{1/p} n}.
+\]
+Start at $T_n=\ell_n$; repeatedly decrease the target with probability $p$
+until the first failure or target zero. All trials are independent, including
+across insertions. The mathematical probabilities concern this ideal source;
+a finite seeded PRNG provides reproducible executions rather than a proof of
+independence. The height theorems assume that the insertion sequence is fixed
+independently of these trials. Random permutations below are also independent
+of the trial source.
+
+\begin{lstlisting}[caption={Repair after ordinary leaf insertion.}]
+procedure Repair($v,n,d,p$)
+    $t\gets\lceil\log_{1/p} n\rceil$
+    while $t>0$ do
+        if Bernoulli($p$) = 0 then break
+        $t\gets t-1$
+    end while
+    if $d\le t$ then return
+    if $d=t+1$ then
+        RotateUp($v$)
+        return
+    end if
+    $x\gets v$
+    for $i=1$ to $d-t-2$ do $x\gets x.\mathrm{parent}$
+    $y\gets x.\mathrm{parent}$; $g\gets y.\mathrm{parent}$
+    if $(x=y.\mathrm{left})\Longleftrightarrow(y=g.\mathrm{left})$ then
+        RotateUp($y$)
+    else
+        RotateUp($x$); RotateUp($x$)
+    end if
+end procedure
+\end{lstlisting}
+
+\begin{theorem}[Deterministic correctness]\label{thm:correct}
+Each successful insertion preserves BST order, stores exactly the old keys and
+the new key, and performs at most two rotations. No node balance field is
+needed. These statements hold for every sequence of trial outcomes.
+\end{theorem}
+\begin{proof}
+Leaf insertion places the new key at its unique search position. A rotation
+preserves the inorder sequence of the rotated subtree and therefore the order
+of the entire tree. It changes only structural pointers, including the root
+pointer when appropriate. If the two-edge case is reached, $x,y,g$ have depths
+$t+2,t+1,t$, so all three exist. On a straight path one rotation promotes $y$;
+on a bent path the first rotation makes $x$ a child of $g$, and the second
+promotes it above $g$. The remaining cases perform zero or one rotation.
+For $n=1$, the target and insertion depth are zero, and no bit is drawn.
+\end{proof}
+
+\begin{lemma}[Distribution and sampling cost]\label{lem:target}
+Conditional on every history preceding insertion $n$,
+\begin{align}
+ \Prob(T_n=0)&=p^{\ell_n}, &
+ \Prob(T_n=t)&=(1-p)p^{\ell_n-t} \quad(1\le t\le\ell_n),\label{eq:mass}\\
+ \Prob(T_n\le t)&=p^{\ell_n-t} \quad(0\le t\le\ell_n), &
+ p^{\ell_n}&\le 1/n.\label{eq:cdf}
+\end{align}
+Writing $G_n=\ell_n-T_n$, we have
+\[
+ \E G_n=\frac{p(1-p^{\ell_n})}{1-p},\qquad
+ \E[\text{number of trials}]=\frac{1-p^{\ell_n}}{1-p}.
+\]
+\end{lemma}
+\begin{proof}
+Reaching target $t$ requires $\ell_n-t$ successes. A positive target also
+requires a failure; zero stops automatically. This proves the mass and
+cumulative formulas. The definition of the ceiling gives $p^{\ell_n}\le1/n$.
+The $j$th trial is requested with probability $p^{j-1}$, and
+$\Prob(G_n\ge j)=p^j$ for $1\le j\le\ell_n$. Sum the two geometric series.
+\end{proof}
+
+For $p=3/4$, read two independent fair bits and succeed unless both are zero.
+Every trial reads both bits, so the expected total is
+$8(1-(3/4)^{\ell_n})<8$. For $p=2/3$, return failure on \texttt{00}, success
+on \texttt{01} or \texttt{10}, and retry on \texttt{11}. The expected bits per
+trial are $2/(3/4)=8/3$; the expected total is again less than eight. For general
+$p$, the theory assumes exact trials; specifying an arbitrary real probability
+on a finite machine requires a representation and sampling model.
+
+\section{Height for every fixed insertion order}\label{sec:height}
+Fix a query $q$ never inserted. Its unsuccessful search ends at an external
+node (a null child pointer); let $D_n(q)$ be that node's depth, with $D_0(q)=0$.
+For a nonempty tree this equals the number of search comparisons. Following
+external nodes avoids identifying a newly promoted internal node with the
+newly inserted key.
+
+\begin{lemma}[One insertion's local effects]\label{lem:effects}
+Write $D,D'$ for the query depths before and after an insertion, including
+repair. If the insertion and query use different gaps and diverge at a node
+of depth $s$, then for target $t$,
+\begin{equation}
+ D'-D=\begin{cases}
+  1 & t=s,\\
+  0 & t=s-1,\\
+ -1 & 0\le t\le s-2,\\
+  0 & t>s.
+ \end{cases}                                                   \label{eq:effects}
+\end{equation}
+If the insertion is into the query's own gap, then $D'\le D+1$.
+If in addition $D\ge\ell_n+2$, then $D'=D$ for every target.
+\end{lemma}
+\begin{proof}
+For different gaps the leaf insertion itself leaves $D$ unchanged. Consider
+$g,y,x$ at depths $t,t+1,t+2$. A query that diverges at $g$ lies in its child
+subtree opposite $y$, which moves down one level in either repair. Divergence
+at $y$ places the query in the subtree opposite $x$, whose depth is unchanged.
+Agreement through $x$ places the query in an original child subtree of $x$;
+either repair moves that subtree up one level. In a bent repair $x$ moves up
+two levels but its original child subtrees move up only one. A divergence
+above $g$ is unaffected. If repair is just a single promotion of the new leaf,
+the opposite subtree of its parent moves down one; earlier divergences are
+unaffected. If repair does nothing, then $t\ge d>s$.
+
+For the same gap, the inserted leaf replaces one external node of depth $D$
+by two of depth $D+1$. Neither repair pushes either new external node farther
+down. If $D\ge\ell_n+2$, every target is at most $D-2$. When $D>t+2$,
+both new external nodes lie below $x$ and move up one level. When $D=t+2$,
+$x$ is the new leaf: a straight repair again moves both up one; a bent repair
+makes them the inner null pointers of the two old ancestors at depth $D$.
+\end{proof}
+
+For the rest of the probabilistic depth analysis assume
+\begin{equation}
+ p>\frac{\sqrt5-1}{2},\qquad
+ a=\frac{p^2}{1-p}>1,\qquad
+ \alpha=\log_{1/p}a,\qquad \beta=1+\alpha.
+                                                               \label{eq:constants}
+\end{equation}
+Constants in asymptotic notation may depend on this fixed $p$.
+
+\begin{lemma}[Conditional exponential drift]\label{lem:drift}
+For a fixed input sequence and its history $\mathcal F_{n-1}$,
+\begin{equation}
+ \E[a^{D_n(q)}\mid\mathcal F_{n-1}]
+ \le \left(1+\frac{a-1}{n}\right)a^{D_{n-1}(q)}+a^{\ell_n+2}.
+                                                               \label{eq:drift}
+\end{equation}
+For a different-gap insertion, the additive term can be omitted.
+\end{lemma}
+\begin{proof}
+Condition on the history, so the tree and next key are fixed. In a different
+gap with $2\le s\le\ell_n$, let $A$ and $B$ be the probabilities that the query
+depth increases and decreases. Lemmas~\ref{lem:target} and~\ref{lem:effects} give
+\[
+ A=(1-p)p^{\ell_n-s},\qquad B=p^{\ell_n-s+2}=aA.
+\]
+Consequently
+\begin{equation}
+ \E[a^{D'-D}]=1+A(a-1)+B(a^{-1}-1)=1.                         \label{eq:cancel}
+\end{equation}
+If $s>\ell_n$, depth cannot increase. At $s=0$ its increase probability is
+$p^{\ell_n}\le1/n$. At $s=1$ it is either zero or
+$((1-p)/p)p^{\ell_n}\le1/n$, since $p>1/2$. These cases give the
+multiplicative factor in~\eqref{eq:drift}. For a same-gap insertion,
+$D\ge\ell_n+2$ gives $D'=D$; otherwise $D'\le\ell_n+2$. The nonnegative
+additive allowance covers the latter case.
+\end{proof}
+
+\begin{lemma}[Polynomial moment]\label{lem:moment}
+For every fixed query $q$ outside the input and every $n\ge1$,
+\begin{equation}
+ \E[a^{D_n(q)}]\le a^3 n^\beta.                              \label{eq:moment}
+\end{equation}
+\end{lemma}
+\begin{proof}
+First $\beta>a$. Indeed,
+\[
+ \beta-1=\frac{\ln a}{-\ln p}
+ >\frac{a-1}{a}\frac{p}{1-p}=\frac{a-1}{p}>a-1,
+\]
+using $\ln a\ge(a-1)/a$ and $-\ln p<(1-p)/p$.
+The ceiling implies $a^{\ell_n+2}\le a^3n^{\beta-1}$. Taking expectations
+in~\eqref{eq:drift} gives, with $M_n=\E[a^{D_n(q)}]$,
+\[
+ M_n\le(1+(a-1)/n)M_{n-1}+a^3n^{\beta-1}.
+\]
+For $n\ge2$, logarithms and $\ln(1+u)\le u$, $\ln(1-u)\le-u$ show
+\[
+ (1+(a-1)/n)(1-1/n)^{\beta-1}\le1.
+\]
+Multiplying by $1-1/n$ yields
+\[
+ (1+(a-1)/n)a^3(n-1)^\beta
+ \le a^3n^\beta-a^3n^{\beta-1}.
+\]
+This absorbs the additive term in the induction. The base is $M_1=a\le a^3$.
+\end{proof}
+
+\begin{theorem}[Height, expectation, and high probability]\label{thm:height}
+After any fixed sequence of $n\ge1$ distinct keys, the height $H_n$ satisfies
+\begin{equation}
+ \Prob(H_n\ge h)\le
+ \min\{1,\,2a^2n^{\beta+1}a^{-h}\}\qquad(h\in\mathbb Z_{\ge0}).
+                                                               \label{eq:height-tail}
+\end{equation}
+In particular, $\E H_n=\Theta(\log(n+1))$ as $n\to\infty$.
+For every $\gamma>0$ there is a constant $c_{p,\gamma}$ such that
+$\Prob(H_n>c_{p,\gamma}\ln n)\le n^{-\gamma}$ for $n\ge2$.
+Every stored node has expected depth $O(\log(n+1))$.
+\end{theorem}
+\begin{proof}
+Choose one fixed query in each of the $n+1$ gaps of the final key set, before
+any algorithmic randomness. They reach every final external node, so
+$H_n+1=\max_q D_n(q)$. Markov's inequality and a union bound give
+\[
+ \Prob(H_n\ge h)
+ \le(n+1)a^3n^\beta a^{-(h+1)}
+ \le2a^2n^{\beta+1}a^{-h}.
+\]
+There is no independence assumption between queries. Taking
+$h\ge(\beta+1+\gamma)\log_a n+\log_a(2a^2)$ proves the high-probability claim.
+For $h_0=\ceil{\log_a(2a^2n^{\beta+1})}$, the tail-sum formula gives
+\[
+ \E H_n\le h_0+\sum_{j\ge1}a^{-j}=h_0+\frac1{a-1}=O(\log(n+1)).
+\]
+Every binary tree satisfies $n\le2^{H_n+1}-1$, which gives the asymptotic
+matching lower bound. Stored-node depths are bounded by height pointwise.
+\end{proof}
+
+\section{Increasing sequences: exact dynamics}\label{sec:increasing}
+The \emph{right spine} follows right children from the root to the current
+maximum. Let $R_n$ be its number of vertices after $n$ insertions, with $R_0=0$.
+All search edges for an increasing insertion go right. Thus any two-edge repair
+is straight; a repair moves the new maximum up exactly one level, even if the
+promoted node is an older ancestor.
+
+\begin{theorem}[Spine and local cost on monotone inputs]\label{thm:monotone}
+For increasing inputs, at every insertion
+\begin{equation}
+ R_n=R_{n-1}+\mathbf1_{\{T_n\ge R_{n-1}\}},\qquad
+ R_n-1\le\ell_n.                                             \label{eq:spine}
+\end{equation}
+At most one rotation is used. If $V_n$ is the implementation's number of counted
+ancestor visits (the walked departures plus the final inspected ancestor), then
+\begin{equation}
+ V_n=(d-T_n-1)_+,\quad V_n\le G_n,\quad
+ \E[V_n\mid\text{past}]\le\frac{p(1-p^{\ell_n})}{1-p}.
+                                                               \label{eq:mono-visits}
+\end{equation}
+For every integer $k\ge1$, $\Prob(V_n\ge k\mid\text{past})\le p^k$.
+The same claims hold with left and right exchanged for decreasing inputs.
+\end{theorem}
+\begin{proof}
+The new maximum attaches at depth $d=R_{n-1}$. If $T_n\ge d$ no rotation
+occurs, and the spine gains one vertex. Otherwise one rotation removes exactly
+one old spine vertex from the extended spine, giving~\eqref{eq:spine}.
+For $n=1$ the spine has one vertex at depth zero. For $n\ge2$,
+inductively $d\le\ell_{n-1}+1\le\ell_n+1$. With no repair $d\le T_n\le\ell_n$;
+with repair the new maximum's final depth is $d-1\le\ell_n$.
+For arbitrary inputs the parent loop has $d-T_n-2$ steps if that quantity is
+nonnegative and the two-edge case is reached, followed by one counted visit.
+Hence $V_n=(d-T_n-1)_+$. The bound on $d$ gives $V_n\le\ell_n-T_n=G_n$.
+Lemma~\ref{lem:target} supplies its mean and tail.
+\end{proof}
+
+Set $\pi_n(j)=\Prob(R_n=j)$ and extend it by zero outside its support. For integer $u$, define
+\[
+ F_n(u)=\Prob(T_n\le u)=
+ \begin{cases}0&u<0,\\p^{\ell_n-u}&0\le u\le\ell_n,\\1&u>\ell_n.\end{cases}
+\]
+Independence of the fresh target gives the exact recurrence
+\begin{equation}
+ \boxed{\ \pi_n(j)=\pi_{n-1}(j)F_n(j-1)
+       +\pi_{n-1}(j-1)\bigl(1-F_n(j-2)\bigr)\ },             \label{eq:spine-law}
+\end{equation}
+with $\pi_0(0)=1$. The expected maximum-key depth is
+$\sum_j(j-1)\pi_n(j)$. This recurrence keeps or increases spine length by one;
+a single rotation does \emph{not} reset it to the target depth.
+If $A_n$ is the total number of rotations through insertion $n$, then summing
+one added spine vertex per insertion and one removed vertex per rotation gives
+$A_n=n-R_n$. Hence
+\[
+ \max\{0,n-\ell_n-1\}\le A_n\le n-1,
+ \qquad A_n/n=1-O_p(\log(n+1)/n).
+\]
+Thus average rotations approach one deterministically on increasing inputs.
+The current maximum's depth bound does not bound the whole tree deterministically:
+all-zero targets can produce a left chain of height $n-1$.
+
+The hanging left subtrees require a joint state. Write the spine as
+$a_0,\ldots,a_{r-1}$ and its left subtrees as $S_0,\ldots,S_{r-1}$, and append
+the new maximum $a_r$ with $S_r=\varnothing$. For $t<r$, remove $a_t$ from
+the spine and replace the promoted node $a_{t+1}$'s left subtree by
+\begin{equation}
+ \operatorname{Node}(a_t,S_t,S_{t+1}).                         \label{eq:merge}
+\end{equation}
+Later spine entries shift up one position. If $t\ge r$ there is no merge.
+With empty-subtree height $-1$, the merged height is
+$1+\max\{\operatorname{height}(S_t),\operatorname{height}(S_{t+1})\}$.
+The tuple of spine keys and subtrees, together with~\eqref{eq:mass}, is a closed
+transition description. Individual subtree-height marginals cannot be multiplied
+as if independent.
+
+For example, insert $1,2,3,4$ with $T_2\ge1,T_3=1,T_4=0$. The result has
+root $3$, right child $4$, and left subtree with root $1$ and right child $2$.
+A hanging left subtree therefore need not be a left-going chain.
+Theorem~\ref{thm:height} bounds the height of all these subtrees together,
+not only the right spine, by $O(\log n)$ in expectation and with high probability.
+
+\section{Uniform random permutations}\label{sec:random}
+Let the input be a uniform permutation of $N$ fixed distinct keys, independent
+of the repair trials. All bounds below hold at every prefix $1\le n\le N$.
+Conditioning on the entire permutation immediately transfers
+Theorem~\ref{thm:height} to this model. To bound \emph{repair work}, we need a
+stronger estimate for the next insertion gap.
+
+\begin{lemma}[The next relative rank is uniform]\label{lem:rank}
+Conditional on the previous relative insertion ranks and repair trials, the
+next key enters each of the $n$ external gaps of the $(n-1)$-node tree with
+probability $1/n$.
+\end{lemma}
+\begin{proof}
+Let $J_i$ be the rank of the $i$th key among the first $i$ keys. The map from
+permutations to vectors $(J_1,\ldots,J_N)$ with $1\le J_i\le i$ is a bijection:
+recover the last key as the $J_N$th remaining key, remove it, and continue
+backwards. Thus the $J_i$ are independent and uniform. The tree shape with keys
+replaced by their current ranks is determined by earlier $J_i$ and earlier
+repair trials. Each possible new rank corresponds to one of its external gaps.
+This conditioning is on comparison ranks, \emph{not} on the actual numerical
+prefix keys; conditioning on those values need not make the remaining gaps
+equally likely.
+\end{proof}
+
+\begin{theorem}[External-gap potential and insertion depth]\label{thm:random-potential}
+Let $\mathcal G_n$ be all $n+1$ external gaps after insertion $n$, and set
+\[
+ Q_n=\sum_{g\in\mathcal G_n}a^{\operatorname{depth}(g)},\qquad
+ C_p=\max\left\{1,\frac{2a^2(a-1)}{\beta-a}\right\}.
+\]
+Then $\E Q_n\le C_p(n+1)^\beta$ for all $n\ge0$.
+If $I_n$ denotes the new leaf's depth \emph{before} repair, then
+\begin{align}
+ \E[a^{I_n-\ell_n}]&\le C_p,\label{eq:excess-moment}\\
+ \Prob(I_n\ge\ell_n+k)&\le C_p a^{-k}\quad(k\ge0),\label{eq:excess-tail}\\
+ \E I_n&\le\log_{1/p}n+\log_a C_p.\label{eq:insert-depth}
+\end{align}
+\end{theorem}
+\begin{proof}
+Condition on the ranked tree and on the chosen insertion gap, of depth $d$.
+For each other gap, Lemma~\ref{lem:drift} bounds its expected exponential depth
+by $(1+(a-1)/n)$ times its old value. The insertion gap is replaced by two gaps.
+If $d\ge\ell_n+2$, both new depths are exactly $d$ by Lemma~\ref{lem:effects}.
+Otherwise each is at most $d+1$, with $d\le\ell_n+1$. Their combined
+contribution is therefore always at most
+\[
+ 2a^d+2(a-1)a^{\ell_n+1}.
+\]
+Put $c=a-1$. Before averaging over the uniform chosen gap, the expected total
+is at most
+\[
+ (1+c/n)(Q_{n-1}-a^d)+2a^d+2c\,a^{\ell_n+1}.
+\]
+Lemma~\ref{lem:rank} gives $\E[a^d\mid\text{ranked tree}]=Q_{n-1}/n$, hence
+\begin{align*}
+ \E Q_n
+ &\le(1+a/n-c/n^2)\E Q_{n-1}+2c\,a^{\ell_n+1}\\
+ &\le(1+a/n)\E Q_{n-1}+2a^2(a-1)n^{\beta-1}.
+\end{align*}
+Here $a^{\ell_n+1}\le a^2 n^{\beta-1}$. Since $\beta>a>1$, convexity gives
+$(n+1)^\beta\ge n^\beta+\beta n^{\beta-1}$. The induction hypothesis
+$\E Q_{n-1}\le C_p n^\beta$ and the definition of $C_p$ thus imply
+$\E Q_n\le C_p(n+1)^\beta$. Its base is $Q_0=1$.
+
+The next gap is uniform, so
+$\E a^{I_n}=\E Q_{n-1}/n\le C_p n^{\beta-1}$.
+Since $a^{\ell_n}\ge n^{\beta-1}$, this proves~\eqref{eq:excess-moment};
+Markov proves~\eqref{eq:excess-tail}. Jensen's inequality applied before
+rounding the logarithm gives~\eqref{eq:insert-depth}.
+\end{proof}
+
+\begin{corollary}[Constant structural repair and rotation locality]\label{cor:random-work}
+For uniform random permutations, counted ancestor visits satisfy
+\begin{equation}
+ \E V_n\le \frac{C_p}{a(a-1)}+\frac{p}{1-p}=O_p(1).           \label{eq:random-visits}
+\end{equation}
+For every integer $k\ge1$,
+\begin{equation}
+ \Prob(V_n\ge k)\le C_p a^{-k/2}+p^{k/2}.                    \label{eq:visit-tail}
+\end{equation}
+The same tail bounds the largest original distance from the new leaf to a node
+promoted during that insertion (distance zero when no rotation occurs).
+Sampling, pointer walking, and rotations together take expected $O_p(1)$ time,
+excluding the separate computation of $\ell_n$ and the insertion search.
+\end{corollary}
+\begin{proof}
+Pointwise, $V_n=(I_n-T_n-1)_+\le(I_n-\ell_n-1)_++G_n$.
+By~\eqref{eq:excess-tail} and the tail-sum formula,
+\[
+ \E(I_n-\ell_n-1)_+
+ =\sum_{j\ge1}\Prob(I_n\ge\ell_n+1+j)
+ \le C_p\sum_{j\ge1}a^{-1-j}=\frac{C_p}{a(a-1)}.
+\]
+Lemma~\ref{lem:target} proves~\eqref{eq:random-visits}. If $V_n\ge k$,
+then $I_n-\ell_n+G_n\ge k+1$. At least one summand exceeds $k/2$;
+Markov for the first and the geometric tail for the second give
+\eqref{eq:visit-tail}. No independence between these events is needed.
+A straight repair promotes a node at original distance $I_n-T_n-1=V_n$;
+a bent repair promotes one at distance $I_n-T_n-2=V_n-1$.
+Single-leaf promotion has distance zero. Lemma~\ref{lem:target} and
+Theorem~\ref{thm:correct} bound the remaining structural work.
+\end{proof}
+
+The potential also gives a sharper random-order height tail:
+\begin{equation}
+ \Prob(H_n\ge h)\le
+ \min\{1,\ C_p(n+1)^\beta a^{-(h+1)}\},                     \label{eq:random-height}
+\end{equation}
+because an external node of depth at least $h+1$ contributes at least $a^{h+1}$
+to $Q_n$. For $p=3/4$ the constants are $a=9/4$,
+$\beta=1+\log_{4/3}(9/4)$, and~\eqref{eq:random-visits} is less than six
+counted visits. For an exact check of this numerical claim,
+$(9/4)^4>(4/3)^{11}$ gives $\beta>15/4$, so $C_p<135/16$ and
+$C_p/[a(a-1)]<3$. These are conservative upper bounds, not predicted measurements.
+
+\begin{proposition}[The shape law is not the ordinary random-BST law]\label{prop:shape}
+For a uniform permutation of three keys, the probability of the balanced
+three-node tree is $(1+p^{\ell_3})/3$. With $p=3/4$, it is $337/768$,
+whereas ordinary unbalanced insertion gives probability $1/3$.
+\end{proposition}
+\begin{proof}
+Conditional on the missing third key, the root of the two-key tree is uniform
+among those two keys, by symmetry of their insertion orders and of repair.
+The last key is the median with probability $1/3$. Its path bends at depth two,
+and the result is balanced exactly when $T_3=0$.
+If the last key is an extreme, the old root is the final median with probability
+$1/2$: then the initial three-node tree is balanced and stays so exactly when
+$T_3\ne0$. With the other old root, the path is straight and becomes balanced
+exactly when $T_3=0$. The extreme case therefore has balance probability $1/2$.
+The total is $p^{\ell_3}/3+(2/3)(1/2)$. Ordinary insertion is balanced exactly
+when its first key is the median. Finally $\ell_3=4$ at $p=3/4$.
+\end{proof}
+
+\section{Costs, arithmetic, and limits of the claims}\label{sec:arithmetic}
+For arbitrary inputs the exact counted visit formula gives
+\begin{equation}
+ \E(I_n-\ell_n-1)_+\ \le\ \E V_n\ \le\
+ \E(I_n-\ell_n-1)_++\frac{p}{1-p}.                           \label{eq:excess}
+\end{equation}
+Thus constant expected structural repair is equivalent to constant expected
+positive excess above the reference depth, up to additive constants. An
+$O(\log n)$ height bound alone does not imply this excess bound.
+Theorems~\ref{thm:monotone} and~\ref{thm:random-potential} supply it for the two
+input classes studied here. For arbitrary fixed inputs we establish expected
+$O(\log(n+1))$ search and structural repair, using Theorem~\ref{thm:height}
+on the previous prefix. The deterministic two-rotation bound always holds.
+
+\paragraph{Computing the ceiling exactly.}
+For the implemented $p=3/4$, the maximum target is the least integer $k$ for
+which $4^k\ge n3^k$. Python recomputes these powers in $\ell_n$ loop iterations;
+the C++ implementation searches a finite table of exact thresholds
+$\floor{(4/3)^k}$ for its 32-bit node-count range. The table covers that finite
+range only. Neither implementation justifies an unbounded constant-time
+arithmetic claim solely from the structural-repair theorem.
+
+There is a simple exact arithmetic variant for any fixed rational $p=u/v$,
+$0<u<v$: retain global values $k,A=v^k,B=u^k$, initially $0,1,1$. After each
+size increment, while $A<nB$, replace $(k,A,B)$ by $(k+1,vA,uB)$. The result is
+$k=\ell_n$. At insertion $n\ge2$ the number of iterations is at most
+$\ceil{\log_{v/u}2}$, because $n/(n-1)\le2$. For fixed $u,v$, $A$ and $B$
+have $O(\log n)$ bits, hence occupy a constant number of words of size
+$\Theta(\log n)$. In a word-RAM with constant-time word multiplication this
+update costs $O_p(1)$ time and adds only a constant number of global words.
+It changes no target law or node representation. This is an explicitly stated
+arithmetic variant, not a claim that the present Python loop already has that
+bound. Bit-complexity costs of arbitrary-precision integers are different.
+
+With that arithmetic variant, full rebalancing after the ordinary search has
+supplied both the leaf position and its depth has expected $O_p(1)$ time on
+monotone inputs and uniform random permutations. A leaf position alone does not
+supply its depth: walking to the root to recover it can take nonconstant time.
+Locating that position still takes expected $O(\log(n+1))$ time. For arbitrary
+fixed inputs the complete insertion likewise takes expected $O(\log(n+1))$
+time in this model.
+
+\paragraph{Conditioning and adaptive inputs.}
+There is no uniform constant repair bound after every reachable history.
+Insert $1,2,\ldots,m$ and let every target be zero, a positive-probability event.
+Inductively the new maximum becomes root, producing the left chain
+$m,m-1,\ldots,1$. Inserting $0$ now has depth $m$, so every target gives
+$V\ge(m-\ell_{m+1}-1)_+$. This is a conditional lower bound on a rare history,
+not a lower bound on the unconditional expectation for that fixed input.
+
+For keys selected after observing the tree, the final gaps used in the union
+bound need not be fixed independently of the random choices. The uniform-rank
+lemma likewise fails for a general adaptive rule. No adaptive-input height
+bound is claimed here. The historical fair-coin paper in this repository
+studies $p=1/2$ with a different cap and cannot be used as the new biased
+strategy's height proof: at $p=1/2$, $a<1$, so the increasing exponential
+potential above is unavailable.
+
+\section{Implementation correspondence and reproducibility}\label{sec:reproduce}
+The registered strategy is \texttt{geometric-three-quarters}.
+Both the Python and C++ implementations use the law in Lemma~\ref{lem:target},
+read exactly two bits per trial, stop at target zero, and call the same local
+repair pattern. The first insertion consumes no bits. The fixed $p$ is shared
+across insertions. Native claims apply while the node count fits its supported
+index range. The browser implementation follows the same target law.
+
+The repository checks identical scripted-bit traces across implementations,
+exact integer depth boundaries, and local repair against independent immutable
+rotations. Additional bounded tests enumerate external-gap depth changes and
+small exact distributions. These tests check correspondence on finite inputs;
+the asymptotic statements follow from the mathematical proofs above. The
+existing Lean development covers selected deterministic repair and fair-coin
+sampler facts; it does not machine-check the new stochastic height or
+random-permutation theorems in this paper.
+
+Compile from the repository root with:
+\begin{lstlisting}[mathescape=false,basicstyle=\footnotesize\ttfamily]
+latexmk -pdf -interaction=nonstopmode -halt-on-error \
+  -outdir=/tmp/geometric-biased-repair-paper \
+  docs/proofs/geometric-biased-repair.tex
+\end{lstlisting}
+GitHub Actions compiles this source, publishes a downloadable workflow artifact,
+and includes the newly compiled PDF in the GitHub Pages site. The repository's
+proof README gives the local validation commands and the two PDF destinations.
+
+\begin{thebibliography}{1}
+\bibitem{brodal}
+Gerth St\o lting Brodal.
+\emph{Bottom-up Rebalancing Binary Search Trees by Flipping a Coin}.
+Full version, 2024, arXiv:2404.08287v1.
+\url{https://arxiv.org/abs/2404.08287v1}.
+\end{thebibliography}
+\end{document}

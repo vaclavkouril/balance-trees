@@ -1,4 +1,56 @@
-# Geometric repair: proof and triage
+# Geometric repair: proofs and PDF builds
+
+## Biased geometric targets (`geometric-three-quarters`)
+
+Read the [probability paper (PDF)](geometric-biased-repair.pdf) or its
+[LaTeX source](geometric-biased-repair.tex). It analyzes the changed target law
+from the supplied proof, for fixed `p > (sqrt(5)-1)/2` and `p < 1`; the Python,
+C++, and browser strategy uses exact `p=3/4` trials.
+
+The paper proves:
+
+- Logarithmic expected height and a high-probability logarithmic height bound
+  for every insertion order fixed independently of the random choices.
+- At most two rotations and fewer than eight expected fair bits per insertion.
+- An exact increasing-sequence right-spine recurrence, a joint description of
+  the hanging left subtrees, and constant expected structural repair.
+- Constant expected ancestor visits and exponential rotation-distance tails on
+  uniform random permutations, using a potential summed over external gaps.
+- A qualified comparison against all seven criteria in Brodal's introduction.
+  The method uses global size information. Full constant repair time also needs
+  the insertion depth supplied by search and the stated incremental arithmetic
+  variant; the current Python ceiling loop has logarithmically many iterations.
+
+The random-permutation argument conditions on past **relative ranks**, not
+actual numeric prefix keys. It does not assume the resulting tree has the
+ordinary random-BST distribution; the paper proves a three-key discrepancy.
+The increasing-sequence recurrence corrects the earlier draft's assumption that
+one rotation can truncate the whole spine to its target. The new theorems are
+mathematical proofs; the existing Lean project does not formalize them.
+
+Compile from the repository root with LaTeX and `latexmk` installed:
+
+```sh
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error \
+  -outdir=/tmp/geometric-biased-repair-paper docs/proofs/geometric-biased-repair.tex
+cp /tmp/geometric-biased-repair-paper/geometric-biased-repair.pdf docs/proofs/geometric-biased-repair.pdf
+cp /tmp/geometric-biased-repair-paper/geometric-biased-repair.pdf src/balance_trees/showcase/site/dist/geometric-biased-repair.pdf
+PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_biased_proof_conformance.py' -v
+PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_pages.py' -v
+```
+
+`proofs.yml` compiles the LaTeX and uploads a `geometric-biased-repair-pdf`
+workflow artifact. `pages.yml` compiles it before the tests and includes that
+new PDF in the site, linked as **3/4 strategy proof (PDF)**. Both workflows
+trigger on proof-source changes. Committing and pushing these changes activates
+the existing GitHub workflow; no local command deploys the site.
+
+The deterministic conformance tests enumerate local query-depth changes,
+compare the exact monotone spine law against shape enumeration, and verify the
+three-key random-permutation probability. They are bounded checks of the model,
+not substitutes for the asymptotic proofs.
+
+## Historical fair-coin targets (`geometric-target-local-repair`)
 
 The [mathematical paper (PDF)](geometric-repair.pdf) and its
 [LaTeX source](geometric-repair.tex) give the model, proofs,

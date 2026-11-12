@@ -11,7 +11,7 @@ from .server import STATIC
 ENGINE_META = '<meta name="rotation-lab-engine" content="auto">'
 PUBLIC_PAGES = ("index.html",)
 PUBLIC_DIRECTORIES = ("benchmarks",)
-PUBLIC_DOCUMENTS = ("geometric-repair.pdf",)
+PUBLIC_DOCUMENTS = ("geometric-repair.pdf", "geometric-biased-repair.pdf")
 
 
 def catalog_source() -> str:

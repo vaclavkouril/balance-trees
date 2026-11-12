@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - 'formal/**'
+      - 'docs/proofs/**'
       - '.github/workflows/proofs.yml'
   pull_request:
     paths:
       - 'formal/**'
+      - 'docs/proofs/**'
       - '.github/workflows/proofs.yml'
   workflow_dispatch:
 
@@ -15,6 +17,29 @@ permissions:
   contents: read
 
 jobs:
+  latex:
+    name: Compile probability paper
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install LaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y latexmk lmodern texlive-latex-extra texlive-fonts-recommended
+      - name: Compile PDF
+        run: |
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error \
+            -outdir="$RUNNER_TEMP/geometric-biased-repair" docs/proofs/geometric-biased-repair.tex
+      - name: Upload paper
+        uses: actions/upload-artifact@v4
+        with:
+          name: geometric-biased-repair-pdf
+          path: ${{ runner.temp }}/geometric-biased-repair/geometric-biased-repair.pdf
+          if-no-files-found: error
+
   lean:
     runs-on: ubuntu-latest
     timeout-minutes: 20

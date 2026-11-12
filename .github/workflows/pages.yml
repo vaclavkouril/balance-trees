@@ -6,14 +6,14 @@ on:
       - ".github/workflows/pages.yml"
       - "src/**"
       - "tests/**"
-      - "docs/proofs/geometric-repair.pdf"
+      - "docs/proofs/**"
       - "pyproject.toml"
   pull_request:
     paths:
       - ".github/workflows/pages.yml"
       - "src/**"
       - "tests/**"
-      - "docs/proofs/geometric-repair.pdf"
+      - "docs/proofs/**"
       - "pyproject.toml"
   workflow_dispatch:
 
@@ -28,7 +28,7 @@ jobs:
   build:
     name: Test and prepare website
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -43,6 +43,16 @@ jobs:
         with:
           node-version: "24"
           package-manager-cache: false
+      - name: Install LaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y latexmk lmodern texlive-latex-extra texlive-fonts-recommended
+      - name: Compile and stage probability paper
+        run: |
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error \
+            -outdir="$RUNNER_TEMP/geometric-biased-repair" docs/proofs/geometric-biased-repair.tex
+          cp "$RUNNER_TEMP/geometric-biased-repair/geometric-biased-repair.pdf" docs/proofs/geometric-biased-repair.pdf
+          cp "$RUNNER_TEMP/geometric-biased-repair/geometric-biased-repair.pdf" src/balance_trees/showcase/site/dist/geometric-biased-repair.pdf
       - name: Test Python implementations
         env:
           PYTHONPATH: src
