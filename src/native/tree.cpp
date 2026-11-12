@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <bit>
+#include <iterator>
 #include <stdexcept>
 #include <utility>
 
@@ -155,8 +156,8 @@ std::uint32_t sample_target_depth(std::uint32_t node_count, RandomBits& bits) {
     return move >= levels - 1 ? 0 : levels - move - 1;
 }
 
-void GeometricTargetLocalRepair::rebalance(RebalanceContext& context) {
-    const auto target = sample_target_depth(++inserted_count_, context.bits);
+namespace {
+void repair_at_target(RebalanceContext& context, std::uint32_t target) {
     const auto depth = context.stats.insertion_depth;
     if (depth <= target) return;
     if (depth == target + 1) {
@@ -181,10 +182,57 @@ void GeometricTargetLocalRepair::rebalance(RebalanceContext& context) {
         context.promote(cursor, distance);
     }
 }
+} // namespace
+
+void GeometricTargetLocalRepair::rebalance(RebalanceContext& context) {
+    repair_at_target(context, sample_target_depth(++inserted_count_, context.bits));
+}
+
+std::uint32_t maximum_three_quarters_target_depth(std::uint32_t node_count) {
+    if (node_count == 0) throw std::invalid_argument("node count must be positive");
+    // floor((4/3)^k), computed with exact integer arithmetic, through UINT32_MAX.
+    static constexpr std::uint64_t thresholds[] = {
+        1ULL, 1ULL, 1ULL, 2ULL, 3ULL, 4ULL,
+        5ULL, 7ULL, 9ULL, 13ULL, 17ULL, 23ULL,
+        31ULL, 42ULL, 56ULL, 74ULL, 99ULL, 133ULL,
+        177ULL, 236ULL, 315ULL, 420ULL, 560ULL, 747ULL,
+        996ULL, 1328ULL, 1771ULL, 2362ULL, 3149ULL, 4199ULL,
+        5599ULL, 7466ULL, 9954ULL, 13273ULL, 17697ULL, 23596ULL,
+        31462ULL, 41950ULL, 55933ULL, 74577ULL, 99437ULL, 132583ULL,
+        176777ULL, 235703ULL, 314271ULL, 419028ULL, 558704ULL, 744938ULL,
+        993251ULL, 1324335ULL, 1765780ULL, 2354374ULL, 3139166ULL, 4185554ULL,
+        5580739ULL, 7440986ULL, 9921315ULL, 13228420ULL, 17637893ULL, 23517191ULL,
+        31356255ULL, 41808340ULL, 55744454ULL, 74325939ULL, 99101252ULL, 132135003ULL,
+        176180004ULL, 234906672ULL, 313208896ULL, 417611861ULL, 556815815ULL, 742421087ULL,
+        989894783ULL, 1319859711ULL, 1759812949ULL, 2346417265ULL, 3128556353ULL, 4171408471ULL,
+        5561877962ULL,
+    };
+    return static_cast<std::uint32_t>(
+        std::lower_bound(std::begin(thresholds), std::end(thresholds), node_count)
+        - std::begin(thresholds));
+}
+
+std::uint32_t sample_three_quarters_target_depth(std::uint32_t node_count, RandomBits& bits) {
+    auto target = maximum_three_quarters_target_depth(node_count);
+    while (target > 0) {
+        const auto first = bits.bit();
+        const auto second = bits.bit();
+        if (first == 0 && second == 0) break;
+        --target;
+    }
+    return target;
+}
+
+void GeometricThreeQuarters::rebalance(RebalanceContext& context) {
+    repair_at_target(context, sample_three_quarters_target_depth(++inserted_count_, context.bits));
+}
 
 StrategyFactory::StrategyFactory() {
     register_strategy("geometric-target-local-repair", [] {
         return std::make_unique<GeometricTargetLocalRepair>();
+    });
+    register_strategy("geometric-three-quarters", [] {
+        return std::make_unique<GeometricThreeQuarters>();
     });
     register_strategy("none", [] { return std::make_unique<NoRebalance>(); });
 }

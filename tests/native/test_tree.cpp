@@ -28,6 +28,21 @@ int main() {
     rejects([&] { empty.bit(); });
     rejects([&] { sample_target_depth(0, empty); });
 
+    rejects([&] { maximum_three_quarters_target_depth(0); });
+    RandomBits root_bits("");
+    check(sample_three_quarters_target_depth(1, root_bits) == 0);
+    check(maximum_three_quarters_target_depth(2) == 3);
+    check(maximum_three_quarters_target_depth(3) == 4);
+    check(maximum_three_quarters_target_depth(UINT32_MAX) == 78);
+    for (auto tape : {"01", "10", "11"}) {
+        RandomBits bits(std::string(tape) + "00");
+        check(sample_three_quarters_target_depth(2, bits) == 2);
+        check(bits.count() == 4);
+    }
+    RandomBits root_sample("111111");
+    check(sample_three_quarters_target_depth(2, root_sample) == 0);
+    check(root_sample.count() == 6);
+
     // SplitMix64's seed-zero first word, including buffer refill and bit order.
     RandomBits seeded(0);
     std::uint64_t word = 0;
@@ -61,7 +76,7 @@ int main() {
         check(tree.tree().depths().empty());
         for (Key key = 0; key < 1000; ++key) {
             auto stats = tree.insert(seed % 2 ? -key : key);
-            check(stats.inserted && stats.rotations <= 2 && stats.random_bits >= 1);
+            check(stats.inserted && stats.rotations <= 2 && (key == 0 || stats.random_bits >= 1));
             check(stats.rotation_distances.empty());
             check(tree.tree().depths().size() == std::size_t(key + 1));
         }

@@ -165,6 +165,24 @@ registerStrategy('geometric-target-local-repair', c => {
     yield* repairAtTargetDepth(c, node, depth, target);
   };
 });
+registerStrategy('geometric-three-quarters', c => {
+  let count = 0, targetMaximum = 0, numerator = 1n, denominator = 1n;
+  return function* (node, depth) {
+    count++;
+    while (numerator < BigInt(count) * denominator) {
+      numerator *= 4n; denominator *= 3n; targetMaximum++;
+    }
+    let target = targetMaximum;
+    while (target > 0) {
+      const first = c.bit(), second = c.bit();
+      if (first === 0 && second === 0) break;
+      target--;
+    }
+    yield* c.event('target', `Geometric repair depth ${target}`,
+      `Maximum target ${targetMaximum}; each decrease has probability 3/4. Repair uses at most two rotations.`, node);
+    yield* repairAtTargetDepth(c, node, depth, target);
+  };
+});
 registerStrategy('interval-target-local-repair', c => intervalTargetLocalRepair(c));
 registerStrategy('random-level-v2-1', c => intervalTargetLocalRepair(c, undefined, true));
 registerStrategy('random-level-v3', c => randomLevelV3(c));

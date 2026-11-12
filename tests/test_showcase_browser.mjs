@@ -324,7 +324,7 @@ class Bits:
         self.count += 1
         return next(self.values)
 results = {}
-for name in ("random-level", "geometric-target-local-repair", "random-level-v2-1", "random-level-v3", "random-level-v4"):
+for name in ("random-level", "geometric-target-local-repair", "geometric-three-quarters", "random-level-v2-1", "random-level-v3", "random-level-v4"):
     tree = TreeFlavor.create(name)
     tree.bits = Bits()
     frames = []

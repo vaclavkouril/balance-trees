@@ -70,6 +70,11 @@ export const FLAVORS = {
     "tag": "Perfect-tree reference, at most two rotations",
     "note": "Sample target depth with capped leading fair bits and L=ceil(log2(n))+1, including the new leaf. Stay at or above the target; otherwise repair a straight or bent ancestor path with at most two rotations. No record exceptions or height guarantee."
   },
+  "geometric-three-quarters": {
+    "name": "Geometric target · 3/4",
+    "tag": "Logarithmic height for fixed insertion sequences",
+    "note": "Sample a target from ceil(log base 4/3 of n) using independent Bernoulli(3/4) trials, then repair locally with at most two rotations."
+  },
   "random-level-v2-1": {
     "name": "Random level v2.1",
     "tag": "Local repair, log-width priorities",

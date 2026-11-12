@@ -12,6 +12,7 @@ from pathlib import Path
 from helpers import FixedBits
 
 from balance_trees import TreeFlavor
+from balance_trees.strategies import GeometricThreeQuarters
 from balance_trees.strategies.geometric_target_local_repair import (
     GeometricTargetLocalRepair,
 )
@@ -60,7 +61,11 @@ class NativeConformanceTests(unittest.TestCase):
         rows = [json.loads(line) for line in result.stdout.splitlines()]
         self.assertEqual(len(rows), len(keys))
         flavor = TreeFlavor(
-            GeometricTargetLocalRepair() if strategy != "none" else None,
+            {
+                "geometric-target-local-repair": GeometricTargetLocalRepair,
+                "geometric-three-quarters": GeometricThreeQuarters,
+                "none": lambda: None,
+            }[strategy](),
             bits=FixedBits(list(map(int, tape))),
         )
         nodes = []
@@ -112,6 +117,7 @@ class NativeConformanceTests(unittest.TestCase):
             ):
                 with self.subTest(keys=keys[:5], tape=tape[:12]):
                     self.compare(keys, tape)
+                    self.compare(keys, tape * 4, strategy="geometric-three-quarters")
             self.compare(keys, "", strategy="none")
 
     def test_invalid_inputs_fail_explicitly(self):

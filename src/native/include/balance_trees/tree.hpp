@@ -92,6 +92,16 @@ private:
     std::uint32_t inserted_count_ = 0;
 };
 
+class GeometricThreeQuarters final : public Strategy {
+public:
+    void rebalance(RebalanceContext& context) override;
+private:
+    std::uint32_t inserted_count_ = 0;
+};
+
+std::uint32_t maximum_three_quarters_target_depth(std::uint32_t node_count);
+std::uint32_t sample_three_quarters_target_depth(std::uint32_t node_count, RandomBits& bits);
+
 class NoRebalance final : public Strategy {
 public:
     void rebalance(RebalanceContext&) override {}

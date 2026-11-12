@@ -5,6 +5,7 @@ from fractions import Fraction
 from .base import NoRebalance, RebalanceContext, Strategy
 from .fixed import ConstantWalk, InverseDepthWalk
 from .geometric_target_local_repair import GeometricTargetLocalRepair
+from .geometric_three_quarters import GeometricThreeQuarters
 from .halving import HalvingWalk
 from .hashed import HashPriority
 from .interval_target_local_repair import IntervalTargetLocalRepair
@@ -97,6 +98,12 @@ for identifier, spec in {
         "Perfect-tree reference, at most two rotations",
         "Sample target depth with capped leading fair bits and L=ceil(log2(n))+1, including the new leaf. Stay at or above the target; otherwise repair a straight or bent ancestor path with at most two rotations. No record exceptions or height guarantee.",
     ),
+    "geometric-three-quarters": StrategySpec(
+        GeometricThreeQuarters,
+        "Geometric target · 3/4",
+        "Logarithmic height for fixed insertion sequences",
+        "Sample a target from ceil(log base 4/3 of n) using independent Bernoulli(3/4) trials, then repair locally with at most two rotations.",
+    ),
     "random-level-v2-1": StrategySpec(
         RandomLevelV21,
         "Random level v2.1",
@@ -127,6 +134,7 @@ __all__ = [
     "ConstantWalk",
     "GeometricStop",
     "GeometricTargetLocalRepair",
+    "GeometricThreeQuarters",
     "HalvingWalk",
     "HashPriority",
     "IntervalTargetLocalRepair",
