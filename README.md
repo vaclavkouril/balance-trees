@@ -67,9 +67,10 @@ node tests/test_large_showcase.mjs
 The local visualizer remains at `http://127.0.0.1:8000`. Its **Mixed insert/delete
 benchmarks** link opens the [full BST report](src/balance_trees/showcase/site/dist/benchmarks/full-bst/index.html),
 with five update workloads, height traces, CPU and wall timings, rotation counts,
-memory, downloadable measurements, and the explained proof. The
+memory, downloadable measurements, and the explained proof. After a Pages
+deployment, the
 [online mixed-operation report](https://vaclavkouril.github.io/balance-trees/benchmarks/full-bst/)
-uses the same bundle. The
+serves the same bundle. The
 [full BST insertion comparison](src/balance_trees/showcase/site/dist/benchmarks/full-bst-insertion/index.html)
 covers all seven insertion families and the three native geometric policies.
 Both suites reach 16,777,216 keys and record concurrency, seeds and measured sources.

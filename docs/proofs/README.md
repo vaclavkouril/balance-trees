@@ -1,5 +1,25 @@
 # Geometric repair: proofs and PDF builds
 
+## Full BST with deletion (`geometric-full-bst`, C++)
+
+The [explained Chapter 6 (PDF)](full-bst-explained.pdf) and its
+[LaTeX source](full-bst-explained.tex) are the maintained, self-contained version.
+They describe insertion, deletion, the increasing cursor sweep, the minimum's
+move to the root, and the height proof with the intermediate probability and
+algebra steps. See [native usage](../native.md#full-bst-insertion-deletion-and-search)
+for the implementation and [benchmark commands](../../benchmarks/README.md#full-bst-insertion-and-mixed-operations)
+for its measurements.
+
+Compile outside the source directory, then update both distributed PDF copies:
+
+```sh
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error \
+  -outdir=/tmp/full-bst-explained docs/proofs/full-bst-explained.tex
+cp /tmp/full-bst-explained/full-bst-explained.pdf docs/proofs/full-bst-explained.pdf
+cp docs/proofs/full-bst-explained.pdf src/balance_trees/showcase/site/dist/benchmarks/full-bst/full-bst-explained.pdf
+PYTHONPATH=src python3 -m unittest discover -s tests -p 'test_pages.py' -v
+```
+
 ## Biased geometric targets (`geometric-three-quarters`)
 
 Read the [probability paper (PDF)](geometric-biased-repair.pdf) or its

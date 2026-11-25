@@ -188,6 +188,37 @@ def metric_cells(row):
     return "".join(cells)
 
 
+def write_charts(results: dict, output: Path, *, prefix: str = "") -> str:
+    """Render each curve once, both inline and as a downloadable SVG."""
+    metadata = results["metadata"]
+    canvas_height = chart_height(metadata["strategies"])
+    charts, overview = [], []
+    for order_index, order in enumerate(metadata["orders"]):
+        order_figures = []
+        for metric_index, metric in enumerate(METRICS):
+            svg = chart_svg(results, order, metric).replace(
+                f"{order}-{metric}", f"{prefix}{order}-{metric}"
+            )
+            filename = f"{prefix}{order}-{metric}.svg"
+            (output / "figures" / filename).write_text(svg)
+            order_figures.append(
+                f'<figure>{svg}<figcaption><a href="./figures/{filename}" download>Download SVG</a></figcaption></figure>'
+            )
+            inner = svg[svg.index(">") + 1 : svg.rindex("</svg>")]
+            overview.append(
+                f'<g transform="translate({metric_index * 720},{order_index * canvas_height})">{inner}</g>'
+            )
+        heading = "h3" if prefix else "h2"
+        charts.append(
+            f'<section data-order="{order}"><{heading}>{order.capitalize()} input</{heading}><div class="charts">{"".join(order_figures)}</div></section>'
+        )
+    height = len(metadata["orders"]) * canvas_height
+    (output / f"{prefix}all-sequences.svg").write_text(
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="2880" height="{height}" viewBox="0 0 2880 {height}"><rect width="100%" height="100%" fill="white"/>{"".join(overview)}</svg>'
+    )
+    return "".join(charts)
+
+
 def render_native_appendix(results: dict, output: Path) -> str:
     metadata = results["metadata"]
     native_strategies = [
@@ -204,9 +235,8 @@ def render_native_appendix(results: dict, output: Path) -> str:
             row for row in results["summaries"] if row["strategy"] in native_strategies
         ],
     }
-    table_rows, figures, overview = [], [], []
-    canvas_height = chart_height(native_strategies)
-    for order_index, order in enumerate(metadata["orders"]):
+    table_rows = []
+    for order in metadata["orders"]:
         for strategy in native_strategies:
             completed = [
                 row
@@ -222,27 +252,18 @@ def render_native_appendix(results: dict, output: Path) -> str:
                     f"<td>{last['elapsed_seconds']:.4f}</td><td>{last['peak_rss_mib']:.1f}</td>"
                     f"<td>{last['node_storage_bytes'] / last['n']:.1f}</td></tr>"
                 )
-        order_figures = []
-        for metric_index, metric in enumerate(METRICS):
-            svg = chart_svg(native_results, order, metric).replace(
-                f"{order}-{metric}", f"native-{order}-{metric}"
-            )
-            filename = f"native-{order}-{metric}.svg"
-            (output / "figures" / filename).write_text(svg)
-            order_figures.append(
-                f'<figure>{svg}<figcaption><a href="./figures/{filename}" download>Download native SVG</a></figcaption></figure>'
-            )
-            inner = svg[svg.index(">") + 1 : svg.rindex("</svg>")]
-            overview.append(
-                f'<g transform="translate({metric_index * 720},{order_index * canvas_height})">{inner}</g>'
-            )
-        figures.append(
-            f'<div data-order="{order}"><h3>{order.capitalize()}</h3><div class="charts">{"".join(order_figures)}</div></div>'
-        )
-    height = len(metadata["orders"]) * canvas_height
-    (output / "native-all-sequences.svg").write_text(
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="2880" height="{height}" viewBox="0 0 2880 {height}"><rect width="100%" height="100%" fill="white"/>{"".join(overview)}</svg>'
-    )
+    charts = ""
+    montage = "all-sequences.svg"
+    if native_only:
+        # Regenerating an older standalone report must also remove its redundant
+        # appendix assets. These names are owned by this renderer.
+        for path in (output / "figures").glob("native-*.svg"):
+            path.unlink()
+        (output / "native-all-sequences.svg").unlink(missing_ok=True)
+    else:
+        montage = "native-all-sequences.svg"
+        figures = write_charts(native_results, output, prefix="native-")
+        charts = f"<details><summary>Native geometric repair · {len(metadata['orders']) * len(METRICS)} standalone SVGs</summary>{figures}</details>"
     complete_count = sum(row["status"] == "complete" for row in records)
     introduction = (
         f"This standalone C++ run has {complete_count} completed trials across {len(native_strategies)} implementations and {len(metadata['orders'])} input families. Each implementation receives identical input keys and rotation seed values."
@@ -283,8 +304,8 @@ def render_native_appendix(results: dict, output: Path) -> str:
 <p><strong>Timing and memory:</strong> native trials run {execution} in isolated Linux processes with a {settings["memory_mib"]} MiB address-space cap and {settings["timeout_seconds"]:g}-second wall deadline. {timing} RSS includes input storage, tree arrays, validation and process overhead. Compiler: {escaped(metadata["compiler"])}. Build: {build} The recorded configuration and CMake sources are available in config.json and the source archive.</p>
 <p><strong>Validation:</strong> every completed native tree passes iterative BST ordering, parent-link, acyclicity and reachability checks; all stored keys match their input slots. Resource boundaries and size ceilings are recorded per implementation and input family. These finite runs establish neither logarithmic height nor constant traversal work.</p>
 <h3>Largest completed native group per implementation and input family</h3><div class="table-wrap"><table><thead><tr><th>Input</th><th>Implementation</th><th>Keys</th>{"".join(f"<th>{escaped(title)}</th>" for title in METRICS.values())}<th>Insert seconds</th><th>Peak RSS MiB</th><th>Node bytes/key</th></tr></thead><tbody>{"".join(table_rows)}</tbody></table></div>
-<p><a href="./native-all-sequences.svg" download>Download all native charts as one SVG</a> · <a href="./source.zip" download>Download measured sources</a> · <a href="./trials.csv" download>All native timings and memory measurements</a></p>
-<details><summary>Native geometric repair · {len(metadata["orders"]) * len(METRICS)} standalone SVGs</summary>{"".join(figures)}</details></section>"""
+<p><a href="./{montage}" download>Download all native charts as one SVG</a> · <a href="./source.zip" download>Download measured sources</a> · <a href="./trials.csv" download>All native timings and memory measurements</a></p>
+{charts}</section>"""
 
 
 def generate_report(
@@ -364,27 +385,7 @@ def generate_report(
                 all_rows.append(
                     f'<tr data-order="{order}"><td>{order}</td><td>{escaped(strategy_label(metadata, strategy))}</td><td>{row["n"]:,}</td><td>{row["completed_trials"]}</td>{metric_cells(row)}</tr>'
                 )
-    canvas_height = chart_height(metadata["strategies"])
-    charts = []
-    overview_groups = []
-    for order_index, order in enumerate(metadata["orders"]):
-        order_figures = []
-        for metric_index, metric in enumerate(METRICS):
-            svg = chart_svg(results, order, metric)
-            filename = f"{order}-{metric}.svg"
-            (figures / filename).write_text(svg)
-            order_figures.append(
-                f'<figure>{svg}<figcaption><a href="./figures/{filename}" download>Download SVG</a></figcaption></figure>'
-            )
-            inner = svg[svg.index(">") + 1 : svg.rindex("</svg>")]
-            overview_groups.append(
-                f'<g transform="translate({metric_index * 720},{order_index * canvas_height})">{inner}</g>'
-            )
-        charts.append(
-            f'<section data-order="{order}"><h2>{order.capitalize()} input</h2><div class="charts">{"".join(order_figures)}</div></section>'
-        )
-    overview = f'<svg xmlns="http://www.w3.org/2000/svg" width="2880" height="{len(metadata["orders"]) * canvas_height}" viewBox="0 0 2880 {len(metadata["orders"]) * canvas_height}"><rect width="100%" height="100%" fill="white"/>{"".join(overview_groups)}</svg>'
-    (output / "all-sequences.svg").write_text(overview)
+    charts = write_charts(results, output)
     for filename in (
         "results.json",
         "summary.csv",
@@ -539,7 +540,7 @@ def generate_report(
 <p><label for="workload">Sequence type </label><select id="workload">{options}</select></p>
 {findings_section}
 <section><h2>Comparison at the largest common size: {common_label}</h2><p class="note">Averages are over completed trials; ± one standard error when repeats exist. {stream_note} Maximum final height is the largest final node depth observed across those trials, not height averaged across seeds or time. Larger partially completed groups are excluded.</p><div class="table-wrap"><table>{table_header}<tbody>{"".join(common_rows)}</tbody></table></div></section>
-{"".join(charts)}
+{charts}
 <section><h2>How large did each implementation reach?</h2><p>Trials advance through increasing sizes. Direct resource failures and probes stopped at a shared pipeline boundary are distinguished below. These are resource-limited measurements of these implementations and validators, not algorithmic size limits.</p>{boundary_note}<div class="table-wrap"><table><thead><tr><th>Input</th><th>Implementation</th><th>Largest complete size</th><th>Next boundary</th></tr></thead><tbody>{"".join(reach_rows)}</tbody></table></div></section>
 <details><summary>All {len(complete)} fully completed measurement groups</summary><div class="table-wrap"><table>{table_header}<tbody>{"".join(all_rows)}</tbody></table></div></details>
 <section><h2>Method and interpretation</h2><ul>

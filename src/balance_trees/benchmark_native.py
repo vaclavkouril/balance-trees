@@ -3,17 +3,15 @@
 import argparse
 import hashlib
 import json
-import os
-import platform
 import shutil
 import subprocess
-import sys
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from datetime import datetime, timezone
 from pathlib import Path
 from time import perf_counter
 
 from .benchmark_parallel import record_key, save_results
+from .benchmark_support import build_native_worker, compiler_version, machine_metadata
 from .experiment import derived_seed
 from .sequences import ORDERS, insertion_order
 
@@ -158,17 +156,6 @@ def run_native_comparison(
         shutil.copytree(native_source, output / "source/native")
         for name in ("benchmark_native.py", "benchmark_comparison_report.py"):
             shutil.copyfile(Path(__file__).with_name(name), output / "source" / name)
-        compiler = subprocess.run(
-            ["c++", "--version"], capture_output=True, text=True, check=True
-        )
-        cpu = next(
-            (
-                line.split(":", 1)[1].strip()
-                for line in Path("/proc/cpuinfo").read_text().splitlines()
-                if line.startswith("model name")
-            ),
-            platform.machine(),
-        )
         now = datetime.now(timezone.utc).isoformat()
         metadata = {
             **(original["metadata"] if original else settings),
@@ -187,7 +174,7 @@ def run_native_comparison(
             "native_settings": settings,
             "native_started_at": now,
             "baseline_sha256": baseline_hash,
-            "compiler": compiler.stdout.splitlines()[0],
+            "compiler": compiler_version(),
             "native_workers": workers,
             "native_build": "CMake Release; C++20; isolated subprocess workers; exact node reserve",
             "native_sampling": "Fixed input per order/size; SHA-256-derived rotation seeds consumed by buffered SplitMix64. Native strategies share seed values but consume different bit counts; Python MT streams are not paired.",
@@ -205,10 +192,7 @@ def run_native_comparison(
             metadata.update(
                 started_at=now,
                 workers=workers,
-                python=sys.version,
-                platform=platform.platform(),
-                cpu=cpu,
-                logical_cpus=os.cpu_count(),
+                **machine_metadata(),
                 source_sha256={
                     str(path.relative_to(output / "source")): hashlib.sha256(
                         path.read_bytes()
@@ -257,10 +241,7 @@ def run_native_comparison(
             raise ValueError(
                 "Input generator or seed derivation differs from source snapshot"
             )
-    compiler = subprocess.run(
-        ["c++", "--version"], capture_output=True, text=True, check=True
-    )
-    if compiler.stdout.splitlines()[0] != metadata["compiler"]:
+    if compiler_version() != metadata["compiler"]:
         raise ValueError("Compiler differs from the recorded native run")
     for relative, digest in metadata["native_source_sha256"].items():
         if (
@@ -269,22 +250,7 @@ def run_native_comparison(
         ):
             raise ValueError("Archived native source differs from recorded checksum")
     build = output / "build"
-    subprocess.run(
-        [
-            "cmake",
-            "-S",
-            str(output / "source/native"),
-            "-B",
-            str(build),
-            "-DCMAKE_BUILD_TYPE=Release",
-            "-DBUILD_TESTING=OFF",
-        ],
-        check=True,
-    )
-    subprocess.run(
-        ["cmake", "--build", str(build), "--target", "native-benchmark", "-j2"],
-        check=True,
-    )
+    build_native_worker(output / "source/native", build, "native-benchmark")
     records = {}
     for line in (output / "trials.jsonl").read_text().splitlines():
         row = json.loads(line)

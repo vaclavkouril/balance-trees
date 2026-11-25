@@ -5,16 +5,20 @@ import hashlib
 import json
 import math
 import os
-import platform
 import shutil
 import subprocess
-import sys
 from collections import deque
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from datetime import datetime, timezone
 from pathlib import Path
 from time import perf_counter
 
+from .benchmark_support import (
+    build_native_worker,
+    compiler_version,
+    machine_metadata,
+    write_json,
+)
 from .experiment import derived_seed
 
 WORKLOADS = (
@@ -117,12 +121,6 @@ def execute_trial(executable: Path, request: dict, timeout: float) -> dict:
     return row
 
 
-def write_json(path: Path, value: dict) -> None:
-    temporary = path.with_suffix(path.suffix + ".new")
-    temporary.write_text(json.dumps(value, indent=2, allow_nan=False) + "\n")
-    temporary.replace(path)
-
-
 def save_results(output: Path, metadata: dict, records: dict) -> dict:
     results = {"metadata": metadata, "trials": sorted(records.values(), key=record_key)}
     write_json(output / "config.json", metadata)
@@ -165,17 +163,6 @@ def prepare_run(output: Path, settings: dict) -> dict:
         "The Python runner also regenerates a full suite into a fresh directory:\n"
         "PYTHONPATH=src python3 -m balance_trees.benchmark_updates --help\n"
     )
-    compiler = subprocess.run(
-        ["c++", "--version"], capture_output=True, text=True, check=True
-    )
-    cpu = next(
-        (
-            line.split(":", 1)[1].strip()
-            for line in Path("/proc/cpuinfo").read_text().splitlines()
-            if line.startswith("model name")
-        ),
-        platform.machine(),
-    )
     metadata = {
         "schema_version": 1,
         "settings": settings,
@@ -183,12 +170,9 @@ def prepare_run(output: Path, settings: dict) -> dict:
         "strategy": "geometric-full-bst",
         "probability": "3/4",
         "started_at": datetime.now(timezone.utc).isoformat(),
-        "python": sys.version,
-        "platform": platform.platform(),
-        "cpu": cpu,
-        "logical_cpus": os.cpu_count(),
+        **machine_metadata(),
         "cpu_affinity_count": len(os.sched_getaffinity(0)),
-        "compiler": compiler.stdout.splitlines()[0],
+        "compiler": compiler_version(),
         "build": "CMake Release (-O3 -DNDEBUG), C++20; pre-reserved compact node arrays",
         "source_sha256": source_hashes(source),
         "execution": (
@@ -233,22 +217,9 @@ def build_worker(output: Path) -> Path:
     executable = build / "native-update-benchmark"
     if executable.is_file():
         return executable
-    commands = (
-        [
-            "cmake",
-            "-S",
-            str(output / "source/src/native"),
-            "-B",
-            str(build),
-            "-DCMAKE_BUILD_TYPE=Release",
-            "-DBUILD_TESTING=OFF",
-        ],
-        ["cmake", "--build", str(build), "--target", "native-update-benchmark", "-j2"],
+    return build_native_worker(
+        output / "source/src/native", build, "native-update-benchmark"
     )
-    with (output / "build.log").open("w") as log:
-        for command in commands:
-            subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, check=True)
-    return executable
 
 
 def run_updates(

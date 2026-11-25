@@ -271,6 +271,9 @@ are not paired, despite matching seed values.
 The report includes a sixth overlay curve, a native implementation appendix,
 native insertion times and memory, 28 native-only SVGs and
 `native-all-sequences.svg`, alongside the 28 combined figures and overview.
+For a report containing only C++ strategies, the main charts already contain
+the complete comparison, so the report writes only those 28 SVGs and
+`all-sequences.svg`.
 Native insertion timing excludes parsing, startup, reservation and validation;
 there is no comparable Python timing in the original experiment. Native RSS uses
 Linux `/proc/self/status` VmHWM to exclude the launcher's pre-exec RSS history.

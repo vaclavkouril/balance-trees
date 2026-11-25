@@ -16,7 +16,11 @@ class NativeComparisonReportTests(unittest.TestCase):
             small_trials=1,
             repeat_through=16,
             seed=2026,
+            workers=1,
+            memory_mib=256,
+            timeout_seconds=20,
             cpu="Test CPU",
+            python="3.11",
             compiler="Test C++20 compiler",
             native_settings=dict(memory_mib=256, timeout_seconds=20),
             native_sampling="SplitMix64 with buffered fair bits.",
@@ -92,7 +96,19 @@ class NativeComparisonReportTests(unittest.TestCase):
                 self.assertEqual(len(circles), 4)
                 self.assertEqual(len({dot.attrib["fill"] for dot in circles}), 2)
                 self.assertIn("p = 3/4", "".join(svg.getroot().itertext()))
-            ElementTree.parse(report.parent / "native-all-sequences.svg")
+            ElementTree.parse(report.parent / "all-sequences.svg")
+            self.assertEqual(len(list((report.parent / "figures").glob("*.svg"))), 8)
+            self.assertEqual(text.count("<figure>"), 8)
+            self.assertFalse((report.parent / "native-all-sequences.svg").exists())
+            # Old standalone reports wrote a second copy of every native chart.
+            for stale in (
+                "native-all-sequences.svg",
+                "figures/native-random-mean_depth.svg",
+            ):
+                (report.parent / stale).write_text("superseded chart")
+            generate_report(source)
+            self.assertFalse((report.parent / "native-all-sequences.svg").exists())
+            self.assertFalse(list((report.parent / "figures").glob("native-*.svg")))
 
     def test_native_suffix_uses_catalog_for_additional_strategy_labels(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -101,9 +117,26 @@ class NativeComparisonReportTests(unittest.TestCase):
             report = generate_report(source)
             self.assertIn("Custom native strategy", report.read_text())
             self.assertIn("This standalone C++ run", report.read_text())
-            svg = (report.parent / "figures/native-random-mean_depth.svg").read_text()
+            svg = (report.parent / "figures/random-mean_depth.svg").read_text()
             self.assertIn("Custom native strategy", svg)
             self.assertNotIn("proof (PDF)", report.read_text())
+
+    def test_combined_report_keeps_distinct_native_subset_charts(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "run"
+            self.write_results(
+                source, ["geometric-target-local-repair", "custom-native"]
+            )
+            report = generate_report(source)
+            self.assertEqual(report.read_text().count("<figure>"), 16)
+            self.assertEqual(len(list((report.parent / "figures").glob("*.svg"))), 16)
+            ns = {"svg": "http://www.w3.org/2000/svg"}
+            for prefix, count in (("", 4), ("native-", 2)):
+                svg = ElementTree.parse(
+                    report.parent / f"figures/{prefix}random-mean_depth.svg"
+                )
+                self.assertEqual(len(svg.findall("svg:circle", ns)), count)
+                ElementTree.parse(report.parent / f"{prefix}all-sequences.svg")
 
     def test_parallel_native_report_uses_the_recorded_worker_limit(self):
         with tempfile.TemporaryDirectory() as directory:

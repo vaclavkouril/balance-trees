@@ -5,7 +5,6 @@ import hashlib
 import heapq
 import json
 import os
-import platform
 import resource
 import shutil
 import subprocess
@@ -18,6 +17,7 @@ from pathlib import Path
 from time import perf_counter
 
 from .benchmark import summarize, write_csv
+from .benchmark_support import machine_metadata, write_json
 from .experiment import derived_seed
 from .measurement import run_trial
 from .sequences import ORDERS, insertion_order
@@ -130,8 +130,8 @@ def save_results(output: Path, metadata: dict, records: dict) -> dict:
     results = dict(
         metadata=metadata, summaries=summaries_with_maximum_height(rows), trials=rows
     )
-    (output / "config.json").write_text(json.dumps(metadata, indent=2) + "\n")
-    (output / "results.json").write_text(json.dumps(results, indent=2) + "\n")
+    write_json(output / "config.json", metadata)
+    write_json(output / "results.json", results)
     write_csv(output / "summary.csv", results["summaries"])
     write_csv(
         output / "trials.csv",
@@ -200,21 +200,10 @@ def run_comparison(
             str(path.relative_to(source)): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sorted(source.rglob("*.py"))
         }
-        cpu = next(
-            (
-                line.split(":", 1)[1].strip()
-                for line in Path("/proc/cpuinfo").read_text().splitlines()
-                if line.startswith("model name")
-            ),
-            platform.machine(),
-        )
         metadata = dict(
             **settings,
             started_at=datetime.now(timezone.utc).isoformat(),
-            python=sys.version,
-            platform=platform.platform(),
-            cpu=cpu,
-            logical_cpus=os.cpu_count(),
+            **machine_metadata(),
             source_sha256=hashes,
             execution="Parallel isolated Python subprocesses; no relative timing claims.",
             sampling="Fixed input per size; paired SHA-256-derived rotation seeds. SE conditional on that input.",
@@ -237,7 +226,7 @@ def run_comparison(
                 ),
             },
         )
-        existing_config.write_text(json.dumps(metadata, indent=2) + "\n")
+        write_json(existing_config, metadata)
     checkpoint = output / "trials.jsonl"
     records = {}
     if checkpoint.exists():

@@ -1,9 +1,9 @@
 // Linux isolated benchmark worker. Input parsing and validation are not timed.
 #include "balance_trees/tree.hpp"
+#include "benchmark_support.hpp"
 
 #include <algorithm>
 #include <chrono>
-#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <stdexcept>
@@ -52,16 +52,7 @@ int main(int argc, char** argv) {
         if (tree.tree().size() != values.size()) throw std::logic_error("lost keys");
         for (std::size_t i = 0; i < values.size(); ++i)
             if (tree.tree().key(static_cast<Index>(i)) != values[i]) throw std::logic_error("changed key");
-        // VmHWM belongs to this executable's address space. ru_maxrss can retain
-        // a larger high-water mark from before exec (the Python launcher).
-        std::ifstream status("/proc/self/status");
-        std::string field, ignored;
-        std::uint64_t peak_rss_kib = 0;
-        while (status >> field) {
-            if (field == "VmHWM:") { status >> peak_rss_kib; break; }
-            std::getline(status, ignored);
-        }
-        if (peak_rss_kib == 0) throw std::runtime_error("cannot measure VmHWM");
+        const auto peak_rss_kib = benchmark::peak_rss_kib();
         const double count = n;
         std::cout << std::setprecision(17)
                   << "{\"mean_depth\":" << depth_sum / count << ",\"height\":" << height

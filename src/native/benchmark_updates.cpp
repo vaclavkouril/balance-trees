@@ -2,12 +2,12 @@
 // Generation, allocation, preload and exact checkpoint validation are not part
 // of measured update time. No operation depends on the randomized tree shape.
 #include "balance_trees/tree.hpp"
+#include "benchmark_support.hpp"
 
 #include <algorithm>
 #include <charconv>
 #include <chrono>
 #include <ctime>
-#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <numeric>
@@ -178,22 +178,6 @@ std::vector<std::uint64_t> checkpoint_positions(std::uint64_t n, bool grow_shrin
     return result;
 }
 
-std::uint64_t peak_rss_kib() {
-    // VmHWM belongs to this executable, unlike ru_maxrss inherited across exec.
-    std::ifstream status("/proc/self/status");
-    std::string field, ignored;
-    while (status >> field) {
-        if (field == "VmHWM:") {
-            std::uint64_t value = 0;
-            status >> value;
-            if (value) return value;
-            break;
-        }
-        std::getline(status, ignored);
-    }
-    throw std::runtime_error("cannot measure VmHWM");
-}
-
 double seconds_since(Clock::time_point start) {
     return std::chrono::duration<double>(Clock::now() - start).count();
 }
@@ -335,7 +319,7 @@ int main(int argc, char** argv) {
                   << ",\"elapsed_seconds\":" << elapsed_seconds << ",\"cpu_seconds\":" << cpu_seconds
                   << ",\"preload_seconds\":" << preload_seconds << ",\"worker_seconds\":" << seconds_since(worker_start)
                   << ",\"node_storage_bytes\":" << tree.tree().storage_bytes()
-                  << ",\"peak_rss_mib\":" << peak_rss_kib() / 1024.0 << ",\"checkpoints\":[";
+                  << ",\"peak_rss_mib\":" << benchmark::peak_rss_kib() / 1024.0 << ",\"checkpoints\":[";
         for (std::size_t index = 0; index < checkpoints.size(); ++index) {
             const auto& point = checkpoints[index];
             if (index) std::cout << ',';

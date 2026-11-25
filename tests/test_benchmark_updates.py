@@ -189,8 +189,8 @@ class UpdateRunnerTests(unittest.TestCase):
             seed=2026,
         )
         compiler = patch(
-            "balance_trees.benchmark_updates.subprocess.run",
-            return_value=subprocess.CompletedProcess([], 0, "test compiler\n", ""),
+            "balance_trees.benchmark_updates.compiler_version",
+            return_value="test compiler",
         )
         compiler.start()
         self.addCleanup(compiler.stop)

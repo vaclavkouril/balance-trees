@@ -18,11 +18,15 @@
   invariant checks focused; explain non-obvious balancing rules in comments.
 - Add deterministic tests for behavior changes and regressions. Cover empty trees,
   duplicates, insertion, lookup, and structural invariants after mutations.
-  Deletion is outside the current insertion-only implementation.
+  The C++ full BST also supports deletion; cover cursor refreshes and sweep wraps.
+  Python strategies remain insertion-only.
 - Keep generated benchmark results out of source control. Use fresh output
   directories, record seeds and methodology, and retain results only when
-  requested. Support performance claims with reproducible inputs and explain
-  complexity tradeoffs.
+  requested. The published report bundles under `site/dist/benchmarks/` are the
+  intentional exception. Preserve their measurements and frozen source archives;
+  remove temporary inputs, superseded previews, and build caches after use.
+  Support performance claims with reproducible inputs and explain complexity
+  tradeoffs.
 - Keep setup and layout in `README.md`; see `docs/benchmarks.md` and
   `benchmarks/README.md` for benchmark commands. Discover files with
   `rg --files --hidden -g '!.git'`.
