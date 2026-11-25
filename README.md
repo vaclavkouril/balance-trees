@@ -1,11 +1,19 @@
 # Experimental balance trees
 
-Insertion-only binary search tree experiments in Python 3.11+ and browser
-JavaScript. Nodes contain keys and structural pointers; policy state and
-measurement counters live outside the tree. Deletion is not implemented.
+Binary search tree experiments in Python 3.11+, browser JavaScript, and C++20.
+Python and JavaScript support insertion only; the native C++ implementation also
+supports the full insertion/deletion algorithm from Chapter 6. Nodes contain
+keys and structural pointers; policy state and measurement counters live outside
+the tree.
 
 ## Strategies
 
+- `geometric-full-bst` (C++ only): Chapter 6 with exact probability 3/4,
+  successor-based deletion, two ordered refreshes per successful nonempty
+  deletion, and a direct minimum-to-root move at each sweep boundary. Uses at
+  most two rotations per insertion and four per deletion. See
+  [the expanded explanation](docs/proofs/full-bst-explained.pdf) and
+  [native usage](docs/native.md#full-bst-insertion-deletion-and-search).
 - `random-level`: sample a vertex uniformly from the smallest perfect tree
   containing the current node count. Promote the inserted leaf to that depth
   only if it is deeper.
@@ -56,12 +64,19 @@ node tests/test_showcase_browser.mjs
 node tests/test_large_showcase.mjs
 ```
 
-The local visualizer remains at `http://127.0.0.1:8000`. Its **C++ probability
-benchmarks** link opens the [252-trial geometric comparison](src/balance_trees/showcase/site/dist/benchmarks/geometric-native/index.html),
-with both strategies measured through 16,777,216 keys across seven input
-families. The [earlier comparison](src/balance_trees/showcase/site/dist/benchmarks/index.html)
-remains available through **Earlier benchmark results**. Both reports are
-included in the static web build. Insertion traces mark comparisons, up/down
+The local visualizer remains at `http://127.0.0.1:8000`. Its **Mixed insert/delete
+benchmarks** link opens the [full BST report](src/balance_trees/showcase/site/dist/benchmarks/full-bst/index.html),
+with five update workloads, height traces, CPU and wall timings, rotation counts,
+memory, downloadable measurements, and the explained proof. The
+[online mixed-operation report](https://vaclavkouril.github.io/balance-trees/benchmarks/full-bst/)
+uses the same bundle. The
+[full BST insertion comparison](src/balance_trees/showcase/site/dist/benchmarks/full-bst-insertion/index.html)
+covers all seven insertion families and the three native geometric policies.
+Both suites reach 16,777,216 keys and record concurrency, seeds and measured sources.
+The [previous probability comparison](src/balance_trees/showcase/site/dist/benchmarks/geometric-native/index.html)
+and [earlier comparison](src/balance_trees/showcase/site/dist/benchmarks/index.html)
+remain available. All four reports are included in the static web build.
+Insertion traces mark comparisons, up/down
 movement and the original inserted node. See [the visualizer guide](docs/showcase.md).
 
 Optional editable installation and formatting:
@@ -90,7 +105,7 @@ See [benchmark methodology](docs/benchmarks.md) and
 
 - `src/balance_trees/`: BST, rotations, strategies, measurements, CLI tools.
 - `src/native/`: alternate C++20 implementation with compact indexed nodes,
-  geometric repair, and an extensible strategy factory; see
+  geometric repair, full BST deletion, and an extensible strategy factory; see
   [native build and parity testing](docs/native.md).
 - `src/balance_trees/showcase/`: local trace API and browser visualizer.
 - `tests/`: correctness, sampling, invariants, CLI and browser checks.

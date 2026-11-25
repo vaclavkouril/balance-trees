@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 462" role="img" aria-labelledby="trace-random-churn-title trace-random-churn-desc">
+<title id="trace-random-churn-title">Random churn · 16M starting keys</title>
+<desc id="trace-random-churn-desc">One recorded seed at this workload&#x27;s largest completed size. Upper panel: live keys on a log2(n+1) scale. Lower panel: tree height at validation checkpoints, not after every operation. The empty tree has height -1 and is drawn at zero. Joining segments are guides between observations.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#314654}.grid{stroke:#e4e9e9}.muted{fill:#607482}</style>
+<rect width="720" height="462" fill="white" rx="12"/>
+<text x="24" y="31" style="font-size:18px;font-weight:650">Random churn · 16M starting keys</text>
+<text class="muted" x="24" y="53">Seed 3418009155167146455 · 33,554,432 public operations · checkpoint samples</text>
+<text x="24" y="80">Live keys · log₂(n + 1) scale</text>
+<path class="grid" d="M74,216.00h618"/><text x="65" y="220.00" text-anchor="end">0</text>
+<path class="grid" d="M74,182.15h618"/><text x="65" y="186.15" text-anchor="end">128</text>
+<path class="grid" d="M74,148.40h618"/><text x="65" y="152.40" text-anchor="end">16k</text>
+<path class="grid" d="M74,114.60h618"/><text x="65" y="118.60" text-anchor="end">2M</text>
+<polyline points="74.00,100.11 228.50,100.11 383.00,100.11 537.50,100.11 692.00,100.11" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="74.00" cy="100.11" r="3" fill="#176b89"><title>After 0 operations: 16,777,216 live keys; height 56; mean depth 29.031</title></circle>
+<circle cx="228.50" cy="100.11" r="3" fill="#176b89"><title>After 8,388,608 operations: 16,777,216 live keys; height 71; mean depth 34.616</title></circle>
+<circle cx="383.00" cy="100.11" r="3" fill="#176b89"><title>After 16,777,216 operations: 16,777,216 live keys; height 68; mean depth 36.239</title></circle>
+<circle cx="537.50" cy="100.11" r="3" fill="#176b89"><title>After 25,165,824 operations: 16,777,216 live keys; height 75; mean depth 36.055</title></circle>
+<circle cx="692.00" cy="100.11" r="3" fill="#176b89"><title>After 33,554,432 operations: 16,777,216 live keys; height 67; mean depth 32.306</title></circle>
+<text x="74.00" y="237" text-anchor="middle">0%</text>
+<text x="228.50" y="237" text-anchor="middle">25%</text>
+<text x="383.00" y="237" text-anchor="middle">50%</text>
+<text x="537.50" y="237" text-anchor="middle">75%</text>
+<text x="692.00" y="237" text-anchor="middle">100%</text>
+<text x="24" y="258">Tree height · edges</text>
+<path class="grid" d="M74,394.00h618"/><text x="65" y="398.00" text-anchor="end">0</text>
+<path class="grid" d="M74,363.00h618"/><text x="65" y="367.00" text-anchor="end">20</text>
+<path class="grid" d="M74,332.00h618"/><text x="65" y="336.00" text-anchor="end">40</text>
+<path class="grid" d="M74,301.00h618"/><text x="65" y="305.00" text-anchor="end">60</text>
+<path class="grid" d="M74,270.00h618"/><text x="65" y="274.00" text-anchor="end">80</text>
+<polyline points="74.00,307.47 228.50,284.29 383.00,288.93 537.50,278.11 692.00,290.47" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="74.00" cy="307.47" r="3" fill="#b45f22"><title>After 0 operations: 16,777,216 live keys; height 56; mean depth 29.031</title></circle>
+<circle cx="228.50" cy="284.29" r="3" fill="#b45f22"><title>After 8,388,608 operations: 16,777,216 live keys; height 71; mean depth 34.616</title></circle>
+<circle cx="383.00" cy="288.93" r="3" fill="#b45f22"><title>After 16,777,216 operations: 16,777,216 live keys; height 68; mean depth 36.239</title></circle>
+<circle cx="537.50" cy="278.11" r="3" fill="#b45f22"><title>After 25,165,824 operations: 16,777,216 live keys; height 75; mean depth 36.055</title></circle>
+<circle cx="692.00" cy="290.47" r="3" fill="#b45f22"><title>After 33,554,432 operations: 16,777,216 live keys; height 67; mean depth 32.306</title></circle>
+<text x="74.00" y="415" text-anchor="middle">0%</text>
+<text x="228.50" y="415" text-anchor="middle">25%</text>
+<text x="383.00" y="415" text-anchor="middle">50%</text>
+<text x="537.50" y="415" text-anchor="middle">75%</text>
+<text x="692.00" y="415" text-anchor="middle">100%</text>
+<text class="muted" x="74" y="443">Progress through the measured public operations · preload excluded</text></svg>

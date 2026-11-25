@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 467" role="img" aria-labelledby="mean_depth-title mean_depth-desc">
+<title id="mean_depth-title">Mean final node depth</title>
+<desc id="mean_depth-desc">Horizontal axis: starting live keys, logarithmic scale. Vertical axis: edges from the root, linear scale. Each point averages completed trials; whiskers show one sample standard deviation when repeated seeds exist. Failed groups leave gaps, not zeros.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#314654}.grid{stroke:#e4e9e9}.muted{fill:#607482}</style>
+<rect width="720" height="467" fill="white" rx="12"/>
+<text x="24" y="31" style="font-size:18px;font-weight:650">Mean final node depth</text>
+<text class="muted" x="24" y="53">edges from the root</text>
+<path class="grid" d="M74,311.00h618"/><text x="64" y="315.00" text-anchor="end">0</text>
+<path class="grid" d="M74,264.20h618"/><text x="64" y="268.20" text-anchor="end">8.35</text>
+<path class="grid" d="M74,217.40h618"/><text x="64" y="221.40" text-anchor="end">16.7</text>
+<path class="grid" d="M74,170.60h618"/><text x="64" y="174.60" text-anchor="end">25.1</text>
+<path class="grid" d="M74,123.80h618"/><text x="64" y="127.80" text-anchor="end">33.4</text>
+<path class="grid" d="M74,77.00h618"/><text x="64" y="81.00" text-anchor="end">41.8</text>
+<path class="grid" d="M74.00,77v234"/><text x="74.00" y="333" text-anchor="middle">1k</text>
+<path class="grid" d="M250.57,77v234"/><text x="250.57" y="333" text-anchor="middle">16k</text>
+<path class="grid" d="M427.14,77v234"/><text x="427.14" y="333" text-anchor="middle">256k</text>
+<path class="grid" d="M515.43,77v234"/><text x="515.43" y="333" text-anchor="middle">1M</text>
+<path class="grid" d="M603.71,77v234"/><text x="603.71" y="333" text-anchor="middle">4M</text>
+<path class="grid" d="M692.00,77v234"/><text x="692.00" y="333" text-anchor="middle">16M</text>
+<text class="muted" x="74" y="355">Starting live keys (k = 1,024; M = 1,048,576) · whiskers ±1 SD</text>
+<g data-series="random-churn">
+<path d="M74.00,238.63V230.23" stroke="#176b89"/>
+<circle cx="74.00" cy="234.43" r="3.5" fill="#176b89"><title>Random churn: n=1,024; 13.667 edges from the root; 3 completed trials</title></circle>
+<path d="M74.00,234.43L250.57,205.17" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<path d="M250.57,209.81V200.53" stroke="#176b89"/>
+<circle cx="250.57" cy="205.17" r="3.5" fill="#176b89"><title>Random churn: n=16,384; 18.8888 edges from the root; 3 completed trials</title></circle>
+<path d="M250.57,205.17L427.14,167.09" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="167.09" r="3.5" fill="#176b89"><title>Random churn: n=262,144; 25.6846 edges from the root; 1 completed trials</title></circle>
+<path d="M427.14,167.09L515.43,156.80" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="156.80" r="3.5" fill="#176b89"><title>Random churn: n=1,048,576; 27.5215 edges from the root; 1 completed trials</title></circle>
+<path d="M515.43,156.80L603.71,141.14" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="141.14" r="3.5" fill="#176b89"><title>Random churn: n=4,194,304; 30.3166 edges from the root; 1 completed trials</title></circle>
+<path d="M603.71,141.14L692.00,129.99" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="129.99" r="3.5" fill="#176b89"><title>Random churn: n=16,777,216; 32.3065 edges from the root; 1 completed trials</title></circle>
+<path d="M24,388h21" stroke="#176b89" stroke-width="3"/><text x="52" y="392">Random churn</text></g>
+<g data-series="ascending-churn">
+<path d="M74.00,232.03V228.58" stroke="#b45f22"/>
+<circle cx="74.00" cy="230.30" r="3.5" fill="#b45f22"><title>Ascending churn: n=1,024; 14.403 edges from the root; 3 completed trials</title></circle>
+<path d="M74.00,230.30L250.57,200.91" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<path d="M250.57,206.82V195.00" stroke="#b45f22"/>
+<circle cx="250.57" cy="200.91" r="3.5" fill="#b45f22"><title>Ascending churn: n=16,384; 19.6491 edges from the root; 3 completed trials</title></circle>
+<path d="M250.57,200.91L427.14,171.30" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="171.30" r="3.5" fill="#b45f22"><title>Ascending churn: n=262,144; 24.9347 edges from the root; 1 completed trials</title></circle>
+<path d="M427.14,171.30L515.43,147.58" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="147.58" r="3.5" fill="#b45f22"><title>Ascending churn: n=1,048,576; 29.1668 edges from the root; 1 completed trials</title></circle>
+<path d="M515.43,147.58L603.71,136.26" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="136.26" r="3.5" fill="#b45f22"><title>Ascending churn: n=4,194,304; 31.1887 edges from the root; 1 completed trials</title></circle>
+<path d="M603.71,136.26L692.00,123.97" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="123.97" r="3.5" fill="#b45f22"><title>Ascending churn: n=16,777,216; 33.3824 edges from the root; 1 completed trials</title></circle>
+<path d="M369,388h21" stroke="#b45f22" stroke-width="3"/><text x="397" y="392">Ascending churn</text></g>
+<g data-series="descending-churn">
+<path d="M74.00,215.62V204.27" stroke="#7153a0"/>
+<circle cx="74.00" cy="209.94" r="3.5" fill="#7153a0"><title>Descending churn: n=1,024; 18.0368 edges from the root; 3 completed trials</title></circle>
+<path d="M74.00,209.94L250.57,175.31" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<path d="M250.57,176.60V174.03" stroke="#7153a0"/>
+<circle cx="250.57" cy="175.31" r="3.5" fill="#7153a0"><title>Descending churn: n=16,384; 24.2179 edges from the root; 3 completed trials</title></circle>
+<path d="M250.57,175.31L427.14,132.07" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="132.07" r="3.5" fill="#7153a0"><title>Descending churn: n=262,144; 31.936 edges from the root; 1 completed trials</title></circle>
+<path d="M427.14,132.07L515.43,122.57" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="122.57" r="3.5" fill="#7153a0"><title>Descending churn: n=1,048,576; 33.6319 edges from the root; 1 completed trials</title></circle>
+<path d="M515.43,122.57L603.71,115.24" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="115.24" r="3.5" fill="#7153a0"><title>Descending churn: n=4,194,304; 34.9392 edges from the root; 1 completed trials</title></circle>
+<path d="M603.71,115.24L692.00,102.07" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="102.07" r="3.5" fill="#7153a0"><title>Descending churn: n=16,777,216; 37.2902 edges from the root; 1 completed trials</title></circle>
+<path d="M24,411h21" stroke="#7153a0" stroke-width="3"/><text x="52" y="415">Descending churn</text></g>
+<g data-series="grow-shrink">
+<path d="M74.00,254.41V251.89" stroke="#237957"/>
+<circle cx="74.00" cy="253.15" r="3.5" fill="#237957"><title>Shrink and regrow: n=1,024; 10.3249 edges from the root; 3 completed trials</title></circle>
+<path d="M74.00,253.15L250.57,222.73" stroke="#237957" stroke-width="2.4" fill="none"/>
+<path d="M250.57,223.78V221.68" stroke="#237957"/>
+<circle cx="250.57" cy="222.73" r="3.5" fill="#237957"><title>Shrink and regrow: n=16,384; 15.7547 edges from the root; 3 completed trials</title></circle>
+<path d="M250.57,222.73L427.14,192.67" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="192.67" r="3.5" fill="#237957"><title>Shrink and regrow: n=262,144; 21.1204 edges from the root; 1 completed trials</title></circle>
+<path d="M427.14,192.67L515.43,175.47" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="175.47" r="3.5" fill="#237957"><title>Shrink and regrow: n=1,048,576; 24.189 edges from the root; 1 completed trials</title></circle>
+<path d="M515.43,175.47L603.71,162.60" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="162.60" r="3.5" fill="#237957"><title>Shrink and regrow: n=4,194,304; 26.4876 edges from the root; 1 completed trials</title></circle>
+<path d="M603.71,162.60L692.00,144.64" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="144.64" r="3.5" fill="#237957"><title>Shrink and regrow: n=16,777,216; 29.6931 edges from the root; 1 completed trials</title></circle>
+<path d="M369,411h21" stroke="#237957" stroke-width="3"/><text x="397" y="415">Shrink and regrow</text></g>
+<g data-series="read-heavy">
+<path d="M74.00,237.82V232.18" stroke="#be4263"/>
+<circle cx="74.00" cy="235.00" r="3.5" fill="#be4263"><title>Read-heavy churn: n=1,024; 13.5648 edges from the root; 3 completed trials</title></circle>
+<path d="M74.00,235.00L250.57,207.16" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<path d="M250.57,209.87V204.45" stroke="#be4263"/>
+<circle cx="250.57" cy="207.16" r="3.5" fill="#be4263"><title>Read-heavy churn: n=16,384; 18.534 edges from the root; 3 completed trials</title></circle>
+<path d="M250.57,207.16L427.14,174.45" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="174.45" r="3.5" fill="#be4263"><title>Read-heavy churn: n=262,144; 24.372 edges from the root; 1 completed trials</title></circle>
+<path d="M427.14,174.45L515.43,149.70" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="149.70" r="3.5" fill="#be4263"><title>Read-heavy churn: n=1,048,576; 28.7885 edges from the root; 1 completed trials</title></circle>
+<path d="M515.43,149.70L603.71,144.96" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="144.96" r="3.5" fill="#be4263"><title>Read-heavy churn: n=4,194,304; 29.6347 edges from the root; 1 completed trials</title></circle>
+<path d="M603.71,144.96L692.00,130.24" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="130.24" r="3.5" fill="#be4263"><title>Read-heavy churn: n=16,777,216; 32.2624 edges from the root; 1 completed trials</title></circle>
+<path d="M24,434h21" stroke="#be4263" stroke-width="3"/><text x="52" y="438">Read-heavy churn</text></g>
+</svg>

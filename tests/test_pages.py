@@ -14,7 +14,12 @@ from balance_trees.showcase.build import (
 )
 from balance_trees.showcase.server import STATIC
 
-REPORT_PAGES = ("benchmarks/index.html", "benchmarks/geometric-native/index.html")
+REPORT_PAGES = (
+    "benchmarks/index.html",
+    "benchmarks/geometric-native/index.html",
+    "benchmarks/full-bst/index.html",
+    "benchmarks/full-bst-insertion/index.html",
+)
 
 
 class AssetReferences(HTMLParser):
@@ -71,6 +76,27 @@ class PagesBuildTests(unittest.TestCase):
             )
             self.assertTrue(
                 (output / "benchmarks/geometric-native/source.zip").is_file()
+            )
+            self.assertIn(
+                "Full BST · mixed-update benchmarks",
+                (output / "benchmarks/full-bst/index.html").read_text(),
+            )
+            for report in ("full-bst", "full-bst-insertion"):
+                for filename in (
+                    "source.zip",
+                    "results.json",
+                    "summary.csv",
+                    "trials.csv",
+                ):
+                    self.assertTrue(
+                        (output / "benchmarks" / report / filename).is_file()
+                    )
+            self.assertEqual(
+                (output / "benchmarks/full-bst/full-bst-explained.pdf").read_bytes(),
+                (
+                    Path(__file__).resolve().parents[1]
+                    / "docs/proofs/full-bst-explained.pdf"
+                ).read_bytes(),
             )
 
     def test_staged_assets_resolve_under_a_github_project_path(self):

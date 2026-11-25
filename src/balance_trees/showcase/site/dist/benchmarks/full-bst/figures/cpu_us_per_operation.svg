@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 467" role="img" aria-labelledby="cpu_us_per_operation-title cpu_us_per_operation-desc">
+<title id="cpu_us_per_operation-title">CPU time per public operation</title>
+<desc id="cpu_us_per_operation-desc">Horizontal axis: starting live keys, logarithmic scale. Vertical axis: µs / operation, linear scale. Each point averages completed trials; whiskers show one sample standard deviation when repeated seeds exist. Failed groups leave gaps, not zeros.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#314654}.grid{stroke:#e4e9e9}.muted{fill:#607482}</style>
+<rect width="720" height="467" fill="white" rx="12"/>
+<text x="24" y="31" style="font-size:18px;font-weight:650">CPU time per public operation</text>
+<text class="muted" x="24" y="53">µs / operation</text>
+<path class="grid" d="M74,311.00h618"/><text x="64" y="315.00" text-anchor="end">0</text>
+<path class="grid" d="M74,264.20h618"/><text x="64" y="268.20" text-anchor="end">0.784</text>
+<path class="grid" d="M74,217.40h618"/><text x="64" y="221.40" text-anchor="end">1.57</text>
+<path class="grid" d="M74,170.60h618"/><text x="64" y="174.60" text-anchor="end">2.35</text>
+<path class="grid" d="M74,123.80h618"/><text x="64" y="127.80" text-anchor="end">3.14</text>
+<path class="grid" d="M74,77.00h618"/><text x="64" y="81.00" text-anchor="end">3.92</text>
+<path class="grid" d="M74.00,77v234"/><text x="74.00" y="333" text-anchor="middle">1k</text>
+<path class="grid" d="M250.57,77v234"/><text x="250.57" y="333" text-anchor="middle">16k</text>
+<path class="grid" d="M427.14,77v234"/><text x="427.14" y="333" text-anchor="middle">256k</text>
+<path class="grid" d="M515.43,77v234"/><text x="515.43" y="333" text-anchor="middle">1M</text>
+<path class="grid" d="M603.71,77v234"/><text x="603.71" y="333" text-anchor="middle">4M</text>
+<path class="grid" d="M692.00,77v234"/><text x="692.00" y="333" text-anchor="middle">16M</text>
+<text class="muted" x="74" y="355">Starting live keys (k = 1,024; M = 1,048,576) · whiskers ±1 SD</text>
+<g data-series="random-churn">
+<path d="M74.00,289.11V278.73" stroke="#176b89"/>
+<circle cx="74.00" cy="283.92" r="3.5" fill="#176b89"><title>Random churn: n=1,024; 0.453613 µs / operation; 3 completed trials</title></circle>
+<path d="M74.00,283.92L250.57,268.13" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<path d="M250.57,270.72V265.54" stroke="#176b89"/>
+<circle cx="250.57" cy="268.13" r="3.5" fill="#176b89"><title>Random churn: n=16,384; 0.71815 µs / operation; 3 completed trials</title></circle>
+<path d="M250.57,268.13L427.14,205.61" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="205.61" r="3.5" fill="#176b89"><title>Random churn: n=262,144; 1.76526 µs / operation; 1 completed trials</title></circle>
+<path d="M427.14,205.61L515.43,210.86" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="210.86" r="3.5" fill="#176b89"><title>Random churn: n=1,048,576; 1.6773 µs / operation; 1 completed trials</title></circle>
+<path d="M515.43,210.86L603.71,188.79" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="188.79" r="3.5" fill="#176b89"><title>Random churn: n=4,194,304; 2.04703 µs / operation; 1 completed trials</title></circle>
+<path d="M603.71,188.79L692.00,102.07" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="102.07" r="3.5" fill="#176b89"><title>Random churn: n=16,777,216; 3.49963 µs / operation; 1 completed trials</title></circle>
+<path d="M24,388h21" stroke="#176b89" stroke-width="3"/><text x="52" y="392">Random churn</text></g>
+<g data-series="ascending-churn">
+<path d="M74.00,284.98V283.19" stroke="#b45f22"/>
+<circle cx="74.00" cy="284.08" r="3.5" fill="#b45f22"><title>Ascending churn: n=1,024; 0.450846 µs / operation; 3 completed trials</title></circle>
+<path d="M74.00,284.08L250.57,277.99" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<path d="M250.57,278.66V277.32" stroke="#b45f22"/>
+<circle cx="250.57" cy="277.99" r="3.5" fill="#b45f22"><title>Ascending churn: n=16,384; 0.552887 µs / operation; 3 completed trials</title></circle>
+<path d="M250.57,277.99L427.14,269.43" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="269.43" r="3.5" fill="#b45f22"><title>Ascending churn: n=262,144; 0.696236 µs / operation; 1 completed trials</title></circle>
+<path d="M427.14,269.43L515.43,267.09" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="267.09" r="3.5" fill="#b45f22"><title>Ascending churn: n=1,048,576; 0.73553 µs / operation; 1 completed trials</title></circle>
+<path d="M515.43,267.09L603.71,265.36" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="265.36" r="3.5" fill="#b45f22"><title>Ascending churn: n=4,194,304; 0.76443 µs / operation; 1 completed trials</title></circle>
+<path d="M603.71,265.36L692.00,254.25" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="254.25" r="3.5" fill="#b45f22"><title>Ascending churn: n=16,777,216; 0.950518 µs / operation; 1 completed trials</title></circle>
+<path d="M369,388h21" stroke="#b45f22" stroke-width="3"/><text x="397" y="392">Ascending churn</text></g>
+<g data-series="descending-churn">
+<path d="M74.00,283.35V281.22" stroke="#7153a0"/>
+<circle cx="74.00" cy="282.29" r="3.5" fill="#7153a0"><title>Descending churn: n=1,024; 0.480957 µs / operation; 3 completed trials</title></circle>
+<path d="M74.00,282.29L250.57,276.80" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<path d="M250.57,277.38V276.23" stroke="#7153a0"/>
+<circle cx="250.57" cy="276.80" r="3.5" fill="#7153a0"><title>Descending churn: n=16,384; 0.572795 µs / operation; 3 completed trials</title></circle>
+<path d="M250.57,276.80L427.14,265.01" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="265.01" r="3.5" fill="#7153a0"><title>Descending churn: n=262,144; 0.770424 µs / operation; 1 completed trials</title></circle>
+<path d="M427.14,265.01L515.43,265.98" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="265.98" r="3.5" fill="#7153a0"><title>Descending churn: n=1,048,576; 0.754119 µs / operation; 1 completed trials</title></circle>
+<path d="M515.43,265.98L603.71,264.72" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="264.72" r="3.5" fill="#7153a0"><title>Descending churn: n=4,194,304; 0.775251 µs / operation; 1 completed trials</title></circle>
+<path d="M603.71,264.72L692.00,250.04" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="250.04" r="3.5" fill="#7153a0"><title>Descending churn: n=16,777,216; 1.02113 µs / operation; 1 completed trials</title></circle>
+<path d="M24,411h21" stroke="#7153a0" stroke-width="3"/><text x="52" y="415">Descending churn</text></g>
+<g data-series="grow-shrink">
+<path d="M74.00,283.85V281.04" stroke="#237957"/>
+<circle cx="74.00" cy="282.44" r="3.5" fill="#237957"><title>Shrink and regrow: n=1,024; 0.478353 µs / operation; 3 completed trials</title></circle>
+<path d="M74.00,282.44L250.57,272.84" stroke="#237957" stroke-width="2.4" fill="none"/>
+<path d="M250.57,274.49V271.20" stroke="#237957"/>
+<circle cx="250.57" cy="272.84" r="3.5" fill="#237957"><title>Shrink and regrow: n=16,384; 0.63915 µs / operation; 3 completed trials</title></circle>
+<path d="M250.57,272.84L427.14,217.26" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="217.26" r="3.5" fill="#237957"><title>Shrink and regrow: n=262,144; 1.57014 µs / operation; 1 completed trials</title></circle>
+<path d="M427.14,217.26L515.43,211.05" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="211.05" r="3.5" fill="#237957"><title>Shrink and regrow: n=1,048,576; 1.67415 µs / operation; 1 completed trials</title></circle>
+<path d="M515.43,211.05L603.71,169.14" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="169.14" r="3.5" fill="#237957"><title>Shrink and regrow: n=4,194,304; 2.37626 µs / operation; 1 completed trials</title></circle>
+<path d="M603.71,169.14L692.00,128.75" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="128.75" r="3.5" fill="#237957"><title>Shrink and regrow: n=16,777,216; 3.05271 µs / operation; 1 completed trials</title></circle>
+<path d="M369,411h21" stroke="#237957" stroke-width="3"/><text x="397" y="415">Shrink and regrow</text></g>
+<g data-series="read-heavy">
+<path d="M74.00,303.35V302.80" stroke="#be4263"/>
+<circle cx="74.00" cy="303.07" r="3.5" fill="#be4263"><title>Read-heavy churn: n=1,024; 0.132747 µs / operation; 3 completed trials</title></circle>
+<path d="M74.00,303.07L250.57,297.85" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<path d="M250.57,298.15V297.54" stroke="#be4263"/>
+<circle cx="250.57" cy="297.85" r="3.5" fill="#be4263"><title>Read-heavy churn: n=16,384; 0.220337 µs / operation; 3 completed trials</title></circle>
+<path d="M250.57,297.85L427.14,263.68" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="263.68" r="3.5" fill="#be4263"><title>Read-heavy churn: n=262,144; 0.792651 µs / operation; 1 completed trials</title></circle>
+<path d="M427.14,263.68L515.43,256.44" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="256.44" r="3.5" fill="#be4263"><title>Read-heavy churn: n=1,048,576; 0.913895 µs / operation; 1 completed trials</title></circle>
+<path d="M515.43,256.44L603.71,242.60" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="242.60" r="3.5" fill="#be4263"><title>Read-heavy churn: n=4,194,304; 1.14577 µs / operation; 1 completed trials</title></circle>
+<path d="M603.71,242.60L692.00,209.96" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="209.96" r="3.5" fill="#be4263"><title>Read-heavy churn: n=16,777,216; 1.69253 µs / operation; 1 completed trials</title></circle>
+<path d="M24,434h21" stroke="#be4263" stroke-width="3"/><text x="52" y="438">Read-heavy churn</text></g>
+</svg>

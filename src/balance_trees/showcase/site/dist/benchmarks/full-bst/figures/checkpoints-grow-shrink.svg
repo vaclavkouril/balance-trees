@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 462" role="img" aria-labelledby="trace-grow-shrink-title trace-grow-shrink-desc">
+<title id="trace-grow-shrink-title">Shrink and regrow · 16M starting keys</title>
+<desc id="trace-grow-shrink-desc">One recorded seed at this workload&#x27;s largest completed size. Upper panel: live keys on a log2(n+1) scale. Lower panel: tree height at validation checkpoints, not after every operation. The empty tree has height -1 and is drawn at zero. Joining segments are guides between observations.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#314654}.grid{stroke:#e4e9e9}.muted{fill:#607482}</style>
+<rect width="720" height="462" fill="white" rx="12"/>
+<text x="24" y="31" style="font-size:18px;font-weight:650">Shrink and regrow · 16M starting keys</text>
+<text class="muted" x="24" y="53">Seed 10318666943043205005 · 33,554,432 public operations · checkpoint samples</text>
+<text x="24" y="80">Live keys · log₂(n + 1) scale</text>
+<path class="grid" d="M74,216.00h618"/><text x="65" y="220.00" text-anchor="end">0</text>
+<path class="grid" d="M74,182.15h618"/><text x="65" y="186.15" text-anchor="end">128</text>
+<path class="grid" d="M74,148.40h618"/><text x="65" y="152.40" text-anchor="end">16k</text>
+<path class="grid" d="M74,114.60h618"/><text x="65" y="118.60" text-anchor="end">2M</text>
+<polyline points="74.00,100.11 228.50,104.94 305.75,109.77 344.38,114.60 363.69,119.43 373.34,124.26 378.17,129.08 380.59,133.91 381.79,138.74 382.40,143.57 382.70,148.40 382.85,153.23 382.92,158.05 382.96,162.88 382.98,167.71 382.99,172.53 383.00,177.34 383.00,182.15 383.00,186.92 383.00,191.64 383.00,196.26 383.00,200.69 383.00,204.79 383.00,208.35 383.00,211.17 383.00,216.00 383.00,211.17 383.00,208.35 383.00,204.79 383.00,200.69 383.00,196.26 383.00,191.64 383.00,186.92 383.00,182.15 383.00,177.34 383.01,172.53 383.02,167.71 383.04,162.88 383.08,158.05 383.15,153.23 383.30,148.40 383.60,143.57 384.21,138.74 385.41,133.91 387.83,129.08 392.66,124.26 402.31,119.43 421.62,114.60 460.25,109.77 537.50,104.94 692.00,100.11" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="74.00" cy="100.11" r="3" fill="#176b89"><title>After 0 operations: 16,777,216 live keys; height 56; mean depth 29.920</title></circle>
+<circle cx="228.50" cy="104.94" r="3" fill="#176b89"><title>After 8,388,608 operations: 8,388,608 live keys; height 71; mean depth 32.921</title></circle>
+<circle cx="305.75" cy="109.77" r="3" fill="#176b89"><title>After 12,582,912 operations: 4,194,304 live keys; height 63; mean depth 31.357</title></circle>
+<circle cx="344.38" cy="114.60" r="3" fill="#176b89"><title>After 14,680,064 operations: 2,097,152 live keys; height 63; mean depth 30.261</title></circle>
+<circle cx="363.69" cy="119.43" r="3" fill="#176b89"><title>After 15,728,640 operations: 1,048,576 live keys; height 59; mean depth 29.201</title></circle>
+<circle cx="373.34" cy="124.26" r="3" fill="#176b89"><title>After 16,252,928 operations: 524,288 live keys; height 55; mean depth 29.827</title></circle>
+<circle cx="378.17" cy="129.08" r="3" fill="#176b89"><title>After 16,515,072 operations: 262,144 live keys; height 52; mean depth 25.968</title></circle>
+<circle cx="380.59" cy="133.91" r="3" fill="#176b89"><title>After 16,646,144 operations: 131,072 live keys; height 45; mean depth 24.595</title></circle>
+<circle cx="381.79" cy="138.74" r="3" fill="#176b89"><title>After 16,711,680 operations: 65,536 live keys; height 43; mean depth 21.586</title></circle>
+<circle cx="382.40" cy="143.57" r="3" fill="#176b89"><title>After 16,744,448 operations: 32,768 live keys; height 42; mean depth 21.665</title></circle>
+<circle cx="382.70" cy="148.40" r="3" fill="#176b89"><title>After 16,760,832 operations: 16,384 live keys; height 37; mean depth 20.431</title></circle>
+<circle cx="382.85" cy="153.23" r="3" fill="#176b89"><title>After 16,769,024 operations: 8,192 live keys; height 37; mean depth 18.718</title></circle>
+<circle cx="382.92" cy="158.05" r="3" fill="#176b89"><title>After 16,773,120 operations: 4,096 live keys; height 35; mean depth 17.776</title></circle>
+<circle cx="382.96" cy="162.88" r="3" fill="#176b89"><title>After 16,775,168 operations: 2,048 live keys; height 31; mean depth 14.814</title></circle>
+<circle cx="382.98" cy="167.71" r="3" fill="#176b89"><title>After 16,776,192 operations: 1,024 live keys; height 26; mean depth 14.016</title></circle>
+<circle cx="382.99" cy="172.53" r="3" fill="#176b89"><title>After 16,776,704 operations: 512 live keys; height 25; mean depth 15.287</title></circle>
+<circle cx="383.00" cy="177.34" r="3" fill="#176b89"><title>After 16,776,960 operations: 256 live keys; height 21; mean depth 10.914</title></circle>
+<circle cx="383.00" cy="182.15" r="3" fill="#176b89"><title>After 16,777,088 operations: 128 live keys; height 17; mean depth 9.414</title></circle>
+<circle cx="383.00" cy="186.92" r="3" fill="#176b89"><title>After 16,777,152 operations: 64 live keys; height 16; mean depth 9.109</title></circle>
+<circle cx="383.00" cy="191.64" r="3" fill="#176b89"><title>After 16,777,184 operations: 32 live keys; height 11; mean depth 5.719</title></circle>
+<circle cx="383.00" cy="196.26" r="3" fill="#176b89"><title>After 16,777,200 operations: 16 live keys; height 9; mean depth 4.438</title></circle>
+<circle cx="383.00" cy="200.69" r="3" fill="#176b89"><title>After 16,777,208 operations: 8 live keys; height 5; mean depth 2.500</title></circle>
+<circle cx="383.00" cy="204.79" r="3" fill="#176b89"><title>After 16,777,212 operations: 4 live keys; height 2; mean depth 1.000</title></circle>
+<circle cx="383.00" cy="208.35" r="3" fill="#176b89"><title>After 16,777,214 operations: 2 live keys; height 1; mean depth 0.500</title></circle>
+<circle cx="383.00" cy="211.17" r="3" fill="#176b89"><title>After 16,777,215 operations: 1 live keys; height 0; mean depth 0.000</title></circle>
+<circle cx="383.00" cy="216.00" r="3" fill="#176b89"><title>After 16,777,216 operations: 0 live keys; height -1; mean depth 0.000</title></circle>
+<circle cx="383.00" cy="211.17" r="3" fill="#176b89"><title>After 16,777,217 operations: 1 live keys; height 0; mean depth 0.000</title></circle>
+<circle cx="383.00" cy="208.35" r="3" fill="#176b89"><title>After 16,777,218 operations: 2 live keys; height 1; mean depth 0.500</title></circle>
+<circle cx="383.00" cy="204.79" r="3" fill="#176b89"><title>After 16,777,220 operations: 4 live keys; height 2; mean depth 1.000</title></circle>
+<circle cx="383.00" cy="200.69" r="3" fill="#176b89"><title>After 16,777,224 operations: 8 live keys; height 3; mean depth 1.625</title></circle>
+<circle cx="383.00" cy="196.26" r="3" fill="#176b89"><title>After 16,777,232 operations: 16 live keys; height 5; mean depth 2.625</title></circle>
+<circle cx="383.00" cy="191.64" r="3" fill="#176b89"><title>After 16,777,248 operations: 32 live keys; height 7; mean depth 3.812</title></circle>
+<circle cx="383.00" cy="186.92" r="3" fill="#176b89"><title>After 16,777,280 operations: 64 live keys; height 10; mean depth 5.406</title></circle>
+<circle cx="383.00" cy="182.15" r="3" fill="#176b89"><title>After 16,777,344 operations: 128 live keys; height 13; mean depth 7.203</title></circle>
+<circle cx="383.00" cy="177.34" r="3" fill="#176b89"><title>After 16,777,472 operations: 256 live keys; height 15; mean depth 7.809</title></circle>
+<circle cx="383.01" cy="172.53" r="3" fill="#176b89"><title>After 16,777,728 operations: 512 live keys; height 19; mean depth 10.068</title></circle>
+<circle cx="383.02" cy="167.71" r="3" fill="#176b89"><title>After 16,778,240 operations: 1,024 live keys; height 20; mean depth 11.047</title></circle>
+<circle cx="383.04" cy="162.88" r="3" fill="#176b89"><title>After 16,779,264 operations: 2,048 live keys; height 22; mean depth 12.305</title></circle>
+<circle cx="383.08" cy="158.05" r="3" fill="#176b89"><title>After 16,781,312 operations: 4,096 live keys; height 25; mean depth 13.383</title></circle>
+<circle cx="383.15" cy="153.23" r="3" fill="#176b89"><title>After 16,785,408 operations: 8,192 live keys; height 25; mean depth 14.691</title></circle>
+<circle cx="383.30" cy="148.40" r="3" fill="#176b89"><title>After 16,793,600 operations: 16,384 live keys; height 29; mean depth 15.768</title></circle>
+<circle cx="383.60" cy="143.57" r="3" fill="#176b89"><title>After 16,809,984 operations: 32,768 live keys; height 32; mean depth 17.027</title></circle>
+<circle cx="384.21" cy="138.74" r="3" fill="#176b89"><title>After 16,842,752 operations: 65,536 live keys; height 35; mean depth 18.389</title></circle>
+<circle cx="385.41" cy="133.91" r="3" fill="#176b89"><title>After 16,908,288 operations: 131,072 live keys; height 39; mean depth 19.699</title></circle>
+<circle cx="387.83" cy="129.08" r="3" fill="#176b89"><title>After 17,039,360 operations: 262,144 live keys; height 42; mean depth 21.014</title></circle>
+<circle cx="392.66" cy="124.26" r="3" fill="#176b89"><title>After 17,301,504 operations: 524,288 live keys; height 43; mean depth 22.583</title></circle>
+<circle cx="402.31" cy="119.43" r="3" fill="#176b89"><title>After 17,825,792 operations: 1,048,576 live keys; height 47; mean depth 23.896</title></circle>
+<circle cx="421.62" cy="114.60" r="3" fill="#176b89"><title>After 18,874,368 operations: 2,097,152 live keys; height 51; mean depth 25.295</title></circle>
+<circle cx="460.25" cy="109.77" r="3" fill="#176b89"><title>After 20,971,520 operations: 4,194,304 live keys; height 53; mean depth 27.140</title></circle>
+<circle cx="537.50" cy="104.94" r="3" fill="#176b89"><title>After 25,165,824 operations: 8,388,608 live keys; height 55; mean depth 28.341</title></circle>
+<circle cx="692.00" cy="100.11" r="3" fill="#176b89"><title>After 33,554,432 operations: 16,777,216 live keys; height 56; mean depth 29.693</title></circle>
+<text x="74.00" y="237" text-anchor="middle">0%</text>
+<text x="228.50" y="237" text-anchor="middle">25%</text>
+<text x="383.00" y="237" text-anchor="middle">50%</text>
+<text x="537.50" y="237" text-anchor="middle">75%</text>
+<text x="692.00" y="237" text-anchor="middle">100%</text>
+<text x="24" y="258">Tree height · edges</text>
+<path class="grid" d="M74,394.00h618"/><text x="65" y="398.00" text-anchor="end">0</text>
+<path class="grid" d="M74,363.00h618"/><text x="65" y="367.00" text-anchor="end">19</text>
+<path class="grid" d="M74,332.00h618"/><text x="65" y="336.00" text-anchor="end">38</text>
+<path class="grid" d="M74,301.00h618"/><text x="65" y="305.00" text-anchor="end">57</text>
+<path class="grid" d="M74,270.00h618"/><text x="65" y="274.00" text-anchor="end">76</text>
+<polyline points="74.00,302.60 228.50,278.11 305.75,291.17 344.38,291.17 363.69,297.70 373.34,304.23 378.17,309.12 380.59,320.55 381.79,323.81 382.40,325.45 382.70,333.61 382.85,333.61 382.92,336.87 382.96,343.40 382.98,351.56 382.99,353.19 383.00,359.72 383.00,366.25 383.00,367.88 383.00,376.05 383.00,379.31 383.00,385.84 383.00,390.74 383.00,392.37 383.00,394.00 383.00,394.00 383.00,394.00 383.00,392.37 383.00,390.74 383.00,389.10 383.00,385.84 383.00,382.57 383.00,377.68 383.00,372.78 383.00,369.52 383.01,362.99 383.02,361.36 383.04,358.09 383.08,353.19 383.15,353.19 383.30,346.67 383.60,341.77 384.21,336.87 385.41,330.34 387.83,325.45 392.66,323.81 402.31,317.29 421.62,310.76 460.25,307.49 537.50,304.23 692.00,302.60" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="74.00" cy="302.60" r="3" fill="#b45f22"><title>After 0 operations: 16,777,216 live keys; height 56; mean depth 29.920</title></circle>
+<circle cx="228.50" cy="278.11" r="3" fill="#b45f22"><title>After 8,388,608 operations: 8,388,608 live keys; height 71; mean depth 32.921</title></circle>
+<circle cx="305.75" cy="291.17" r="3" fill="#b45f22"><title>After 12,582,912 operations: 4,194,304 live keys; height 63; mean depth 31.357</title></circle>
+<circle cx="344.38" cy="291.17" r="3" fill="#b45f22"><title>After 14,680,064 operations: 2,097,152 live keys; height 63; mean depth 30.261</title></circle>
+<circle cx="363.69" cy="297.70" r="3" fill="#b45f22"><title>After 15,728,640 operations: 1,048,576 live keys; height 59; mean depth 29.201</title></circle>
+<circle cx="373.34" cy="304.23" r="3" fill="#b45f22"><title>After 16,252,928 operations: 524,288 live keys; height 55; mean depth 29.827</title></circle>
+<circle cx="378.17" cy="309.12" r="3" fill="#b45f22"><title>After 16,515,072 operations: 262,144 live keys; height 52; mean depth 25.968</title></circle>
+<circle cx="380.59" cy="320.55" r="3" fill="#b45f22"><title>After 16,646,144 operations: 131,072 live keys; height 45; mean depth 24.595</title></circle>
+<circle cx="381.79" cy="323.81" r="3" fill="#b45f22"><title>After 16,711,680 operations: 65,536 live keys; height 43; mean depth 21.586</title></circle>
+<circle cx="382.40" cy="325.45" r="3" fill="#b45f22"><title>After 16,744,448 operations: 32,768 live keys; height 42; mean depth 21.665</title></circle>
+<circle cx="382.70" cy="333.61" r="3" fill="#b45f22"><title>After 16,760,832 operations: 16,384 live keys; height 37; mean depth 20.431</title></circle>
+<circle cx="382.85" cy="333.61" r="3" fill="#b45f22"><title>After 16,769,024 operations: 8,192 live keys; height 37; mean depth 18.718</title></circle>
+<circle cx="382.92" cy="336.87" r="3" fill="#b45f22"><title>After 16,773,120 operations: 4,096 live keys; height 35; mean depth 17.776</title></circle>
+<circle cx="382.96" cy="343.40" r="3" fill="#b45f22"><title>After 16,775,168 operations: 2,048 live keys; height 31; mean depth 14.814</title></circle>
+<circle cx="382.98" cy="351.56" r="3" fill="#b45f22"><title>After 16,776,192 operations: 1,024 live keys; height 26; mean depth 14.016</title></circle>
+<circle cx="382.99" cy="353.19" r="3" fill="#b45f22"><title>After 16,776,704 operations: 512 live keys; height 25; mean depth 15.287</title></circle>
+<circle cx="383.00" cy="359.72" r="3" fill="#b45f22"><title>After 16,776,960 operations: 256 live keys; height 21; mean depth 10.914</title></circle>
+<circle cx="383.00" cy="366.25" r="3" fill="#b45f22"><title>After 16,777,088 operations: 128 live keys; height 17; mean depth 9.414</title></circle>
+<circle cx="383.00" cy="367.88" r="3" fill="#b45f22"><title>After 16,777,152 operations: 64 live keys; height 16; mean depth 9.109</title></circle>
+<circle cx="383.00" cy="376.05" r="3" fill="#b45f22"><title>After 16,777,184 operations: 32 live keys; height 11; mean depth 5.719</title></circle>
+<circle cx="383.00" cy="379.31" r="3" fill="#b45f22"><title>After 16,777,200 operations: 16 live keys; height 9; mean depth 4.438</title></circle>
+<circle cx="383.00" cy="385.84" r="3" fill="#b45f22"><title>After 16,777,208 operations: 8 live keys; height 5; mean depth 2.500</title></circle>
+<circle cx="383.00" cy="390.74" r="3" fill="#b45f22"><title>After 16,777,212 operations: 4 live keys; height 2; mean depth 1.000</title></circle>
+<circle cx="383.00" cy="392.37" r="3" fill="#b45f22"><title>After 16,777,214 operations: 2 live keys; height 1; mean depth 0.500</title></circle>
+<circle cx="383.00" cy="394.00" r="3" fill="#b45f22"><title>After 16,777,215 operations: 1 live keys; height 0; mean depth 0.000</title></circle>
+<circle cx="383.00" cy="394.00" r="3" fill="#b45f22"><title>After 16,777,216 operations: 0 live keys; height -1; mean depth 0.000</title></circle>
+<circle cx="383.00" cy="394.00" r="3" fill="#b45f22"><title>After 16,777,217 operations: 1 live keys; height 0; mean depth 0.000</title></circle>
+<circle cx="383.00" cy="392.37" r="3" fill="#b45f22"><title>After 16,777,218 operations: 2 live keys; height 1; mean depth 0.500</title></circle>
+<circle cx="383.00" cy="390.74" r="3" fill="#b45f22"><title>After 16,777,220 operations: 4 live keys; height 2; mean depth 1.000</title></circle>
+<circle cx="383.00" cy="389.10" r="3" fill="#b45f22"><title>After 16,777,224 operations: 8 live keys; height 3; mean depth 1.625</title></circle>
+<circle cx="383.00" cy="385.84" r="3" fill="#b45f22"><title>After 16,777,232 operations: 16 live keys; height 5; mean depth 2.625</title></circle>
+<circle cx="383.00" cy="382.57" r="3" fill="#b45f22"><title>After 16,777,248 operations: 32 live keys; height 7; mean depth 3.812</title></circle>
+<circle cx="383.00" cy="377.68" r="3" fill="#b45f22"><title>After 16,777,280 operations: 64 live keys; height 10; mean depth 5.406</title></circle>
+<circle cx="383.00" cy="372.78" r="3" fill="#b45f22"><title>After 16,777,344 operations: 128 live keys; height 13; mean depth 7.203</title></circle>
+<circle cx="383.00" cy="369.52" r="3" fill="#b45f22"><title>After 16,777,472 operations: 256 live keys; height 15; mean depth 7.809</title></circle>
+<circle cx="383.01" cy="362.99" r="3" fill="#b45f22"><title>After 16,777,728 operations: 512 live keys; height 19; mean depth 10.068</title></circle>
+<circle cx="383.02" cy="361.36" r="3" fill="#b45f22"><title>After 16,778,240 operations: 1,024 live keys; height 20; mean depth 11.047</title></circle>
+<circle cx="383.04" cy="358.09" r="3" fill="#b45f22"><title>After 16,779,264 operations: 2,048 live keys; height 22; mean depth 12.305</title></circle>
+<circle cx="383.08" cy="353.19" r="3" fill="#b45f22"><title>After 16,781,312 operations: 4,096 live keys; height 25; mean depth 13.383</title></circle>
+<circle cx="383.15" cy="353.19" r="3" fill="#b45f22"><title>After 16,785,408 operations: 8,192 live keys; height 25; mean depth 14.691</title></circle>
+<circle cx="383.30" cy="346.67" r="3" fill="#b45f22"><title>After 16,793,600 operations: 16,384 live keys; height 29; mean depth 15.768</title></circle>
+<circle cx="383.60" cy="341.77" r="3" fill="#b45f22"><title>After 16,809,984 operations: 32,768 live keys; height 32; mean depth 17.027</title></circle>
+<circle cx="384.21" cy="336.87" r="3" fill="#b45f22"><title>After 16,842,752 operations: 65,536 live keys; height 35; mean depth 18.389</title></circle>
+<circle cx="385.41" cy="330.34" r="3" fill="#b45f22"><title>After 16,908,288 operations: 131,072 live keys; height 39; mean depth 19.699</title></circle>
+<circle cx="387.83" cy="325.45" r="3" fill="#b45f22"><title>After 17,039,360 operations: 262,144 live keys; height 42; mean depth 21.014</title></circle>
+<circle cx="392.66" cy="323.81" r="3" fill="#b45f22"><title>After 17,301,504 operations: 524,288 live keys; height 43; mean depth 22.583</title></circle>
+<circle cx="402.31" cy="317.29" r="3" fill="#b45f22"><title>After 17,825,792 operations: 1,048,576 live keys; height 47; mean depth 23.896</title></circle>
+<circle cx="421.62" cy="310.76" r="3" fill="#b45f22"><title>After 18,874,368 operations: 2,097,152 live keys; height 51; mean depth 25.295</title></circle>
+<circle cx="460.25" cy="307.49" r="3" fill="#b45f22"><title>After 20,971,520 operations: 4,194,304 live keys; height 53; mean depth 27.140</title></circle>
+<circle cx="537.50" cy="304.23" r="3" fill="#b45f22"><title>After 25,165,824 operations: 8,388,608 live keys; height 55; mean depth 28.341</title></circle>
+<circle cx="692.00" cy="302.60" r="3" fill="#b45f22"><title>After 33,554,432 operations: 16,777,216 live keys; height 56; mean depth 29.693</title></circle>
+<text x="74.00" y="415" text-anchor="middle">0%</text>
+<text x="228.50" y="415" text-anchor="middle">25%</text>
+<text x="383.00" y="415" text-anchor="middle">50%</text>
+<text x="537.50" y="415" text-anchor="middle">75%</text>
+<text x="692.00" y="415" text-anchor="middle">100%</text>
+<text class="muted" x="74" y="443">Progress through the measured public operations · preload excluded</text></svg>

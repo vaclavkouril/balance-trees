@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 467" role="img" aria-labelledby="height_ratio-title height_ratio-desc">
+<title id="height_ratio-title">Final height relative to live size</title>
+<desc id="height_ratio-desc">Horizontal axis: starting live keys, logarithmic scale. Vertical axis: height / log₂(n + 1), linear scale. Each point averages completed trials; whiskers show one sample standard deviation when repeated seeds exist. Failed groups leave gaps, not zeros.</desc>
+<style>text{font:12px system-ui,sans-serif;fill:#314654}.grid{stroke:#e4e9e9}.muted{fill:#607482}</style>
+<rect width="720" height="467" fill="white" rx="12"/>
+<text x="24" y="31" style="font-size:18px;font-weight:650">Final height relative to live size</text>
+<text class="muted" x="24" y="53">height / log₂(n + 1)</text>
+<path class="grid" d="M74,311.00h618"/><text x="64" y="315.00" text-anchor="end">0</text>
+<path class="grid" d="M74,264.20h618"/><text x="64" y="268.20" text-anchor="end">0.728</text>
+<path class="grid" d="M74,217.40h618"/><text x="64" y="221.40" text-anchor="end">1.46</text>
+<path class="grid" d="M74,170.60h618"/><text x="64" y="174.60" text-anchor="end">2.18</text>
+<path class="grid" d="M74,123.80h618"/><text x="64" y="127.80" text-anchor="end">2.91</text>
+<path class="grid" d="M74,77.00h618"/><text x="64" y="81.00" text-anchor="end">3.64</text>
+<path class="grid" d="M74.00,77v234"/><text x="74.00" y="333" text-anchor="middle">1k</text>
+<path class="grid" d="M250.57,77v234"/><text x="250.57" y="333" text-anchor="middle">16k</text>
+<path class="grid" d="M427.14,77v234"/><text x="427.14" y="333" text-anchor="middle">256k</text>
+<path class="grid" d="M515.43,77v234"/><text x="515.43" y="333" text-anchor="middle">1M</text>
+<path class="grid" d="M603.71,77v234"/><text x="603.71" y="333" text-anchor="middle">4M</text>
+<path class="grid" d="M692.00,77v234"/><text x="692.00" y="333" text-anchor="middle">16M</text>
+<text class="muted" x="74" y="355">Starting live keys (k = 1,024; M = 1,048,576) · whiskers ±1 SD</text>
+<g data-series="random-churn">
+<path d="M74.00,147.02V132.17" stroke="#176b89"/>
+<circle cx="74.00" cy="139.60" r="3.5" fill="#176b89"><title>Random churn: n=1,024; 2.66629 height / log₂(n + 1); 3 completed trials</title></circle>
+<path d="M74.00,139.60L250.57,136.51" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<path d="M250.57,141.10V131.92" stroke="#176b89"/>
+<circle cx="250.57" cy="136.51" r="3.5" fill="#176b89"><title>Random churn: n=16,384; 2.71427 height / log₂(n + 1); 3 completed trials</title></circle>
+<path d="M250.57,136.51L427.14,139.57" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="139.57" r="3.5" fill="#176b89"><title>Random churn: n=262,144; 2.66667 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M427.14,139.57L515.43,131.00" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="131.00" r="3.5" fill="#176b89"><title>Random churn: n=1,048,576; 2.8 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M515.43,131.00L603.71,129.83" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="129.83" r="3.5" fill="#176b89"><title>Random churn: n=4,194,304; 2.81818 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M603.71,129.83L692.00,131.54" stroke="#176b89" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="131.54" r="3.5" fill="#176b89"><title>Random churn: n=16,777,216; 2.79167 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M24,388h21" stroke="#176b89" stroke-width="3"/><text x="52" y="392">Random churn</text></g>
+<g data-series="ascending-churn">
+<path d="M74.00,143.88V131.03" stroke="#b45f22"/>
+<circle cx="74.00" cy="137.45" r="3.5" fill="#b45f22"><title>Ascending churn: n=1,024; 2.69962 height / log₂(n + 1); 3 completed trials</title></circle>
+<path d="M74.00,137.45L250.57,134.98" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<path d="M250.57,141.99V127.97" stroke="#b45f22"/>
+<circle cx="250.57" cy="134.98" r="3.5" fill="#b45f22"><title>Ascending churn: n=16,384; 2.73808 height / log₂(n + 1); 3 completed trials</title></circle>
+<path d="M250.57,134.98L427.14,132.43" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="132.43" r="3.5" fill="#b45f22"><title>Ascending churn: n=262,144; 2.77778 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M427.14,132.43L515.43,121.36" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="121.36" r="3.5" fill="#b45f22"><title>Ascending churn: n=1,048,576; 2.95 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M515.43,121.36L603.71,129.83" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="129.83" r="3.5" fill="#b45f22"><title>Ascending churn: n=4,194,304; 2.81818 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M603.71,129.83L692.00,128.86" stroke="#b45f22" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="128.86" r="3.5" fill="#b45f22"><title>Ascending churn: n=16,777,216; 2.83333 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M369,388h21" stroke="#b45f22" stroke-width="3"/><text x="397" y="392">Ascending churn</text></g>
+<g data-series="descending-churn">
+<path d="M74.00,126.17V118.74" stroke="#7153a0"/>
+<circle cx="74.00" cy="122.46" r="3.5" fill="#7153a0"><title>Descending churn: n=1,024; 2.93292 height / log₂(n + 1); 3 completed trials</title></circle>
+<path d="M74.00,122.46L250.57,124.27" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<path d="M250.57,126.92V121.62" stroke="#7153a0"/>
+<circle cx="250.57" cy="124.27" r="3.5" fill="#7153a0"><title>Descending churn: n=16,384; 2.90474 height / log₂(n + 1); 3 completed trials</title></circle>
+<path d="M250.57,124.27L427.14,111.00" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="111.00" r="3.5" fill="#7153a0"><title>Descending churn: n=262,144; 3.11111 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M427.14,111.00L515.43,114.93" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="114.93" r="3.5" fill="#7153a0"><title>Descending churn: n=1,048,576; 3.05 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M515.43,114.93L603.71,129.83" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="129.83" r="3.5" fill="#7153a0"><title>Descending churn: n=4,194,304; 2.81818 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M603.71,129.83L692.00,126.18" stroke="#7153a0" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="126.18" r="3.5" fill="#7153a0"><title>Descending churn: n=16,777,216; 2.875 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M24,411h21" stroke="#7153a0" stroke-width="3"/><text x="52" y="415">Descending churn</text></g>
+<g data-series="grow-shrink">
+<path d="M74.00,194.73V187.31" stroke="#237957"/>
+<circle cx="74.00" cy="191.02" r="3.5" fill="#237957"><title>Shrink and regrow: n=1,024; 1.8664 height / log₂(n + 1); 3 completed trials</title></circle>
+<path d="M74.00,191.02L250.57,174.78" stroke="#237957" stroke-width="2.4" fill="none"/>
+<path d="M250.57,180.08V169.47" stroke="#237957"/>
+<circle cx="250.57" cy="174.78" r="3.5" fill="#237957"><title>Shrink and regrow: n=16,384; 2.11903 height / log₂(n + 1); 3 completed trials</title></circle>
+<path d="M250.57,174.78L427.14,161.00" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="161.00" r="3.5" fill="#237957"><title>Shrink and regrow: n=262,144; 2.33333 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M427.14,161.00L515.43,172.79" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="172.79" r="3.5" fill="#237957"><title>Shrink and regrow: n=1,048,576; 2.15 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M515.43,172.79L603.71,161.97" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="161.97" r="3.5" fill="#237957"><title>Shrink and regrow: n=4,194,304; 2.31818 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M603.71,161.97L692.00,161.00" stroke="#237957" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="161.00" r="3.5" fill="#237957"><title>Shrink and regrow: n=16,777,216; 2.33333 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M369,411h21" stroke="#237957" stroke-width="3"/><text x="397" y="415">Shrink and regrow</text></g>
+<g data-series="read-heavy">
+<path d="M74.00,140.59V125.75" stroke="#be4263"/>
+<circle cx="74.00" cy="133.17" r="3.5" fill="#be4263"><title>Read-heavy churn: n=1,024; 2.76628 height / log₂(n + 1); 3 completed trials</title></circle>
+<path d="M74.00,133.17L250.57,130.39" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<path d="M250.57,137.40V123.37" stroke="#be4263"/>
+<circle cx="250.57" cy="130.39" r="3.5" fill="#be4263"><title>Read-heavy churn: n=16,384; 2.80951 height / log₂(n + 1); 3 completed trials</title></circle>
+<path d="M250.57,130.39L427.14,132.43" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="427.14" cy="132.43" r="3.5" fill="#be4263"><title>Read-heavy churn: n=262,144; 2.77778 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M427.14,132.43L515.43,102.07" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="515.43" cy="102.07" r="3.5" fill="#be4263"><title>Read-heavy churn: n=1,048,576; 3.25 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M515.43,102.07L603.71,126.91" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="603.71" cy="126.91" r="3.5" fill="#be4263"><title>Read-heavy churn: n=4,194,304; 2.86364 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M603.71,126.91L692.00,131.54" stroke="#be4263" stroke-width="2.4" fill="none"/>
+<circle cx="692.00" cy="131.54" r="3.5" fill="#be4263"><title>Read-heavy churn: n=16,777,216; 2.79167 height / log₂(n + 1); 1 completed trials</title></circle>
+<path d="M24,434h21" stroke="#be4263" stroke-width="3"/><text x="52" y="438">Read-heavy churn</text></g>
+</svg>

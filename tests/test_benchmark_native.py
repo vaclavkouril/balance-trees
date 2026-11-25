@@ -3,6 +3,7 @@ import shutil
 import tempfile
 import unittest
 from pathlib import Path
+from threading import Barrier, Lock
 from unittest.mock import patch
 from xml.etree import ElementTree
 from zipfile import ZipFile
@@ -10,6 +11,7 @@ from zipfile import ZipFile
 from balance_trees.benchmark_comparison_report import generate_report
 from balance_trees.benchmark_native import (
     BIASED_NATIVE,
+    FULL_NATIVE,
     NATIVE,
     execute_native_trial,
     run_native_comparison,
@@ -21,6 +23,92 @@ from balance_trees.benchmark_parallel import run_comparison
     shutil.which("c++") and shutil.which("cmake"), "C++20 and CMake required"
 )
 class NativeBenchmarkTests(unittest.TestCase):
+    def test_full_bst_can_be_selected_for_insertion_benchmarks(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "native"
+            results = run_native_comparison(
+                None,
+                output,
+                strategies=(FULL_NATIVE, BIASED_NATIVE),
+                sizes=[16],
+                orders=("increasing",),
+                small_trials=1,
+                timeout=20,
+                memory_mib=256,
+                workers=2,
+            )
+            self.assertEqual(
+                results["metadata"]["strategies"], [FULL_NATIVE, BIASED_NATIVE]
+            )
+            full, biased = sorted(results["trials"], key=lambda row: row["strategy"])
+            self.assertEqual(full["strategy"], FULL_NATIVE)
+            self.assertEqual(full["status"], "complete")
+            self.assertEqual(biased["status"], "complete")
+            for metric in (
+                "height",
+                "mean_depth",
+                "mean_random_bits",
+                "mean_rotations",
+            ):
+                self.assertEqual(full["metrics"][metric], biased["metrics"][metric])
+            report = generate_report(output)
+            self.assertIn("C++ full BST", report.read_text())
+
+    def test_parallel_workers_share_immutable_input_and_respect_limit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "native"
+            barrier = Barrier(2, timeout=10)
+            lock = Lock()
+            active = set()
+            maximum_active = 0
+
+            def synchronized_worker(executable, input_path, request, timeout):
+                nonlocal maximum_active
+                original_input = input_path.read_bytes()
+                strategy = request["strategy"]
+                with lock:
+                    self.assertNotIn(strategy, active)
+                    active.add(strategy)
+                    maximum_active = max(maximum_active, len(active))
+                try:
+                    # No sleeps: each pair must actually overlap to pass.
+                    barrier.wait()
+                    row = execute_native_trial(executable, input_path, request, timeout)
+                    self.assertEqual(input_path.read_bytes(), original_input)
+                    return row
+                finally:
+                    with lock:
+                        active.remove(strategy)
+
+            options = dict(
+                sizes=[8, 16],
+                orders=("random",),
+                small_trials=2,
+                repeat_through=8,
+                timeout=20,
+                memory_mib=256,
+                workers=2,
+            )
+            with patch(
+                "balance_trees.benchmark_native.execute_native_trial",
+                side_effect=synchronized_worker,
+            ):
+                results = run_native_comparison(None, output, **options)
+            self.assertEqual(maximum_active, 2)
+            self.assertEqual(len(results["trials"]), 6)
+            self.assertTrue(
+                all(row["status"] == "complete" for row in results["trials"])
+            )
+            self.assertEqual(results["metadata"]["native_workers"], 2)
+            self.assertIn("parallel load", results["metadata"]["native_timing"])
+            self.assertFalse((output / "input.txt").exists())
+            with patch("balance_trees.benchmark_native.execute_native_trial") as worker:
+                resumed = run_native_comparison(None, output, **options)
+            worker.assert_not_called()
+            self.assertEqual(results["trials"], resumed["trials"])
+            with self.assertRaisesRegex(ValueError, "identical baseline and settings"):
+                run_native_comparison(None, output, **{**options, "workers": 1})
+
     def test_standalone_run_compares_both_strategies_and_reuses_inputs(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "native"
@@ -57,6 +145,13 @@ class NativeBenchmarkTests(unittest.TestCase):
             resumed = run_native_comparison(None, output, **options)
             self.assertEqual(results["trials"], resumed["trials"])
             self.assertEqual(before, (output / "trials.jsonl").read_bytes())
+            # Existing serial runs have no worker count in their native settings.
+            config_path = output / "config.json"
+            legacy_config = json.loads(config_path.read_text())
+            legacy_config["native_settings"].pop("workers")
+            config_path.write_text(json.dumps(legacy_config))
+            legacy_resumed = run_native_comparison(None, output, **options)
+            self.assertEqual(results["trials"], legacy_resumed["trials"])
             with self.assertRaisesRegex(ValueError, "identical baseline and settings"):
                 run_native_comparison(None, output, **options, seed=123)
             self.assertFalse((output / "input.txt").exists())
@@ -71,6 +166,7 @@ class NativeBenchmarkTests(unittest.TestCase):
                 repeat_through=16,
                 timeout=20,
                 memory_mib=256,
+                workers=2,
             )
 
             def fail_old_strategy(executable, input_path, request, timeout):

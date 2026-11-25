@@ -8,6 +8,7 @@ import platform
 import shutil
 import subprocess
 import sys
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from datetime import datetime, timezone
 from pathlib import Path
 from time import perf_counter
@@ -18,7 +19,9 @@ from .sequences import ORDERS, insertion_order
 
 NATIVE = "geometric-target-local-repair-native"
 BIASED_NATIVE = "geometric-three-quarters-native"
-NATIVE_STRATEGIES = (NATIVE, BIASED_NATIVE)
+FULL_NATIVE = "geometric-full-bst-native"
+DEFAULT_NATIVE_STRATEGIES = (NATIVE, BIASED_NATIVE)
+NATIVE_STRATEGIES = (*DEFAULT_NATIVE_STRATEGIES, FULL_NATIVE)
 DEFAULT_SIZES = [2**power for power in (10, 12, 14, 16, 18, 20, 21, 22, 23, 24)]
 
 
@@ -76,6 +79,7 @@ def run_native_comparison(
     small_trials: int = 3,
     repeat_through: int = 65536,
     seed: int = 2026,
+    workers: int = 1,
 ) -> dict:
     original = json.loads((baseline / "results.json").read_text()) if baseline else None
     if original:
@@ -88,7 +92,7 @@ def run_native_comparison(
         sizes = DEFAULT_SIZES if sizes is None else sizes
         orders = ORDERS if orders is None else orders
     strategies = (
-        ((NATIVE,) if original else NATIVE_STRATEGIES)
+        ((NATIVE,) if original else DEFAULT_NATIVE_STRATEGIES)
         if strategies is None
         else strategies
     )
@@ -107,6 +111,7 @@ def run_native_comparison(
         or any(name not in ORDERS for name in orders)
         or small_trials < 1
         or repeat_through < 0
+        or workers < 1
     ):
         raise ValueError(
             "Use increasing sizes >=2, known strategies/orders, positive limits and >=128 MiB"
@@ -123,6 +128,7 @@ def run_native_comparison(
         small_trials=small_trials,
         repeat_through=repeat_through,
         seed=seed,
+        workers=workers,
     )
     baseline_hash = (
         hashlib.sha256((baseline / "results.json").read_bytes()).hexdigest()
@@ -131,8 +137,10 @@ def run_native_comparison(
     )
     if output.exists():
         metadata = json.loads((output / "config.json").read_text())
+        # Runs written before parallel execution was supported used one worker.
+        recorded_settings = {"workers": 1, **metadata["native_settings"]}
         if (
-            metadata["native_settings"] != settings
+            recorded_settings != settings
             or metadata["baseline_sha256"] != baseline_hash
         ):
             raise ValueError("Resume requires identical baseline and settings")
@@ -180,9 +188,11 @@ def run_native_comparison(
             "native_started_at": now,
             "baseline_sha256": baseline_hash,
             "compiler": compiler.stdout.splitlines()[0],
-            "native_build": "CMake Release; C++20; sequential isolated workers; exact node reserve",
+            "native_workers": workers,
+            "native_build": "CMake Release; C++20; isolated subprocess workers; exact node reserve",
             "native_sampling": "Fixed input per order/size; SHA-256-derived rotation seeds consumed by buffered SplitMix64. Native strategies share seed values but consume different bit counts; Python MT streams are not paired.",
-            "native_timing": "Insertion and aggregate counters only; input generation/parsing, node reservation, startup and final validation excluded. Sequential native workers on the same host; no Python timing comparison.",
+            "native_timing": f"Insertion and aggregate counters only; input generation/parsing, node reservation, startup and final validation excluded. This runner allows up to {workers} concurrent native workers; other workloads may also share the host. Wall times under parallel load are descriptive, not isolated latency or relative speed measurements; no Python timing comparison.",
+            "native_scheduling": "One immutable input per order/size; input generation finishes before its trials start. Strategies run concurrently, with at most one in-flight trial per strategy so failures stop its later repetitions and sizes. Each input is removed only after all its workers finish.",
             "native_source_sha256": {
                 str(path.relative_to(output / "source")): hashlib.sha256(
                     path.read_bytes()
@@ -194,7 +204,7 @@ def run_native_comparison(
         if not original:
             metadata.update(
                 started_at=now,
-                workers=1,
+                workers=workers,
                 python=sys.version,
                 platform=platform.platform(),
                 cpu=cpu,
@@ -205,7 +215,7 @@ def run_native_comparison(
                     ).hexdigest()
                     for path in sorted((output / "source").rglob("*.py"))
                 },
-                execution="Sequential isolated C++ workers; Python generates inputs and orchestrates trials.",
+                execution=f"Up to {workers} isolated C++ workers in parallel; Python generates one input at a time and orchestrates trials.",
                 sampling=metadata["native_sampling"],
                 metrics="Mean rotations/key, final mean node depth, maximum final height, logical random bits/key; native insertion seconds, ancestor visits and peak RSS. Root depth is zero.",
                 limits="Per-worker address-space cap and wall deadline include insertion and final validation. A failed strategy/order stops its repeated and larger trials; these remain explicit not_run records.",
@@ -221,6 +231,10 @@ def run_native_comparison(
             BIASED_NATIVE: dict(
                 name="C++ geometric repair · p=3/4",
                 note="Exact Bernoulli(3/4) targets; same 20-byte indexed payload and local repair; at most two rotations.",
+            ),
+            FULL_NATIVE: dict(
+                name="C++ full BST · p=3/4",
+                note="Chapter 6 with deletion refreshes; this runner measures insertion-only workloads. Same insertion repair as geometric-three-quarters.",
             ),
         }
         metadata["catalog"] = {
@@ -275,6 +289,23 @@ def run_native_comparison(
     for line in (output / "trials.jsonl").read_text().splitlines():
         row = json.loads(line)
         records[record_key(row)] = row
+
+    def record(row):
+        records[record_key(row)] = row
+        with (output / "trials.jsonl").open("a") as handle:
+            handle.write(json.dumps(row) + "\n")
+        save_results(output, metadata, records)
+        print(
+            f"{row['status']}: {row['strategy']} {row['order']} "
+            f"n={row['n']:,} trial={row['trial']}"
+            + (
+                f" insert={row['metrics']['elapsed_seconds']:.3f}s RSS={row['metrics']['peak_rss_mib']:.1f}MiB"
+                if row["status"] == "complete"
+                else ""
+            ),
+            flush=True,
+        )
+
     started = perf_counter()
     for order in orders:
         stopped = {strategy: None for strategy in strategies}
@@ -284,54 +315,74 @@ def run_native_comparison(
             input_digest = None
             order_seed = derived_seed(seed, "order", n)
             try:
-                for trial in range(count):
-                    for strategy in strategies:
-                        request = dict(
-                            strategy=strategy,
-                            order=order,
-                            n=n,
-                            trial=trial,
-                            seed=derived_seed(seed, "rotation", n, order, trial),
-                            order_seed=order_seed,
-                            memory_mib=memory_mib,
-                        )
-                        key = record_key(request)
-                        if key in records:
-                            if records[key]["status"] not in ("complete", "not_run"):
-                                stopped[strategy] = f"{records[key]['status']} at n={n}"
-                            continue
-                        if stopped[strategy]:
-                            row = {
-                                **request,
-                                "status": "not_run",
-                                "metrics": {},
-                                "detail": f"Skipped after {stopped[strategy]}",
-                            }
-                        else:
+                # Each strategy has a sequential chain of repetitions. Keeping
+                # only its next trial in flight preserves failure censoring;
+                # unrelated strategies can use the other worker slots.
+                with ThreadPoolExecutor(max_workers=workers) as executor:
+                    pending = {}
+
+                    def schedule(strategy, first_trial):
+                        nonlocal input_digest
+                        for trial in range(first_trial, count):
+                            request = dict(
+                                strategy=strategy,
+                                order=order,
+                                n=n,
+                                trial=trial,
+                                seed=derived_seed(seed, "rotation", n, order, trial),
+                                order_seed=order_seed,
+                                memory_mib=memory_mib,
+                            )
+                            key = record_key(request)
+                            if key in records:
+                                if records[key]["status"] not in (
+                                    "complete",
+                                    "not_run",
+                                ):
+                                    stopped[strategy] = (
+                                        f"{records[key]['status']} at n={n}"
+                                    )
+                                continue
+                            if stopped[strategy]:
+                                record(
+                                    {
+                                        **request,
+                                        "status": "not_run",
+                                        "metrics": {},
+                                        "detail": f"Skipped after {stopped[strategy]}",
+                                    }
+                                )
+                                continue
                             if input_digest is None:
                                 input_digest = prepare_input(
                                     input_path, order, n, order_seed
                                 )
-                            row = execute_native_trial(
-                                build / "native-benchmark", input_path, request, timeout
+                            future = executor.submit(
+                                execute_native_trial,
+                                build / "native-benchmark",
+                                input_path,
+                                request,
+                                timeout,
                             )
+                            pending[future] = request
+                            return
+
+                    for strategy in strategies:
+                        schedule(strategy, 0)
+                    while pending:
+                        completed, _ = wait(pending, return_when=FIRST_COMPLETED)
+                        for future in completed:
+                            request = pending.pop(future)
+                            row = future.result()
                             row["input_sha256"] = input_digest
+                            strategy = request["strategy"]
                             if row["status"] != "complete":
                                 stopped[strategy] = f"{row['status']} at n={n}"
-                        records[key] = row
-                        with (output / "trials.jsonl").open("a") as handle:
-                            handle.write(json.dumps(row) + "\n")
-                        save_results(output, metadata, records)
-                        print(
-                            f"{row['status']}: {strategy} {order} n={n:,} trial={trial}"
-                            + (
-                                f" insert={row['metrics']['elapsed_seconds']:.3f}s RSS={row['metrics']['peak_rss_mib']:.1f}MiB"
-                                if row["status"] == "complete"
-                                else ""
-                            ),
-                            flush=True,
-                        )
+                            record(row)
+                            schedule(strategy, request["trial"] + 1)
             finally:
+                # The executor context joins even after an exception: no worker
+                # can still need this input when it is removed or replaced.
                 input_path.unlink(missing_ok=True)
     metadata["native_finished_at"] = datetime.now(timezone.utc).isoformat()
     metadata["native_session_wall_seconds"] = perf_counter() - started
@@ -354,6 +405,12 @@ def main():
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--timeout", type=float, default=360)
     parser.add_argument("--memory-mib", type=int, default=768)
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="Maximum concurrent subprocesses sharing one order/size input",
+    )
     args = parser.parse_args()
     run_native_comparison(
         args.baseline,
@@ -366,6 +423,7 @@ def main():
         small_trials=args.small_trials,
         repeat_through=args.repeat_through,
         seed=args.seed,
+        workers=args.workers,
     )
 
 

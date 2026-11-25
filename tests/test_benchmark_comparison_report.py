@@ -104,3 +104,16 @@ class NativeComparisonReportTests(unittest.TestCase):
             svg = (report.parent / "figures/native-random-mean_depth.svg").read_text()
             self.assertIn("Custom native strategy", svg)
             self.assertNotIn("proof (PDF)", report.read_text())
+
+    def test_parallel_native_report_uses_the_recorded_worker_limit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "run"
+            self.write_results(source, ["geometric-full-bst-native"])
+            results = json.loads((source / "results.json").read_text())
+            results["metadata"]["native_settings"]["workers"] = 2
+            (source / "results.json").write_text(json.dumps(results))
+            report = generate_report(source).read_text()
+            self.assertIn("2</strong><span>C++ workers (maximum)", report)
+            self.assertIn("up to 2 concurrent workers", report)
+            self.assertIn("shared resource contention", report)
+            self.assertNotIn("run sequentially", report)

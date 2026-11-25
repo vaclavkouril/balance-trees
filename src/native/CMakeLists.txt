@@ -15,6 +15,9 @@ target_link_libraries(balance-tree PRIVATE balance_trees)
 add_executable(native-benchmark benchmark.cpp)
 target_link_libraries(native-benchmark PRIVATE balance_trees)
 
+add_executable(native-update-benchmark benchmark_updates.cpp)
+target_link_libraries(native-update-benchmark PRIVATE balance_trees)
+
 include(CTest)
 if(BUILD_TESTING)
   add_executable(native-tests ../../tests/native/test_tree.cpp)

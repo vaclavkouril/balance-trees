@@ -17,6 +17,7 @@ LABELS = {
     "treap": "Stored-priority treap",
     "geometric-target-local-repair-native": "C++ geometric repair",
     "geometric-three-quarters-native": "C++ geometric repair · p = 3/4",
+    "geometric-full-bst-native": "C++ full BST · p = 3/4",
 }
 COLORS = (
     "#2563eb",
@@ -259,6 +260,12 @@ def render_native_appendix(results: dict, output: Path) -> str:
         else "C++ geometric repair · native measurements"
     )
     settings = metadata["native_settings"]
+    workers = settings.get("workers", metadata.get("native_workers", 1))
+    execution = (
+        "sequentially"
+        if workers == 1
+        else f"with up to {workers} concurrent workers on a shared host"
+    )
     sampling = escaped(
         metadata.get("native_sampling", "Buffered SplitMix64 fair bits.")
     )
@@ -273,7 +280,7 @@ def render_native_appendix(results: dict, output: Path) -> str:
 <p>{introduction}</p>
 <p><strong>Implementation:</strong> signed 64-bit keys and three 32-bit indices in separate contiguous arrays: 20 bytes of reserved array payload per key. No priorities, heights or balance fields persist in nodes. Nodes are reserved before timing. SplitMix64 supplies buffered words without discarding unused bits. Rotation traces are disabled; counters stay enabled. Each trial uses a fresh strategy.</p>
 <p><strong>Sampling:</strong> {sampling} {stream_note} Means have ±1 SE only for repeated seeds; largest final height is the maximum across seeds.</p>
-<p><strong>Timing and memory:</strong> native trials run sequentially in isolated Linux processes with a {settings["memory_mib"]} MiB address-space cap and {settings["timeout_seconds"]:g}-second wall deadline. {timing} RSS includes input storage, tree arrays, validation and process overhead. Compiler: {escaped(metadata["compiler"])}. Build: {build} The recorded configuration and CMake sources are available in config.json and the source archive.</p>
+<p><strong>Timing and memory:</strong> native trials run {execution} in isolated Linux processes with a {settings["memory_mib"]} MiB address-space cap and {settings["timeout_seconds"]:g}-second wall deadline. {timing} RSS includes input storage, tree arrays, validation and process overhead. Compiler: {escaped(metadata["compiler"])}. Build: {build} The recorded configuration and CMake sources are available in config.json and the source archive.</p>
 <p><strong>Validation:</strong> every completed native tree passes iterative BST ordering, parent-link, acyclicity and reachability checks; all stored keys match their input slots. Resource boundaries and size ceilings are recorded per implementation and input family. These finite runs establish neither logarithmic height nor constant traversal work.</p>
 <h3>Largest completed native group per implementation and input family</h3><div class="table-wrap"><table><thead><tr><th>Input</th><th>Implementation</th><th>Keys</th>{"".join(f"<th>{escaped(title)}</th>" for title in METRICS.values())}<th>Insert seconds</th><th>Peak RSS MiB</th><th>Node bytes/key</th></tr></thead><tbody>{"".join(table_rows)}</tbody></table></div>
 <p><a href="./native-all-sequences.svg" download>Download all native charts as one SVG</a> · <a href="./source.zip" download>Download measured sources</a> · <a href="./trials.csv" download>All native timings and memory measurements</a></p>
@@ -477,8 +484,16 @@ def generate_report(
         else "Target strategy comparison"
     )
     settings = metadata["native_settings"] if native_only else metadata
-    workers = 1 if native_only else metadata["workers"]
-    worker_label = "C++ worker" if native_only else "Python workers"
+    workers = (
+        settings.get("workers", metadata.get("native_workers", 1))
+        if native_only
+        else metadata["workers"]
+    )
+    worker_label = (
+        ("C++ worker" if workers == 1 else "C++ workers (maximum)")
+        if native_only
+        else "Python workers"
+    )
     environment = (
         "C++ · " + escaped(metadata["compiler"])
         if native_only
@@ -498,9 +513,14 @@ def generate_report(
         )
     )
     execution_note = (
-        "Native trials run sequentially in isolated processes. Insertion timing excludes input preparation, capacity reservation and final validation."
+        (
+            "Native trials run in isolated processes with the recorded worker limit. "
+            "Insertion timing excludes input preparation, capacity reservation and final validation. "
+            "Concurrent wall timings include scheduling and shared resource contention; "
+            "they are not measurements of isolated latency or comparative speedup."
+        )
         if native_only
-        else "Python trials run concurrently in isolated processes; any native extension runs sequentially. Cross-language runtime comparisons are omitted."
+        else "Python trials run concurrently in isolated processes; native extension concurrency is recorded separately. Cross-language runtime comparisons are omitted."
     )
     implementation_names = ", ".join(
         escaped(strategy_label(metadata, strategy))

@@ -50,15 +50,29 @@ void BST::reserve(std::size_t count) {
     parent_.reserve(count);
 }
 
-InsertResult BST::insert(Key key_value) {
+BST::InsertionPosition BST::insertion_position(Key key_value) const {
     Index ancestor = null, current = root_;
     std::uint32_t depth = 0;
     while (current != null) {
-        if (key_value == keys_[current]) return {current, false, depth};
+        if (key_value == keys_[current]) return {current, ancestor, depth};
         ancestor = current;
         current = key_value < keys_[current] ? left_[current] : right_[current];
         ++depth;
     }
+    return {null, ancestor, depth};
+}
+
+void BST::attach_leaf(Index node, Index ancestor) {
+    left_[node] = right_[node] = null;
+    parent_[node] = ancestor;
+    if (ancestor == null) root_ = node;
+    else if (keys_[node] < keys_[ancestor]) left_[ancestor] = node;
+    else right_[ancestor] = node;
+}
+
+InsertResult BST::insert(Key key_value) {
+    const auto position = insertion_position(key_value);
+    if (position.existing != null) return {position.existing, false, position.depth};
     if (size() == null) throw std::length_error("32-bit node index limit exceeded");
     // Reserve all arrays before changing their lengths, including on allocation
     // failure. Geometric growth avoids quadratic allocation without reserve().
@@ -71,20 +85,111 @@ InsertResult BST::insert(Key key_value) {
     keys_.push_back(key_value);
     left_.push_back(null);
     right_.push_back(null);
-    parent_.push_back(ancestor);
-    if (ancestor == null) root_ = node;
-    else if (key_value < keys_[ancestor]) left_[ancestor] = node;
-    else right_[ancestor] = node;
-    return {node, true, depth};
+    parent_.push_back(null);
+    attach_leaf(node, position.parent);
+    return {node, true, position.depth};
 }
 
 bool BST::contains(Key key_value) const {
+    return find(key_value) != null;
+}
+
+Index BST::find(Key key_value, std::uint64_t* visits) const {
     auto current = root_;
     while (current != null) {
-        if (key_value == keys_[current]) return true;
+        if (visits) ++*visits;
+        if (key_value == keys_[current]) return current;
         current = key_value < keys_[current] ? left_[current] : right_[current];
     }
-    return false;
+    return null;
+}
+
+Index BST::minimum(Index subtree, std::uint64_t* visits) const {
+    if (subtree == null) return null;
+    while (true) {
+        if (visits) ++*visits;
+        const auto child = left_.at(subtree);
+        if (child == null) return subtree;
+        subtree = child;
+    }
+}
+
+Index BST::successor(Key key_value, std::uint64_t* visits) const {
+    Index current = root_, candidate = null;
+    while (current != null) {
+        if (visits) ++*visits;
+        if (keys_[current] > key_value) {
+            candidate = current;
+            current = left_[current];
+        } else current = right_[current];
+    }
+    return candidate;
+}
+
+Index BST::detach(Index node, std::uint64_t* visits) {
+    // Use the successor even for a node with only a right child. The proof's
+    // transfer from the left gap relies on this particular removal rule.
+    Index detached = node, child = left_.at(node);
+    if (right_[node] != null) {
+        detached = minimum(right_[node], visits);
+        keys_[node] = keys_[detached];
+        child = right_[detached];
+    }
+    const auto ancestor = parent_[detached];
+    if (ancestor == null) root_ = child;
+    else if (left_[ancestor] == detached) left_[ancestor] = child;
+    else right_[ancestor] = child;
+    if (child != null) parent_[child] = ancestor;
+    left_[detached] = right_[detached] = parent_[detached] = null;
+    return detached;
+}
+
+void BST::erase(Index node, std::uint64_t* visits) {
+    const auto detached = detach(node, visits);
+    const auto last = static_cast<Index>(size() - 1);
+    // Keep all live nodes densely packed without a free list. Relocating the
+    // last slot repairs only its parent and child links; topology is unchanged.
+    if (detached != last) {
+        keys_[detached] = keys_[last];
+        left_[detached] = left_[last];
+        right_[detached] = right_[last];
+        parent_[detached] = parent_[last];
+        const auto ancestor = parent_[detached];
+        if (ancestor == null) root_ = detached;
+        else if (left_[ancestor] == last) left_[ancestor] = detached;
+        else right_[ancestor] = detached;
+        if (left_[detached] != null) parent_[left_[detached]] = detached;
+        if (right_[detached] != null) parent_[right_[detached]] = detached;
+    }
+    keys_.pop_back();
+    left_.pop_back();
+    right_.pop_back();
+    parent_.pop_back();
+}
+
+InsertResult BST::reinsert(Index node, std::uint64_t* visits) {
+    const auto saved_key = keys_.at(node);
+    const auto detached = detach(node, visits);
+    keys_[detached] = saved_key;
+    const auto position = insertion_position(saved_key);
+    if (visits) *visits += position.depth;
+    attach_leaf(detached, position.parent);
+    // The arrays retain their size during the temporary removal; no caller or
+    // sampler observes that intermediate state. Repair sees the restored size.
+    return {detached, true, position.depth};
+}
+
+bool BST::move_minimum_to_root(std::uint64_t* visits) {
+    const auto node = minimum(root_, visits);
+    if (node == root_) return false; // Includes an empty tree.
+    const auto ancestor = parent_[node];
+    left_[ancestor] = right_[node];
+    if (right_[node] != null) parent_[right_[node]] = ancestor;
+    right_[node] = root_;
+    parent_[root_] = node;
+    parent_[node] = null;
+    root_ = node;
+    return true;
 }
 
 void BST::rotate_up(Index node) {
@@ -185,7 +290,8 @@ void repair_at_target(RebalanceContext& context, std::uint32_t target) {
 } // namespace
 
 void GeometricTargetLocalRepair::rebalance(RebalanceContext& context) {
-    repair_at_target(context, sample_target_depth(++inserted_count_, context.bits));
+    repair_at_target(context, sample_target_depth(
+        static_cast<std::uint32_t>(context.tree.size()), context.bits));
 }
 
 std::uint32_t maximum_three_quarters_target_depth(std::uint32_t node_count) {
@@ -224,7 +330,8 @@ std::uint32_t sample_three_quarters_target_depth(std::uint32_t node_count, Rando
 }
 
 void GeometricThreeQuarters::rebalance(RebalanceContext& context) {
-    repair_at_target(context, sample_three_quarters_target_depth(++inserted_count_, context.bits));
+    repair_at_target(context, sample_three_quarters_target_depth(
+        static_cast<std::uint32_t>(context.tree.size()), context.bits));
 }
 
 StrategyFactory::StrategyFactory() {
@@ -233,6 +340,9 @@ StrategyFactory::StrategyFactory() {
     });
     register_strategy("geometric-three-quarters", [] {
         return std::make_unique<GeometricThreeQuarters>();
+    });
+    register_strategy("geometric-full-bst", [] {
+        return std::make_unique<GeometricFullBST>();
     });
     register_strategy("none", [] { return std::make_unique<NoRebalance>(); });
 }
@@ -257,7 +367,10 @@ TreeFlavor::TreeFlavor(std::unique_ptr<Strategy> strategy, RandomBits bits, bool
 }
 
 InsertionStats TreeFlavor::insert(Key key_value) {
-    auto result = tree_.insert(key_value);
+    return repair(tree_.insert(key_value));
+}
+
+InsertionStats TreeFlavor::repair(InsertResult result) {
     InsertionStats stats{result.inserted, result.depth, 0, 0, 0, {}};
     if (result.inserted) {
         const auto before = bits_.count();
@@ -266,6 +379,46 @@ InsertionStats TreeFlavor::insert(Key key_value) {
         stats.random_bits = bits_.count() - before;
     }
     return stats;
+}
+
+DeletionStats TreeFlavor::erase(Key key_value) {
+    if (!strategy_->supports_deletion())
+        throw std::logic_error("deletion requires the geometric-full-bst strategy");
+    DeletionStats stats;
+    const auto node = tree_.find(key_value, &stats.search_visits);
+    if (node == null) return stats;
+    tree_.erase(node, &stats.search_visits);
+    stats.erased = true;
+    if (tree_.size() == 0) {
+        cursor_.reset();
+        return stats;
+    }
+    refresh_next(stats);
+    refresh_next(stats);
+    return stats;
+}
+
+void TreeFlavor::refresh_next(DeletionStats& stats) {
+    auto node = cursor_ ? tree_.successor(*cursor_, &stats.search_visits)
+                        : tree_.minimum(tree_.root(), &stats.search_visits);
+    if (node == null) {
+        stats.minimum_moves += tree_.move_minimum_to_root(&stats.search_visits);
+        node = tree_.root();
+    }
+    const auto refreshed_key = tree_.key(node);
+    const auto insertion = repair(tree_.reinsert(node, &stats.search_visits));
+    stats.visits += insertion.visits;
+    stats.rotations += insertion.rotations;
+    stats.random_bits += insertion.random_bits;
+    ++stats.refreshes;
+    if (trace_) {
+        stats.refreshed_keys.push_back(refreshed_key);
+        stats.rotation_distances.insert(stats.rotation_distances.end(),
+            insertion.rotation_distances.begin(), insertion.rotation_distances.end());
+    }
+    // Save a value, never a node index: successor copying and storage
+    // compaction can relocate keys, and the cursor key may later be deleted.
+    cursor_ = refreshed_key;
 }
 
 } // namespace balance_trees

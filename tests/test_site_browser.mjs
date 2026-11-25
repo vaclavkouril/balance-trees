@@ -76,6 +76,8 @@ try {
   const registeredCount = await evaluate('fetch("./api/config").then(r => r.json()).then(data => Object.keys(data.strategies).length)');
   assert.equal(await evaluate('document.querySelector("#strategy").options.length'), registeredCount + 1);
   assert.equal(await evaluate('document.querySelector("#benchmark-link").getAttribute("href")'), './benchmarks/index.html');
+  assert.equal(await evaluate('document.querySelector("#full-bst-benchmark-link").getAttribute("href")'), './benchmarks/full-bst/index.html');
+  assert.equal(await evaluate('document.querySelector("#full-bst-insertion-link").getAttribute("href")'), './benchmarks/full-bst-insertion/index.html');
   await evaluate(`document.querySelector('#tutorial').close(); document.querySelector('#strategy').value='treap'; document.querySelector('#seed').value='17'; document.querySelector('#sequence').value='8,4,12,2,6,10,14,3,5,11,0,-2'; document.querySelector('#use-sequence').click();`);
   await waitFor('document.querySelector("#count").value === "12" && document.querySelector("#phase").textContent === "Ready"');
   const coloredFrame = await evaluate(`(async () => {
@@ -104,6 +106,28 @@ try {
   await evaluate('document.querySelector("#workload").value="converging"; document.querySelector("#workload").dispatchEvent(new Event("change"))');
   assert.equal(await evaluate('[...document.querySelectorAll("[data-order]:not([hidden])")].every(element=>element.dataset.order==="converging")'), true);
   await screenshot('benchmark-report.png');
+  await navigate('benchmarks/full-bst/index.html');
+  assert.equal(await evaluate('document.querySelectorAll("#workload-filter option").length'), 6);
+  assert.equal(await evaluate('document.querySelectorAll("figure svg").length'), 12);
+  assert.equal(await evaluate('fetch("./checkpoints.csv").then(r=>r.status)'), 200);
+  assert.equal(await evaluate('fetch("./source.zip").then(r=>r.status)'), 200);
+  assert.equal(await evaluate('fetch("./full-bst-explained.pdf").then(r=>r.status)'), 200);
+  await screenshot('full-bst-report-desktop.png');
+  await evaluate('document.querySelector("#workload-filter").value="grow-shrink"; document.querySelector("#workload-filter").dispatchEvent(new Event("change"))');
+  assert.equal(await evaluate('[...document.querySelectorAll("[data-workload]:not([hidden])")].every(element=>element.dataset.workload==="grow-shrink")'), true);
+  assert.equal(await evaluate('[...document.querySelectorAll("[data-series][data-dimmed=false]")].every(element=>element.dataset.series==="grow-shrink")'), true);
+  await evaluate('document.querySelector(".charts").scrollIntoView({behavior:"instant"})');
+  await screenshot('full-bst-scaling-desktop.png');
+  await evaluate('document.querySelector("figure[data-workload=grow-shrink]").scrollIntoView({behavior:"instant"})');
+  await screenshot('full-bst-shrink-trace.png');
+  await page('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+  await evaluate('window.scrollTo({top:0,behavior:"instant"})');
+  assert.equal(await evaluate('document.documentElement.scrollWidth <= 390'), true, 'Mixed report overflows on mobile');
+  await screenshot('full-bst-report-mobile.png');
+  await page('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1100, deviceScaleFactor: 1, mobile: false });
+  await navigate('benchmarks/full-bst-insertion/index.html');
+  assert.equal(await evaluate('document.querySelectorAll("#workload option").length'), 8);
+  assert.equal(await evaluate('fetch("./summary.csv").then(r=>r.status)'), 200);
   await navigate('index.html');
   await waitFor('document.querySelector("#source-badge")?.textContent === "Python implementation"');
   await evaluate(`document.querySelector('#tutorial').close(); document.querySelector('#strategy').value='random-level'; document.querySelector('#count').value='10000'; document.querySelector('#order').value='random'; document.querySelector('#generate').click();`);

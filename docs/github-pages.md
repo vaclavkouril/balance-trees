@@ -1,12 +1,20 @@
 # Static visualizer build
 
 The static build includes the interactive visualizer, its runtime assets, and
-two benchmark reports under `benchmarks/`. **C++ probability benchmarks** opens
+four benchmark reports under `benchmarks/`. **Mixed insert/delete benchmarks**
+opens `benchmarks/full-bst/index.html`, with five mixed workloads, graphs,
+checkpoint tables, measurements, source downloads and the explained Chapter 6
+PDF. **Full BST insertion benchmarks** opens
+`benchmarks/full-bst-insertion/index.html`, comparing all three native geometric
+policies across seven input families. Both suites use sizes through 16,777,216
+keys. See [reproduction commands](../benchmarks/README.md).
+
+**C++ probability benchmarks** opens
 `benchmarks/geometric-native/index.html`: the 252-trial comparison of the original
 fair-coin and new 3/4 strategies across seven input families, through 16,777,216
 keys. The report links back to the visualizer and to the probability PDF.
 **Earlier benchmark results** opens the previous comparison at
-`benchmarks/index.html`. Both reports include their charts, measurements and
+`benchmarks/index.html`. All reports include their charts, measurements and
 measured source archives. Other historical report bundles remain excluded.
 
 From the repository root, with Python 3.11+:
